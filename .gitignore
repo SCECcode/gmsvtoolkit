@@ -6,6 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+# C and Fortran intermediate files
+*.o
+*.mod
+bin/
+*.version
+*.a
+
 # Distribution / packaging
 .Python
 build/
