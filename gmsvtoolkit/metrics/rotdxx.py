@@ -149,12 +149,12 @@ class RotDXX(object):
     Module for computing RotD100/50 provided by UCB
     """
 
-    def __init__(self):
+    def __init__(self, mode=None, vertical=None):
         """
         Initializes class variables
         """
-        self.vertical = None
-        self.mode = None
+        self.vertical = vertical
+        self.mode = mode
 
     def parse_arguments(self):
         """
@@ -320,26 +320,26 @@ class RotDXX(object):
             # And clean up later
             atexit.register(cleanup, temp_dir)
 
-            stations = StationList(station_file)
-            station_list = stations.get_station_list()
+        stations = StationList(station_file)
+        station_list = stations.get_station_list()
 
-            # Loop through stations
-            for station in station_list:
-                station_name = station.scode
+        # Loop through stations
+        for station in station_list:
+            station_name = station.scode
 
-                # Find input file
-                input_list = glob.glob("%s%s*%s*.acc.bbp" %
-                                       (input_dir, os.sep, station_name))
-                if len(input_list) != 1:
-                    print("[ERROR]: Can't find input file for station %s" % (station_name))
-                    sys.exit(1)
+            # Find input file
+            input_list = glob.glob("%s%s*%s*.acc.bbp" %
+                                   (input_dir, os.sep, station_name))
+            if len(input_list) != 1:
+                print("[ERROR]: Can't find input file for station %s" % (station_name))
+                sys.exit(1)
 
-                input_file = os.path.basename(input_list[0])
-                output_base = input_file[0:input_file.find(".acc.bbp")]
+            input_file = os.path.basename(input_list[0])
+            output_base = input_file[0:input_file.find(".acc.bbp")]
 
-                # Run RotDXX
-                self.run_single_file(input_file, output_base,
-                                     input_dir, output_dir, temp_dir)
+            # Run RotDXX
+            self.run_single_file(input_file, output_base,
+                                 input_dir, output_dir, temp_dir)
 
 if __name__ == '__main__':
     print("Running module: %s" % (os.path.basename(sys.argv[0])))
