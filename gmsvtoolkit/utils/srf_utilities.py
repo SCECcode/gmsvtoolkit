@@ -108,7 +108,7 @@ def get_srf_num_segments(srf_file):
 
     if srf_segments is None:
         print("[ERROR]: Could not read number of segments from "
-              "SRF file: %s" % (src_file))
+              "SRF file: %s" % (srf_file))
         sys.exit(1)
 
     # Return number of segments
