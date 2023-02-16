@@ -43,7 +43,7 @@ import unittest
 # Import GMSVToolkit modules
 import seqnum
 from core import gmsvtoolkit_config
-from statistics import psa_gof
+from stats import psa_gof
 from core.station_list import StationList
 import cmp_bbp
 
