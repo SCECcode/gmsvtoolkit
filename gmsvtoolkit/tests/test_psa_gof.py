@@ -77,7 +77,7 @@ class TestPSAGoF(unittest.TestCase):
         Test the psa_gof module
         """
         # Reference directory
-        ref_dir = os.path.join(self.install.TEST_REF_DIR, "statistics")
+        ref_dir = os.path.join(self.install.TEST_REF_DIR, "stats")
         obs_dir = os.path.join(ref_dir, "obs")
         sims_dir = os.path.join(ref_dir, "sims")
 
