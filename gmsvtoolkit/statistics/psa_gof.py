@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2022, University of Southern California
+Copyright (c) 2023, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -48,15 +48,16 @@ from utils.src_utilities import parse_src_file
 from utils import os_utilities
 
 # Import Pynga and its utilities
-import pynga.utils as putils
+from models.pynga import utils as putils
 
 class PSAGoF(object):
 
-    def __init__(self):
-        self.mode = None
+    def __init__(self, mode=None, min_cdst=0, max_cutoff=None):
+        self.mode = mode
         self.src_keys = None
-        self.min_cdst = 0
-        self.max_cutoff = None
+        self.min_cdst = min_cdst
+        self.max_cutoff = max_cutoff
+        self.comp_label = None
 
     def parse_arguments(self):
         """
@@ -94,10 +95,8 @@ class PSAGoF(object):
         
     def run(self):
         """
-        Run PSAGoF module
+        Parse parameters and then run PSAGoF module
         """
-        install = gmsvtoolkit_config.GMSVToolKitConfig.get_instance()
-
         # Parse command-line options
         args = self.parse_arguments()
 
@@ -121,30 +120,48 @@ class PSAGoF(object):
         if not args.comp_label:
             print("[ERROR]: Please specify comp-label prefix!")
             sys,exit(1)
+        self.comp_label = args.comp_label
+
+        # Allow user to replace default max_cutoff value
         self.max_cutoff = args.max_cutoff
 
-        # Set mode
-        self.mode = "rotd50"
-        extension = "rd50"
-        comps = ["psa5n", "psa5e", "rotd50"]
         if args.rotd100 and args.rotd50:
             print("[ERROR]: Please specify --rotd50 or --rotd100, not both!")
             sys.exit(1)
+
+        # Set mode
+        self.mode = "rotd50"
         if args.rotd100:
             self.mode = "rotd100"
+
+        # Run PSA GoF module
+        self.run_psa_gof(args.station_list, args.src_file,
+                         args.obs_dir, args.sims_dir, output_dir)
+
+    def run_psa_gof(self, a_station_list, a_src_file,
+                    obs_dir, sims_dir, output_dir):
+        """
+        Parse parameters and then run PSAGoF module
+        """
+        install = gmsvtoolkit_config.GMSVToolKitConfig.get_instance()
+
+        # Pick mode
+        extension = "rd50"
+        comps = ["psa5n", "psa5e", "rotd50"]
+        if self.mode == "rotd100":
             extension = "rd100"
             comps = ["rotd50", "rotd100", "ratio"]
 
         # Parse input files
-        station_base = os.path.basename(os.path.splitext(args.station_list)[0])
-        self.src_keys = parse_src_file(args.src_file)
-        stations = StationList(args.station_list)
+        station_base = os.path.basename(os.path.splitext(a_station_list)[0])
+        self.src_keys = parse_src_file(a_src_file)
+        stations = StationList(a_station_list)
         station_list = stations.get_station_list()
         print_header = 1
 
         # Select output file
         outfile = os.path.join(output_dir, "%s.%s-resid.txt" %
-                               (args.comp_label, extension))
+                               (self.comp_label, extension))
         if os.path.exists(outfile):
             os.remove(outfile)
 
@@ -175,7 +192,7 @@ class PSAGoF(object):
 
             # Find input files for observed and simulated data
             obs_files = glob.glob("%s%s*%s*.%s" %
-                                   (args.obs_dir, os.sep,
+                                   (obs_dir, os.sep,
                                     station_name, extension))
             if len(obs_files) != 1:
                 print("[ERROR]: Can't find observation file for station %s" % (station_name))
@@ -183,7 +200,7 @@ class PSAGoF(object):
             obs_file = obs_files[0]
 
             sim_files = glob.glob("%s%s*%s*.%s" %
-                                   (args.sims_dir, os.sep,
+                                   (sims_dir, os.sep,
                                     station_name, extension))
             if len(sim_files) != 1:
                 print("[ERROR]: Can't find simulation file for station %s" % (station_name))
@@ -199,7 +216,7 @@ class PSAGoF(object):
                    "datafile1=%s simfile1=%s " % (obs_file, sim_file) +
                    "comp1=%s comp2=%s comp3=%s " % (comps[0], comps[1], comps[2]) +
                    "eqname=%s mag=%s stat=%s lon=%.4f lat=%.4f " %
-                   (args.comp_label.split("-")[0], self.src_keys['magnitude'],
+                   (self.comp_label.split("-")[0], self.src_keys['magnitude'],
                     station_name, station_lon, station_lat) +
                    "vs30=%d cd=%.2f " % (int(station.vs30), rrup) +
                    "flo=%f fhi=%f " % (float(station.low_freq_corner),
@@ -216,7 +233,7 @@ class PSAGoF(object):
         for comp in comps:
             # Build paths and check lengths
             fileroot = os.path.join(output_dir, "%s_r%d-%d-%s-%s" %
-                                    (args.comp_label, self.min_cdst,
+                                    (self.comp_label, self.min_cdst,
                                      self.max_cutoff, extension, comp))
             os_utilities.check_path_lengths([outfile, fileroot],
                                             os_utilities.GP_MAX_FILENAME)
