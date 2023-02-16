@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2022, University of Southern California
+Copyright (c) 2023, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@ from __future__ import division, print_function
 import sys
 
 # Import Broadband modules
-from station import Station
+from core.station import Station
 
 # Sets maximum allowed len for station name, code limits are:
 # jbsim: 64 characters
