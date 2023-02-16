@@ -209,7 +209,8 @@ def create_rdxx_plot(station_id, input_files, labels, output_file,
 
 class PlotRotDXX(object):
 
-    def __init__(self):
+    def __init__(self, mode=None):
+        self.mode = mode
         self.comp_label = None
 
     def parse_arguments(self):

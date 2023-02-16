@@ -52,12 +52,13 @@ from models.pynga import utils as putils
 
 class PSAGoF(object):
 
-    def __init__(self, mode=None, min_cdst=0, max_cutoff=None):
+    def __init__(self, mode=None, min_cdst=0,
+                 max_cutoff=None, comp_label=None):
         self.mode = mode
         self.src_keys = None
         self.min_cdst = min_cdst
         self.max_cutoff = max_cutoff
-        self.comp_label = None
+        self.comp_label = comp_label
 
     def parse_arguments(self):
         """
