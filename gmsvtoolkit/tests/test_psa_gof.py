@@ -94,7 +94,7 @@ class TestPSAGoF(unittest.TestCase):
                                 obs_dir, sims_dir, self.temp_dir)
 
         # Check results
-        resid_ref_file = os.path.join(ref_dir, "NR-rd50-resid.txt")
+        resid_ref_file = os.path.join(ref_dir, "NR-10000000.rd50-resid.txt")
         resid_file = os.path.join(self.temp_dir, "NR-10000000.rd50-resid.txt")
         self.assertFalse(cmp_bbp.cmp_resid(resid_ref_file,
                                            resid_file,
