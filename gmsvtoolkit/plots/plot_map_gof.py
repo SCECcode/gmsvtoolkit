@@ -179,7 +179,7 @@ def plot_map_gof(src_file, station_file, resid_file, comp_label, input_dir,
     all_sta_y_data = []
     all_sta_resid_data = []
     for period in plot_periods:
-        summary_output = os.path.join(input_dir, "%s-resid-map-%.3f-%s.txt" %
+        summary_output = os.path.join(output_dir, "%s-resid-map-%.3f-%s.txt" %
                                       (comp_label, period, component))
         sta_x_data, sta_y_data, sta_resid_data = read_resid(resid_file,
                                                             component,
