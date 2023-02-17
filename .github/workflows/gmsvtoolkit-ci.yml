@@ -1,0 +1,33 @@
+name: gmsvtoolkit-ci
+
+on: push
+
+jobs:
+  gmsvtoolkit-build-linux:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: [ "3.7", "3.8", "3.9", "3.10" ]
+    steps:
+    - name: set GMSVTOOLKIT_DIR
+      run: echo "GMSVTOOLKIT_BASE_DIR=$RUNNER_WORKSPACE/gmsvtoolkit" >> $GITHUB_ENV
+    - name: Setup Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: configure Python
+      run: |
+        sudo apt-get update
+        sudo apt-get install g++-8 -y
+        sudo apt-get install gfortran-8 -y
+        pip install numpy
+        pip install scipy
+        pip install matplotlib
+    - name: checkout GMSVToolkit
+      uses: actions/checkout@v3
+    - name: build gmsvtoolkit
+      run: ./.github/scripts/gmsvtoolkit-build-ci.sh
+      shell: bash
+    - name: test GMSVToolkit
+      run: ./.github/scripts/gmsvtoolkit-test-ci.sh
+      shell: bash
