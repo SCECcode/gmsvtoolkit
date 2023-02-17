@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2022, University of Southern California
+Copyright (c) 2023, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -366,8 +366,12 @@ def run():
     (north, south,
      east, west) = fault_utilities.set_boundaries_from_stations(station_file,
                                                                 src_file)
-    trace_file = "%s.trace" % (src_file)
-    simple_station_file = "%s.simple" % (station_file)
+    trace_file = os.path.join(output_dir,
+                              "%s.trace" %
+                              (os.path.basename(src_file)))
+    simple_station_file = os.path.join(output_dir,
+                                       "%s.simple" %
+                                       (os.path.basename(station_file)))
     map_prefix = os.path.join(output_dir, "station_map")
     
     if src_file.endswith(".srf"):

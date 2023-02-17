@@ -48,6 +48,7 @@ import seqnum
 from test_rotdxx import TestRotDXX
 from test_plot_rotdxx import TestPlotRotDXX
 from test_psa_gof import TestPSAGoF
+from test_plot_psa_gof import TestPlotPSAGoF
 from test_peer_formatter import TestPEERFormat
 
 def cleanup(dir_name):
@@ -89,6 +90,7 @@ TS.addTest(unittest.makeSuite(TestPEERFormat))
 TS.addTest(unittest.makeSuite(TestRotDXX))
 TS.addTest(unittest.makeSuite(TestPlotRotDXX))
 TS.addTest(unittest.makeSuite(TestPSAGoF))
+TS.addTest(unittest.makeSuite(TestPlotPSAGoF))
 
 # Done, run the tests
 print("==> Running GMSVToolkit Unit Tests...")

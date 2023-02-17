@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2022, University of Southern California
+Copyright (c) 2023, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -157,8 +157,12 @@ def plot_map_gof(src_file, station_file, resid_file, comp_label, input_dir,
     (north, south,
      east, west) = fault_utilities.set_boundaries_from_stations(station_file,
                                                                 src_file)
-    trace_file = "%s.trace" % (src_file)
-    simple_station_file = "%s.simple" % (station_file)
+    trace_file = os.path.join(output_dir,
+                              "%s.trace" %
+                              (os.path.basename(src_file)))
+    simple_station_file = os.path.join(output_dir,
+                                       "%s.simple" %
+                                       (os.path.basename(station_file)))
 
     if src_file.endswith(".srf"):
         fault_utilities.write_fault_trace(src_file, trace_file)

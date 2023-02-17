@@ -85,7 +85,7 @@ class TestPlotPSAGoF(unittest.TestCase):
         # Reference directory
         ref_dir = os.path.join(self.install.TEST_REF_DIR, "stats")
         plot_title = "GoF Comparison between NR and simulation 10000000"
-        mode = "rotd50"
+        mode = "rd50"
         plot_limit = 0.01
         extension = "rd50"
         colorset = "single"
