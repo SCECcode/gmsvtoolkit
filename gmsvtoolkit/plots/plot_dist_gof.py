@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2022, University of Southern California
+Copyright (c) 2023, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -140,7 +140,7 @@ def plot_dist_gof(resid_file, comp_label, input_dir,
     all_distances = []
     # Read the residuals data
     for period in plot_periods:
-        summary_output = os.path.join(input_dir, "%s-resid-%.3f-%s.txt" %
+        summary_output = os.path.join(output_dir, "%s-resid-%.3f-%s.txt" %
                                       (comp_label, period, component))
         data, distance = read_resid(resid_file, component, period, summary_output)
         all_data.append(data)
