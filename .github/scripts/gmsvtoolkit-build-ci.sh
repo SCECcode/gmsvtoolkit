@@ -45,6 +45,7 @@ python3 -c "import scipy; print('SciPy: ', scipy.__version__)"
 python3 -c "import matplotlib; print('Matplotlib: ', matplotlib.__version__)"
 
 # Set basic parameters
+VERSION=22.4.0
 BASEDIR="${RUNNER_WORKSPACE}"
 GMSVTOOLKIT_DIR="${BASEDIR}/gmsvtoolkit/gmsvtoolkit"
 SRCDIR="${GMSVTOOLKIT_DIR}/src"
