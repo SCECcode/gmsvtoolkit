@@ -136,7 +136,7 @@ def read_coastal(filename, plotregion):
         else:
             if (segnum >= segments):
                 print("Invalid number of segments in " +
-                      "polygon from file %s" % (file))
+                      "polygon from file %s" % (filename))
                 return([], [])
             segnum = segnum + 1
             x = float(tokens[0])
@@ -353,12 +353,21 @@ def run():
         # We need a SRC or SRF file to get the fault geometry
         print("[ERROR]: Please specify a .src or .srf source description file!")
         sys.exit(1)
-    src_file = os.path.join(input_dir, args.src_file)
     if not args.station_list:
         print("[ERROR]: Please specify station list!")
         sys.exit(1)
-    station_file = os.path.join(input_dir, args.station_list)
+    # All good, create map plot
+    plot_map(args.station_list, args.src_file, plot_title,
+             input_dir, output_dir, output_dir)
 
+def plot_map(station_file, src_file, plot_title,
+             input_dir, output_dir, temp_dir):
+    """
+    Generate map plot with stations and and fault
+    """
+    src_file = os.path.join(input_dir, src_file)
+    station_file = os.path.join(input_dir, station_file)
+    
     # Find plotting data files
     install = gmsvtoolkit_config.GMSVToolKitConfig.get_instance()
 

@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 """
 BSD 3-Clause License
 
@@ -29,28 +29,23 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-Top level test suites for BB Platform
 """
 from __future__ import division, print_function
 
 # Import Python modules
 import os
 import sys
+import glob
 import atexit
 import shutil
 import tempfile
 import unittest
 
+# Import GMSVToolkit modules
 import seqnum
-
-# Import GMSVToolkit unit test modules
-from test_rotdxx import TestRotDXX
-from test_plot_rotdxx import TestPlotRotDXX
-from test_psa_gof import TestPSAGoF
-from test_plot_psa_gof import TestPlotPSAGoF
-from test_plot_map import TestPlotMap
-from test_peer_formatter import TestPEERFormat
+from core import gmsvtoolkit_config
+from plots import plot_map
+from core.station_list import StationList
 
 def cleanup(dir_name):
     """
@@ -58,43 +53,42 @@ def cleanup(dir_name):
     """
     shutil.rmtree(dir_name)
 
-class Logger(object):
-    def __init__(self, filename):
-        self.filename = filename
-        self.out_fp = open(self.filename, 'w')
+class TestPlotMap(unittest.TestCase):
+    """
+    Unit test for the plot_map module
+    """
 
-    def write(self, string):
-        self.out_fp.write(string)
+    def setUp(self):
+        """
+        Sets up the environment for the test
+        """
+        self.install = gmsvtoolkit_config.GMSVToolKitConfig.get_instance()
+        
+        if "GMSVTOOLKIT_TESTDIR" in os.environ:
+            self.temp_dir = os.path.join(os.environ["GMSVTOOLKIT_TESTDIR"],
+                                         str(int(seqnum.get_seq_num())))
+        else:
+            self.temp_dir = tempfile.mkdtemp()
+            # Add clean up for later
+            atexit.register(cleanup, self.temp_dir)
+            
+    def test_plot_map(self):
+        """
+        Test the plot_map module
+        """
+        # Reference directory
+        ref_dir = os.path.join(self.install.TEST_REF_DIR, "stats")
+        plot_title = "Fault Trace with Stations"
+        r_station_list = "nr_v19_06_2_3_stations.stl"
+        r_src_file = "nr-gp-0000.src"
+        a_station_list = os.path.join(ref_dir, r_station_list)
+        a_src_file = os.path.join(ref_dir, r_src_file)
+        
+        # Run the map plotting code
+        plot_map.plot_map(r_station_list, r_src_file, plot_title,
+                          ref_dir, self.temp_dir, self.temp_dir)
 
-    def flush(self):
-        self.out_fp.flush()
-
-    def close(self):
-        self.out_fp.flush()
-        self.out_fp.close()
-
-# Initialize
-if "GMSVTOOLKIT_TESTDIR" in os.environ:
-    LOG_DIR = os.path.join(os.environ["GMSVTOOLKIT_TESTDIR"],
-                           str(int(seqnum.get_seq_num())))
-else:
-    # Use current directory
-    LOG_DIR = tempfile.mkdtemp()
-    # Add clean up for later
-    atexit.register(cleanup, LOG_DIR)
-
-sys.stdout = Logger(os.path.join(LOG_DIR, "unit_tests.log"))
-TS = unittest.TestSuite()
-
-# Add GMSVToolkit tests
-TS.addTest(unittest.makeSuite(TestPEERFormat))
-TS.addTest(unittest.makeSuite(TestRotDXX))
-TS.addTest(unittest.makeSuite(TestPlotRotDXX))
-TS.addTest(unittest.makeSuite(TestPSAGoF))
-TS.addTest(unittest.makeSuite(TestPlotPSAGoF))
-TS.addTest(unittest.makeSuite(TestPlotMap))
-
-# Done, run the tests
-print("==> Running GMSVToolkit Unit Tests...")
-RETURN_CODE = unittest.TextTestRunner(verbosity=2).run(TS)
-sys.exit(not RETURN_CODE.wasSuccessful())
+if __name__ == "__main__":
+    SUITE = unittest.TestLoader().loadTestsFromTestCase(TestPlotMap)
+    RETURN_CODE = unittest.TextTestRunner(verbosity=2).run(SUITE)
+    sys.exit(not RETURN_CODE.wasSuccessful())
