@@ -374,8 +374,10 @@ def run():
     plot_title = None
     if args.output_dir:
         output_dir = args.output_dir
+    output_dir = os.path.abspath(output_dir)
     if args.input_dir:
         input_dir = args.input_dir
+    input_dir = os.path.abspath(input_dir)
     if args.plot_title:
         plot_title = args.plot_title
 
@@ -383,11 +385,11 @@ def run():
     if not args.src_file:
         print("[ERROR]: Please specify source description file!")
         sys.exit(1)
-    src_file = os.path.join(input_dir, args.src_file)
+    src_file = os.path.abspath(args.src_file)
     if not args.station_list:
         print("[ERROR]: Please specify station list!")
         sys.exit(1)
-    station_file = os.path.join(input_dir, args.station_list)
+    station_file = os.path.abspath(args.station_list)
     
     # Set mode
     mode = "rotd50"
