@@ -1056,10 +1056,8 @@ def run():
         sys.exit(1)
     if plot_mode != 'rd100':
         extension = "rd50"
-#        comps = ["psa5n", "psa5e", "rotd50"]
     else:
         extension = "rd100"
-#        comps = ["rotd50", "rotd100", "ratio"]
 
     # Where to find residuals information
     fileroot = '%s_r0-%d-%s' % (args.comp_label, max_cutoff, extension)
