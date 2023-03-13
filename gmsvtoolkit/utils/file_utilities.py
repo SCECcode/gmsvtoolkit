@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2022, Southern California Earthquake Center
+Copyright (c) 2023, Southern California Earthquake Center
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -40,6 +40,9 @@ import os
 import sys
 import numpy as np
 
+# GMSVToolkit files
+from core import exceptions
+
 def peer_get_num_lines(input_file):
     """
     Return number of lines from a file
@@ -57,40 +60,66 @@ def peer_get_num_lines(input_file):
 
     return num_lines
 
-def bbp_get_num_samples(input_file):
+def count_header_lines(a_bbpfile):
     """
-    Read the number of samples from a BBP file
+    Function counts and returns the number of header lines in a BBP file
     """
-    num_samples = 0
+    header_lines = 0
+
+    my_file = open(a_bbpfile, 'r')
+    for line in my_file:
+        line = line.strip()
+        # Check for empty lines, we count them too
+        if not line:
+            header_lines = header_lines + 1
+            continue
+        # Check for comments
+        if line.startswith('%') or line.startswith('#'):
+            header_lines = header_lines + 1
+            continue
+        # Reached non header line
+        break
+    my_file.close()
+
+    return header_lines
+
+def read_bbp_samples(bbp_file):
+    """
+    Reads BBP file and returns the number of samples in the timeseries
+    """
+    number_of_samples = 0
 
     try:
-        ifile = open(input_file)
-        for line in ifile:
+        input_file = open(bbp_file)
+        for line in input_file:
             line = line.strip()
             if not line:
                 continue
             # Skip comments
             if line.startswith("#") or line.startswith("%"):
                 continue
-            num_samples = num_samples + 1
-        ifile.close()
+            number_of_samples = number_of_samples + 1
+        input_file.close()
     except OSError as e:
-        print("[ERROR]: error reading bbp file: %s" % (e.filename))
+        print("[ERROR]: reading bbp file: %s" % (e.filename))
         sys.exit(1)
 
-    return num_samples
+    return number_of_samples
 
-def bbp_get_dt(input_file):
+def read_bbp_dt(bbp_file):
     """
-    Read timeseries file and return dt
+    Reads BBP file and returns dt
     """
     val1 = None
     val2 = None
     file_dt = None
 
     # Figure out dt first, we need it later
-    ifile = open(input_file)
-    for line in ifile:
+    input_file = open(bbp_file)
+    for line in input_file:
+        line = line.strip()
+        if not line:
+            continue
         # Skip comments
         if line.startswith("#") or line.startswith("%"):
             continue
@@ -102,7 +131,7 @@ def bbp_get_dt(input_file):
         if val2 is None:
             val2 = pieces[0]
             break
-    ifile.close()
+    input_file.close()
 
     # Quit if cannot figure out dt
     if val1 is None or val2 is None:
@@ -157,6 +186,48 @@ def read_file_bbp2(filename):
     return time, h1_comp, h2_comp, ud_comp
 # end of read_file_bbp2
 
+def add_extra_points(input_bbp_file, output_bbp_file, num_points):
+    """
+    Add num_points data points at the end of the input_bbp_File,
+    writing the result to output_bbp_file
+    """
+    bbp_dt = None
+    bbp_t1 = None
+    bbp_t2 = None
+    input_file = open(input_bbp_file, 'r')
+    output_file = open(output_bbp_file, 'w')
+
+    for line in input_file:
+        line = line.strip()
+        if not line:
+            continue
+        if line.startswith("#") or line.startswith("%"):
+            output_file.write("%s\n" % (line))
+            continue
+        pieces = line.split()
+        cur_dt = float(pieces[0])
+        if bbp_dt is None:
+            if bbp_t1 is None:
+                bbp_t1 = cur_dt
+            elif bbp_t2 is None:
+                bbp_t2 = cur_dt
+                bbp_dt = bbp_t2 - bbp_t1
+        # Still write the line to output file
+        output_file.write("%s\n" % (line))
+
+    # Close input file
+    input_file.close()
+
+    if bbp_dt is None:
+        raise exceptions.ParameterError("Cannot find DT in %s!" %
+                                        (bbp_file))
+    for _ in range(0, num_points):
+        cur_dt = cur_dt + bbp_dt
+        output_file.write("%5.7f   %5.9e   %5.9e    %5.9e\n" %
+                          (cur_dt, 0.0, 0.0, 0.0))
+
+    output_file.close()
+
 def read_rdxx(input_rdxx_file):
     """
     Reads RotDXX input file
@@ -189,3 +260,65 @@ def read_rdxx(input_rdxx_file):
     input_file.close()
 
     return np.array(periods), np.array(comp1), np.array(comp2), np.array(comp3)
+
+def read_fas_file(fas_file):
+    """
+    Reads FAS file and returns freq and fas arrays
+    """
+    freqs = []
+    fas = []
+
+    # Read input file
+    input_file = open(fas_file, 'r')
+    # Skip headers
+    for line in input_file:
+        line = line.strip()
+        # skip blank lines
+        if not line:
+            continue
+        if line.startswith("freq"):
+            break
+    for line in input_file:
+        line = line.strip()
+        # skip blank lines
+        if not line:
+            continue
+        pieces = line.split()
+        pieces = [float(piece) for piece in pieces]
+        freqs.append(pieces[0])
+        fas.append(pieces[1])
+    # All done!
+    input_file.close()
+
+    return freqs, fas
+
+def read_fas_eas_file(fas_input_file):
+    """
+    Reads the fas_input_file, returning
+    freq, fas_h1, fas_h2, eas, seas
+    """
+    freqs = []
+    fas_h1 = []
+    fas_h2 = []
+    eas = []
+    seas = []
+
+    input_file = open(fas_input_file, 'r')
+    for line in input_file:
+        line = line.strip()
+        if not line:
+            continue
+        if line.startswith("#") or line.startswith("%"):
+            continue
+        pieces = line.split()
+        if len(pieces) != 5:
+            continue
+        pieces = [float(piece) for piece in pieces]
+        freqs.append(pieces[0])
+        fas_h1.append(pieces[1])
+        fas_h2.append(pieces[2])
+        eas.append(pieces[3])
+        seas.append(pieces[4])
+    input_file.close()
+
+    return freqs, fas_h1, fas_h2, eas, seas

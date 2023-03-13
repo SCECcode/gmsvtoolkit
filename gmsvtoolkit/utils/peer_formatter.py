@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2022, University of Southern California
+Copyright (c) 2023, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,7 @@ import sys
 # Import GMSVToolkit modules
 from core import constants
 from core import exceptions
-from utils.file_utilities import bbp_get_dt, bbp_get_num_samples, peer_get_num_lines
+from utils.file_utilities import read_bbp_dt, read_bbp_samples, peer_get_num_lines
 
 def peer2bbp(in_peer_n_file, in_peer_e_file, in_peer_z_file, out_bbp_file):
     """
@@ -129,8 +129,8 @@ def bbp2peer(in_bbp_file, out_peer_n_file, out_peer_e_file, out_peer_z_file):
     Convert bbp file into three peer files for use by RotD50/100 and
     other programs that input PEER format seismograms
     """
-    npts = bbp_get_num_samples(in_bbp_file)
-    dt = bbp_get_dt(in_bbp_file)
+    npts = read_bbp_samples(in_bbp_file)
+    dt = read_bbp_dt(in_bbp_file)
     num_header_lines = 0
     header_lines = []
 
