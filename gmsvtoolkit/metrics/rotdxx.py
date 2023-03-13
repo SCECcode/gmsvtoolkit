@@ -218,9 +218,9 @@ class RotDXX(object):
         if args.input_file is not None:
             input_file = args.input_file
         elif args.batch_file is not None:
-            batch_file = args.batch_file
+            batch_file = os.path.abspath(args.batch_file)
         elif args.station_list is not None:
-            station_file = args.station_list
+            station_file = os.path.abspath(args.station_list)
         else:
             print("[ERROR]: Must specify either input file, batch file, or station file!")
             sys.exit(1)
