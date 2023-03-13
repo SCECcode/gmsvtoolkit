@@ -288,9 +288,9 @@ class PlotRotDXX(object):
                 output_file = args.output_file
             else:
                 if args.comp_label:
-                  output_file = "%s_%s_%s.png" % (args.comp_label,
-                                                  args.station_id,
-                                                  self.mode)
+                    output_file = "%s_%s_%s.png" % (args.comp_label,
+                                                    args.station_id,
+                                                    self.mode)
                 else:
                     output_file = "%s_%s.png" % (args.station_id,
                                                  self.mode)
