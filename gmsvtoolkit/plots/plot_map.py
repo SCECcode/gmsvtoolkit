@@ -356,8 +356,11 @@ def run():
     if not args.station_list:
         print("[ERROR]: Please specify station list!")
         sys.exit(1)
+    # Set up paths for station file and src_file
+    station_list = os.path.abspath(args.station_list)
+    src_file = os.path.abspath(args.src_file)
     # All good, create map plot
-    plot_map(args.station_list, args.src_file, plot_title,
+    plot_map(station_list, src_file, plot_title,
              input_dir, output_dir, output_dir)
 
 def plot_map(station_file, src_file, plot_title,
@@ -367,7 +370,7 @@ def plot_map(station_file, src_file, plot_title,
     """
     src_file = os.path.join(input_dir, src_file)
     station_file = os.path.join(input_dir, station_file)
-    
+
     # Find plotting data files
     install = gmsvtoolkit_config.GMSVToolKitConfig.get_instance()
 
@@ -382,7 +385,7 @@ def plot_map(station_file, src_file, plot_title,
                                        "%s.simple" %
                                        (os.path.basename(station_file)))
     map_prefix = os.path.join(output_dir, "station_map")
-    
+
     if src_file.endswith(".srf"):
         fault_utilities.write_fault_trace(src_file, trace_file)
     else:
