@@ -72,8 +72,8 @@ def plot_fas(freqs, h1_data, h2_data, eas_smoothed_data,
     pylab.xlabel('Frequency (Hz)')
     pylab.axis([0.01, 100, 0.001, 1000])
     pylab.grid(True)
-    pylab.grid(b=True, which='major', linestyle='-', color='lightgray')
-    pylab.grid(b=True, which='minor', linewidth=0.5, color='gray')
+    pylab.grid(which='major', linestyle='-', color='lightgray')
+    pylab.grid(which='minor', linewidth=0.5, color='gray')
 
     # Save plot
     pylab.savefig(fas_plot, format="png",
