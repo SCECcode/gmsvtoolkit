@@ -51,6 +51,10 @@ from test_psa_gof import TestPSAGoF
 from test_plot_psa_gof import TestPlotPSAGoF
 from test_plot_map import TestPlotMap
 from test_peer_formatter import TestPEERFormat
+from test_plot_fas import TestPlotFAS
+from test_plot_fas_comparison import TestPlotFASComparison
+from test_fas import TestFAS
+from test_fas_gof import TestFASGoF
 
 def cleanup(dir_name):
     """
@@ -93,6 +97,10 @@ TS.addTest(unittest.makeSuite(TestPlotRotDXX))
 TS.addTest(unittest.makeSuite(TestPSAGoF))
 TS.addTest(unittest.makeSuite(TestPlotPSAGoF))
 TS.addTest(unittest.makeSuite(TestPlotMap))
+TS.addTest(unittest.makeSuite(TestPlotFAS))
+TS.addTest(unittest.makeSuite(TestPlotFASComparison))
+TS.addTest(unittest.makeSuite(TestFAS))
+TS.addTest(unittest.makeSuite(TestFASGoF))
 
 # Done, run the tests
 print("==> Running GMSVToolkit Unit Tests...")
