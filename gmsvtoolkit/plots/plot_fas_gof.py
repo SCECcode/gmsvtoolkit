@@ -263,9 +263,6 @@ def parse_arguments():
                         help="input directory with residuals files")
     parser.add_argument("--output-dir", dest="output_dir",
                         help="output directory")
-    parser.add_argument("-o", "--output", "--output-file",
-                        dest="output_file",
-                        help="output rd100 file")
     parser.add_argument("--comp-label", dest="comp_label",
                         help="comparison label used for the output file prefix")
     parser.add_argument("--max-cutoff", dest="max_cutoff", type=float, default=1000.0,

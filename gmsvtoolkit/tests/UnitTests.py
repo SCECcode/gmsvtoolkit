@@ -49,6 +49,7 @@ from test_rotdxx import TestRotDXX
 from test_plot_rotdxx import TestPlotRotDXX
 from test_psa_gof import TestPSAGoF
 from test_plot_psa_gof import TestPlotPSAGoF
+from test_plot_fas_gof import TestPlotFASGoF
 from test_plot_map import TestPlotMap
 from test_peer_formatter import TestPEERFormat
 from test_plot_fas import TestPlotFAS
@@ -101,6 +102,7 @@ TS.addTest(unittest.makeSuite(TestPlotFAS))
 TS.addTest(unittest.makeSuite(TestPlotFASComparison))
 TS.addTest(unittest.makeSuite(TestFAS))
 TS.addTest(unittest.makeSuite(TestFASGoF))
+TS.addTest(unittest.makeSuite(TestPlotFASGoF))
 
 # Done, run the tests
 print("==> Running GMSVToolkit Unit Tests...")
