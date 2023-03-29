@@ -44,7 +44,7 @@ import unittest
 # Import GMSVToolkit modules
 import seqnum
 from core import gmsvtoolkit_config
-from plots import plot_gof
+from plots import plot_psa_gof
 from plots import plot_vs30_gof
 from plots import plot_dist_gof
 from plots import plot_map_gof
@@ -78,9 +78,9 @@ class TestPlotPSAGoF(unittest.TestCase):
             # Add clean up for later
             atexit.register(cleanup, self.temp_dir)
             
-    def test_plot_gof(self):
+    def test_plot_psa_gof(self):
         """
-        Test the plot_gof module
+        Test the plot_psa_gof module
         """
         # Reference directory
         ref_dir = os.path.join(self.install.TEST_REF_DIR, "stats")
@@ -95,9 +95,9 @@ class TestPlotPSAGoF(unittest.TestCase):
         fileroot = '%s_r0-%d-%s' % (self.comp_label, self.max_cutoff, extension)
         
         # Run PSA GoF plotting code
-        plot_gof.plot(plot_title, fileroot, ref_dir, self.temp_dir,
-                      cutoff=self.max_cutoff, min_period=plot_limit,
-                      mode=mode, colorset=colorset, lfreq=lfreq, hfreq=hfreq)
+        plot_psa_gof.plot(plot_title, fileroot, ref_dir, self.temp_dir,
+                          cutoff=self.max_cutoff, min_period=plot_limit,
+                          mode=mode, colorset=colorset, lfreq=lfreq, hfreq=hfreq)
         
     def test_plot_dist_gof(self):
         """
