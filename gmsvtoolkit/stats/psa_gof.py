@@ -139,7 +139,7 @@ class PSAGoF(object):
     def run_psa_gof(self, a_station_list, a_src_file,
                     obs_dir, sims_dir, output_dir):
         """
-        Parse parameters and then run PSAGoF module
+        Calculate residuals between data from obs_dir and sims_dir
         """
         install = gmsvtoolkit_config.GMSVToolKitConfig.get_instance()
 
