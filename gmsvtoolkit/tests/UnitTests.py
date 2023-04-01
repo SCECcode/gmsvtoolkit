@@ -56,6 +56,9 @@ from test_plot_fas import TestPlotFAS
 from test_plot_fas_comparison import TestPlotFASComparison
 from test_fas import TestFAS
 from test_fas_gof import TestFASGoF
+from test_calc_gmpe import TestCalcGMPE
+from test_gmpe_gof import TestGMPEGoF
+from test_plot_gmpe_gof import TestPlotGMPEGoF
 
 def cleanup(dir_name):
     """
@@ -103,6 +106,9 @@ TS.addTest(unittest.makeSuite(TestPlotFASComparison))
 TS.addTest(unittest.makeSuite(TestFAS))
 TS.addTest(unittest.makeSuite(TestFASGoF))
 TS.addTest(unittest.makeSuite(TestPlotFASGoF))
+TS.addTest(unittest.makeSuite(TestCalcGMPE))
+TS.addTest(unittest.makeSuite(TestGMPEGoF))
+TS.addTest(unittest.makeSuite(TestPlotGMPEGoF))
 
 # Done, run the tests
 print("==> Running GMSVToolkit Unit Tests...")
