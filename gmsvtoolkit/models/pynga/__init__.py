@@ -276,8 +276,8 @@ def NGA08(model_name, Mw, Rjb, Vs30, period, epislon=0, NGAs=None,
                 # median value is in g
                 values[:, icmp] = logline(np.log(period_low),
                                           np.log(period_high),
-                                          np.log(values_low[:, icmp]),
-                                          np.log(values_high[:, icmp]),
+                                          np.log(values_low[:, icmp].astype(float)),
+                                          np.log(values_high[:, icmp].astype(float)),
                                           np.log(period))
                 # change the median into g unit (logline gives the
                 # result in ln(g))
