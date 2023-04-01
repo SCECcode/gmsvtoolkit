@@ -45,6 +45,7 @@ import unittest
 import seqnum
 
 # Import GMSVToolkit unit test modules
+from test_pynga import TestPyNGA
 from test_rotdxx import TestRotDXX
 from test_plot_rotdxx import TestPlotRotDXX
 from test_psa_gof import TestPSAGoF
@@ -95,6 +96,7 @@ sys.stdout = Logger(os.path.join(LOG_DIR, "unit_tests.log"))
 TS = unittest.TestSuite()
 
 # Add GMSVToolkit tests
+TS.addTest(unittest.makeSuite(TestPyNGA))
 TS.addTest(unittest.makeSuite(TestPEERFormat))
 TS.addTest(unittest.makeSuite(TestRotDXX))
 TS.addTest(unittest.makeSuite(TestPlotRotDXX))
