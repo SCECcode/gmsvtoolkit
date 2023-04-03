@@ -148,4 +148,4 @@ if __name__ == "__main__":
     STATION_LIST = StationList(sys.argv[1])
     ME = STATION_LIST.get_station_list()
     for STATION in ME:
-        print(x.scode)
+        print(STATION.scode)
