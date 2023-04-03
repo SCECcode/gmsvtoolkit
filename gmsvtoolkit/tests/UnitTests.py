@@ -60,6 +60,7 @@ from test_fas_gof import TestFASGoF
 from test_calc_gmpe import TestCalcGMPE
 from test_gmpe_gof import TestGMPEGoF
 from test_plot_gmpe_gof import TestPlotGMPEGoF
+from test_plot_gmpe import TestPlotGMPE
 
 def cleanup(dir_name):
     """
@@ -109,6 +110,7 @@ TS.addTest(unittest.makeSuite(TestFAS))
 TS.addTest(unittest.makeSuite(TestFASGoF))
 TS.addTest(unittest.makeSuite(TestPlotFASGoF))
 TS.addTest(unittest.makeSuite(TestCalcGMPE))
+TS.addTest(unittest.makeSuite(TestPlotGMPE))
 TS.addTest(unittest.makeSuite(TestGMPEGoF))
 TS.addTest(unittest.makeSuite(TestPlotGMPEGoF))
 
