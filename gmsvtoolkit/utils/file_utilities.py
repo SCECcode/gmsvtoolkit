@@ -142,7 +142,7 @@ def read_bbp_dt(bbp_file):
     return val2 - val1
 # end get_dt
 
-def read_file_bbp2(filename):
+def read_bbp_file(filename):
     """
     This function reads a bbp file and returns the timeseries in the
     format time, h1, h2, up tuple
@@ -220,7 +220,7 @@ def add_extra_points(input_bbp_file, output_bbp_file, num_points):
 
     if bbp_dt is None:
         raise exceptions.ParameterError("Cannot find DT in %s!" %
-                                        (bbp_file))
+                                        (input_bbp_file))
     for _ in range(0, num_points):
         cur_dt = cur_dt + bbp_dt
         output_file.write("%5.7f   %5.9e   %5.9e    %5.9e\n" %
