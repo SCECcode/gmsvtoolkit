@@ -227,7 +227,7 @@ def plot_overlay_timeseries(input_files, labels,
             axarr[i][index].grid(True)
             styles = all_styles[0:len(times)]
             for timeseries, c_acc, style in zip(times, c_accs, styles):
-                axarr[i][index].plot(timeseries, c_acc, style)
+                axarr[i][index].plot(timeseries, c_acc, style, lw=0.5)
             # Add labels to first plot
             if i == 0:
                 axarr[i][index].legend(labels_acc, prop={'size':6})
@@ -239,7 +239,7 @@ def plot_overlay_timeseries(input_files, labels,
             axarr[i][index].grid(True)
             styles = all_styles[0:len(times)]
             for timeseries, c_vel, style in zip(times, c_vels, styles):
-                axarr[i][index].plot(timeseries, c_vel, style)
+                axarr[i][index].plot(timeseries, c_vel, style, lw=0.5)
             # Add labels to first plot
             if i == 0:
                 axarr[i][index].legend(labels_vel, prop={'size':6})
@@ -251,7 +251,7 @@ def plot_overlay_timeseries(input_files, labels,
             axarr[i][index].grid(True)
             styles = all_styles[0:len(times)]
             for timeseries, c_dis, style in zip(times, c_displs, styles):
-                axarr[i][index].plot(timeseries, c_dis, style)
+                axarr[i][index].plot(timeseries, c_dis, style, lw=0.5)
             # Add labels to first plot
             if i == 0:
                 axarr[i][index].legend(labels_dis, prop={'size':6})
