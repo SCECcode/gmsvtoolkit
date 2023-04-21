@@ -283,9 +283,12 @@ def plot_overlay_timeseries(input_files, labels,
 
 class PlotSeismograms(object):
 
-    def __init__(self, mode=["acc", "vel", "dis"], n_comp=None):
+    def __init__(self, mode=["acc", "vel", "dis"],
+                 n_comp=None,
+                 orientations=[0.0, 90.0, "up"]):
         self.mode = mode[:]
         self.n_comp = n_comp
+        self.orientations = orientations
         self.comp_label = None
 
     def parse_arguments(self):
