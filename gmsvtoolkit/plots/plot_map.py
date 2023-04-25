@@ -211,7 +211,7 @@ def read_topo(filename, plotregion):
     return masked
 
 def plot_station_map(plottitle, plotregion, topo, coastal, border,
-                     fault, sta, map_prefix, hypocenter_list=None):
+                     fault, sta, output_file, hypocenter_list=None):
     """
     Genereate the station map plot
     """
@@ -300,8 +300,8 @@ def plot_station_map(plottitle, plotregion, topo, coastal, border,
     for tick in pylab.gca().get_yticklabels():
         tick.set_fontsize(8)
 
-    print("==> Creating Plot: %s.png" % (map_prefix))
-    pylab.savefig('%s.png' % (map_prefix), format="png",
+    print("==> Creating Plot: %s" % (output_file))
+    pylab.savefig('%s' % (output_file), format="png",
                   transparent=False, dpi=plot_config.dpi)
     pylab.close()
 
@@ -319,6 +319,8 @@ def parse_arguments():
                         help="source description file (SRC or SRF file)")
     parser.add_argument("--station-list", "-s", dest="station_list",
                         help="station list")
+    parser.add_argument("--output-file", dest="output_file", default="station_map.png",
+                        help="output filename for station map plot")
     parser.add_argument("--plot-title", "--title", dest="plot_title",
                         help="set plot title")
     args = parser.parse_args()
@@ -364,9 +366,13 @@ def run():
         station_list = os.path.abspath(args.station_list)
         src_file = os.path.abspath(args.src_file)
     # All good, create map plot
-    plot_map(station_list, src_file, plot_title, output_dir)
+    plot_map(station_list, src_file,
+             plot_title, output_dir,
+             output_file=args.output_file)
 
-def plot_map(station_file, src_file, plot_title, output_dir):
+def plot_map(station_file, src_file,
+             plot_title, output_dir,
+             output_file="station_map.png"):
     """
     Generate map plot with stations and and fault
     """
@@ -383,7 +389,7 @@ def plot_map(station_file, src_file, plot_title, output_dir):
     simple_station_file = os.path.join(output_dir,
                                        "%s.simple" %
                                        (os.path.basename(station_file)))
-    map_prefix = os.path.join(output_dir, "station_map")
+    output_file = os.path.join(output_dir, output_file)
 
     if src_file.endswith(".srf"):
         fault_utilities.write_fault_trace(src_file, trace_file)
@@ -404,7 +410,7 @@ def plot_map(station_file, src_file, plot_title, output_dir):
 
     plot_station_map(plot_title, plot_region, topo, coastal,
                      border, trace_file, simple_station_file,
-                     map_prefix, [hypo_coord])
+                     output_file, [hypo_coord])
 
 if __name__ == '__main__':
     run()
