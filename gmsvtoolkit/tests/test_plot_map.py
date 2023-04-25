@@ -85,8 +85,8 @@ class TestPlotMap(unittest.TestCase):
         a_src_file = os.path.join(ref_dir, r_src_file)
         
         # Run the map plotting code
-        plot_map.plot_map(r_station_list, r_src_file, plot_title,
-                          ref_dir, self.temp_dir, self.temp_dir)
+        plot_map.plot_map(a_station_list, a_src_file,
+                          plot_title, self.temp_dir)
 
 if __name__ == "__main__":
     SUITE = unittest.TestLoader().loadTestsFromTestCase(TestPlotMap)

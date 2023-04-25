@@ -357,20 +357,19 @@ def run():
         print("[ERROR]: Please specify station list!")
         sys.exit(1)
     # Set up paths for station file and src_file
-    station_list = os.path.abspath(args.station_list)
-    src_file = os.path.abspath(args.src_file)
+    if input_dir:
+        station_list = os.path.join(input_dir, args.station_list)
+        src_file = os.path.join(input_dir, args.src_file)
+    else:
+        station_list = os.path.abspath(args.station_list)
+        src_file = os.path.abspath(args.src_file)
     # All good, create map plot
-    plot_map(station_list, src_file, plot_title,
-             input_dir, output_dir, output_dir)
+    plot_map(station_list, src_file, plot_title, output_dir)
 
-def plot_map(station_file, src_file, plot_title,
-             input_dir, output_dir, temp_dir):
+def plot_map(station_file, src_file, plot_title, output_dir):
     """
     Generate map plot with stations and and fault
     """
-    src_file = os.path.join(input_dir, src_file)
-    station_file = os.path.join(input_dir, station_file)
-
     # Find plotting data files
     install = gmsvtoolkit_config.GMSVToolKitConfig.get_instance()
 
