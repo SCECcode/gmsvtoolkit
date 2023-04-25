@@ -177,6 +177,8 @@ class RotDXX(object):
                             help="file with list of timeseries to process")
         parser.add_argument("--station-list", "-s", dest="station_list",
                             help="station list for batch processing")
+        parser.add_argument("--input-suffix", "--suffix", dest="input_suffix",
+                            default=".acc.bbp", help="suffix used for input files")
         parser.add_argument("--vertical", "-v", dest="vertical", action="store_true",
                             help="process vertical component instead of horizontals")
         parser.add_argument("--rotd100", dest="rotd100", action="store_true",
@@ -230,7 +232,8 @@ class RotDXX(object):
             if batch_file is not None:
                 self.run_batch_mode(batch_file, input_dir, output_dir)
             else:
-                self.run_station_mode(station_file, input_dir, output_dir)
+                self.run_station_mode(station_file, input_dir,
+                                      output_dir, input_suffix=args.input_suffix)
         else:
             if args.output_file is not None:
                 output_base = os.path.splitext(args.output_file)[0]
@@ -310,7 +313,8 @@ class RotDXX(object):
         input_list.close()
 
     def run_station_mode(self, station_file, input_dir,
-                         output_dir, temp_dir=None):
+                         output_dir, input_suffix=".acc.bbp",
+                         temp_dir=None):
         """
         Calculates RotDXX for stations in a station list
         """
@@ -328,14 +332,15 @@ class RotDXX(object):
             station_name = station.scode
 
             # Find input file
-            input_list = glob.glob("%s%s*%s*.acc.bbp" %
-                                   (input_dir, os.sep, station_name))
+            input_list = glob.glob("%s%s*%s*%s" %
+                                   (input_dir, os.sep,
+                                    station_name, input_suffix))
             if len(input_list) != 1:
                 print("[ERROR]: Can't find input file for station %s" % (station_name))
                 sys.exit(1)
 
             input_file = os.path.basename(input_list[0])
-            output_base = input_file[0:input_file.find(".acc.bbp")]
+            output_base = input_file[0:input_file.find(input_suffix)]
 
             # Run RotDXX
             self.run_single_file(input_file, output_base,
