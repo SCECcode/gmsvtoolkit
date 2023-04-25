@@ -85,6 +85,7 @@ class TestPlotGMPE(unittest.TestCase):
         station_name = "2001-SCE"
         output_file = "%s_%s_gmpe.png" % (self.comp_label,
                                           station_name)
+        output_file = os.path.join(self.temp_dir, output_file)
         
         # Run PSA GoF plotting code
         plot_gmpe.run_single_station(station_name, self.gmpe_dir,
