@@ -122,9 +122,9 @@ def read_resid(resid_file, component, period, summary_output):
     # Return the data we found
     return data, vs30s
 
-def plot_vs30_gof(resid_file, comp_label, input_dir,
-                  output_dir, plot_title=None,
-                  plot_periods=None, component=COMP_EXT_RD50):
+def _plot_vs30_gof(resid_file, comp_label, input_dir,
+                   output_dir, plot_title=None,
+                   plot_periods=None, component=COMP_EXT_RD50):
     """
     Reads data from resid_file and creates a GoF Vs30 plot
     for all periods
@@ -222,7 +222,7 @@ def parse_arguments():
                         help="input directory")
     parser.add_argument("--output-dir", dest="output_dir",
                         help="output directory")
-    parser.add_argument("--comp-label", dest="comp_label",
+    parser.add_argument("--comp-label", dest="comp_label", required=True,
                         help="comparison label used for the output file prefix")
     parser.add_argument("--rotd100", dest="rotd100", action="store_true",
                         help="select RotD100 comparison")
@@ -253,27 +253,33 @@ def run():
         plot_title = args.plot_title
 
     # Set mode
-    mode = "rotd50"
-    extension = "rd50"
-    comps = ["psa5n", "psa5e", "rotd50"]
+    plot_mode = "rd50"
     if args.rotd100 and args.rotd50:
         print("[ERROR]: Please specify --rotd50 or --rotd100, not both!")
         sys.exit(1)
     if args.rotd100:
-        mode = "rotd100"
-        extension = "rd100"
-        comps = ["rotd50", "rotd100", "ratio"]
+        plot_mode = "rd100"
 
-    # Other plot parameters
-    if not args.comp_label:
-        print("[ERROR]: Please specify comp-label prefix!")
-        sys,exit(1)
+    plot_vs30_gof(input_dir, output_dir,
+                  args.comp_label, plot_mode,
+                  plot_title=plot_title)
+
+def plot_vs30_gof(input_dir, output_dir,
+                  comp_label, plot_mode,
+                  plot_title=None):
+    """
+    Calls plotting code
+    """
+    plot_mode = plot_mode.lower()
+    if plot_mode not in ["rd50", "rd100"]:
+        print("[ERROR]: plot_mode must be rd50 or rd100!")
+        sys.exit(-1)
 
     # Select the residuals file
     resid_file = os.path.join(input_dir, "%s.%s-resid.txt" %
-                              (args.comp_label, extension))
-    plot_vs30_gof(resid_file, args.comp_label, input_dir,
-                  output_dir, plot_title)
+                              (comp_label, plot_mode))
+    _plot_vs30_gof(resid_file, comp_label, input_dir,
+                   output_dir, plot_title)
 
 if __name__ == '__main__':
     run()

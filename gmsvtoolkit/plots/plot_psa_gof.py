@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2022, University of Southern California
+Copyright (c) 2023, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -651,7 +651,7 @@ def parse_arguments():
     parser.add_argument("-o", "--output", "--output-file",
                         dest="output_file",
                         help="output rd100 file")
-    parser.add_argument("--comp-label", dest="comp_label",
+    parser.add_argument("--comp-label", dest="comp_label", required=True,
                         help="comparison label used for the output file prefix")
     parser.add_argument("--plot-mode", dest="plot_mode", default="rd50",
                         help="plot mode [rd50, rd50-single, rd50-single-freq, rd100]")
@@ -687,33 +687,47 @@ def run():
     if args.input_dir:
         input_dir = args.input_dir
 
-    # Other plot parameters
-    if not args.comp_label:
-        print("[ERROR]: Please specify comp-label prefix!")
-        sys,exit(1)
-    max_cutoff = args.max_cutoff
-    if args.colorset.lower() != "single" and args.colorset.lower() != "combined":
+    plot_psa_gof(input_dir, output_dir,
+                 args.plot_title, args.comp_label,
+                 plot_mode=args.plot_mode.lower(),
+                 min_period=args.plot_limit,
+                 max_cutoff=args.max_cutoff,
+                 colorset=args.colorset.lower(),
+                 lfreq=args.lfreq, hfreq=args.hfreq)
+
+def plot_psa_gof(input_dir, output_dir,
+                 plot_title, comp_label,
+                 plot_mode='rd50', min_period=0.01,
+                 max_cutoff=1000.0, colorset='single',
+                 lfreq=None, hfreq=None):
+    """
+    Calls the plotting code with the required parameters
+    """
+    # Check input parameters
+    plot_mode = plot_mode.lower()
+    colorset = colorset.lower()
+
+    if colorset != "single" and colorset != "combined":
         print("[ERROR]: Please use only 'single' or 'combined' for colorset!")
         sys.exit(1)
 
-    # Set mode
-    plot_mode = args.plot_mode.lower()
     if plot_mode not in ['rd50', 'rd50-single', 'rd50-single-freq', 'rd100']:
         print("[ERROR]: Please select plot mode from [rd50, rd50-single, rd50-single-freq, rd100]")
         sys.exit(1)
+
     if plot_mode != 'rd100':
         extension = "rd50"
     else:
         extension = "rd100"
 
     # Where to find residuals information
-    fileroot = '%s_r0-%d-%s' % (args.comp_label, max_cutoff, extension)
-    
+    fileroot = '%s_r0-%d-%s' % (comp_label, max_cutoff, extension)
+
     # Create plot
-    plot(args.plot_title, fileroot, input_dir, output_dir,
-         cutoff=max_cutoff, min_period=args.plot_limit,
-         mode=plot_mode, colorset=args.colorset.lower(),
-         lfreq=args.lfreq, hfreq=args.hfreq)
+    plot(plot_title, fileroot, input_dir, output_dir,
+         cutoff=max_cutoff, min_period=min_period,
+         mode=plot_mode, colorset=colorset.lower(),
+         lfreq=lfreq, hfreq=hfreq)
 
 if __name__ == '__main__':
     run()

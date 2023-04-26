@@ -85,19 +85,11 @@ class TestPlotPSAGoF(unittest.TestCase):
         # Reference directory
         ref_dir = os.path.join(self.install.TEST_REF_DIR, "stats")
         plot_title = "GoF Comparison between NR and simulation 10000000"
-        mode = "rd50"
-        plot_limit = 0.01
-        extension = "rd50"
-        colorset = "single"
-        lfreq = None
-        hfreq = None
-        
-        fileroot = '%s_r0-%d-%s' % (self.comp_label, self.max_cutoff, extension)
         
         # Run PSA GoF plotting code
-        plot_psa_gof.plot(plot_title, fileroot, ref_dir, self.temp_dir,
-                          cutoff=self.max_cutoff, min_period=plot_limit,
-                          mode=mode, colorset=colorset, lfreq=lfreq, hfreq=hfreq)
+        plot_psa_gof.plot_psa_gof(ref_dir, self.temp_dir,
+                                  plot_title, self.comp_label,
+                                  max_cutoff=self.max_cutoff)
         
     def test_plot_dist_gof(self):
         """
@@ -106,14 +98,12 @@ class TestPlotPSAGoF(unittest.TestCase):
         # Reference directory
         ref_dir = os.path.join(self.install.TEST_REF_DIR, "stats")
         plot_title = "GoF Comparison between NR and simulation 10000000"
-        extension = "rd50"
-        
-        resid_file = os.path.join(ref_dir, "%s.%s-resid.txt" %
-                                  (self.comp_label, extension))
+        plot_mode = "rd50"
         
         # Run PSA distance GoF plotting code
-        plot_dist_gof.plot_dist_gof(resid_file, self.comp_label, ref_dir,
-                                    self.temp_dir, plot_title)
+        plot_dist_gof.plot_dist_gof(ref_dir, self.temp_dir,
+                                    self.comp_label, plot_mode,
+                                    plot_title)
         
     def test_plot_vs30_gof(self):
         """
@@ -122,14 +112,12 @@ class TestPlotPSAGoF(unittest.TestCase):
         # Reference directory
         ref_dir = os.path.join(self.install.TEST_REF_DIR, "stats")
         plot_title = "GoF Comparison between NR and simulation 10000000"
-        extension = "rd50"
-        
-        resid_file = os.path.join(ref_dir, "%s.%s-resid.txt" %
-                                  (self.comp_label, extension))
+        plot_mode = "rd50"
         
         # Run PSA Vs30 GoF plotting code
-        plot_vs30_gof.plot_vs30_gof(resid_file, self.comp_label, ref_dir,
-                                    self.temp_dir, plot_title)
+        plot_vs30_gof.plot_vs30_gof(ref_dir, self.temp_dir,
+                                    self.comp_label, plot_mode,
+                                    plot_title)
         
     def test_plot_map_gof(self):
         """
@@ -142,15 +130,13 @@ class TestPlotPSAGoF(unittest.TestCase):
         r_src_file = "nr-gp-0000.src"
         a_station_list = os.path.join(ref_dir, r_station_list)
         a_src_file = os.path.join(ref_dir, r_src_file)
-        extension = "rd50"
-        
-        resid_file = os.path.join(ref_dir, "%s.%s-resid.txt" %
-                                  (self.comp_label, extension))
+        plot_mode = "rd50"
         
         # Run the PSA map GoF plotting code
-        plot_map_gof.plot_map_gof(a_src_file, a_station_list, resid_file,
-                                  self.comp_label, ref_dir, self.temp_dir,
-                                  plot_title)
+        plot_map_gof.plot_map_gof(ref_dir, self.temp_dir,
+                                  self.comp_label, plot_mode,
+                                  a_src_file, a_station_list,
+                                  plot_title=plot_title)
 
 if __name__ == "__main__":
     SUITE = unittest.TestLoader().loadTestsFromTestCase(TestPlotPSAGoF)

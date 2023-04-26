@@ -130,9 +130,9 @@ def read_resid(resid_file, component, period, summary_output):
     # Return the data we found
     return sta_x_data, sta_y_data, sta_resid_data
 
-def plot_map_gof(src_file, station_file, resid_file, comp_label, input_dir,
-                 output_dir, plot_title=None, plot_periods=None,
-                 component=COMP_EXT_RD50):
+def _plot_map_gof(src_file, station_file, resid_file, comp_label, input_dir,
+                  output_dir, plot_title=None, plot_periods=None,
+                  component=COMP_EXT_RD50):
     """
     Reads data from resid_file and plots a map gof plot with a number
     of periods
@@ -349,7 +349,7 @@ def parse_arguments():
                         help="source description file (SRC file)")
     parser.add_argument("--station-list", "-s", dest="station_list",
                         help="station list")
-    parser.add_argument("--comp-label", dest="comp_label",
+    parser.add_argument("--comp-label", dest="comp_label", required=True,
                         help="comparison label used for the output file prefix")
     parser.add_argument("--rotd100", dest="rotd100", action="store_true",
                         help="select RotD100 comparison")
@@ -392,27 +392,35 @@ def run():
     station_file = os.path.abspath(args.station_list)
     
     # Set mode
-    mode = "rotd50"
-    extension = "rd50"
-    comps = ["psa5n", "psa5e", "rotd50"]
+    plot_mode = "rd50"
     if args.rotd100 and args.rotd50:
         print("[ERROR]: Please specify --rotd50 or --rotd100, not both!")
         sys.exit(1)
     if args.rotd100:
-        mode = "rotd100"
-        extension = "rd100"
-        comps = ["rotd50", "rotd100", "ratio"]
+        plot_mode = "rd100"
 
-    # Other plot parameters
-    if not args.comp_label:
-        print("[ERROR]: Please specify comp-label prefix!")
-        sys,exit(1)
+    plot_map_gof(input_dir, output_dir,
+                 args.comp_label, plot_mode,
+                 src_file, station_file,
+                 plot_title=plot_title)
+
+def plot_map_gof(input_dir, output_dir,
+                 comp_label, plot_mode,
+                 src_file, station_file,
+                 plot_title=None):
+    """
+    Calls plot_map_gof code
+    """
+    plot_mode = plot_mode.lower()
+    if plot_mode not in ["rd50", "rd100"]:
+        print("[ERROR]: plot_mode must be rd50 or rd100!")
+        sys.exit(-1)
 
     # Select the residuals file
     resid_file = os.path.join(input_dir, "%s.%s-resid.txt" %
-                              (args.comp_label, extension))
-    plot_map_gof(src_file, station_file, resid_file, args.comp_label,
-                 input_dir, output_dir, plot_title)
+                              (comp_label, plot_mode))
+    _plot_map_gof(src_file, station_file, resid_file, comp_label,
+                  input_dir, output_dir, plot_title)
     
 if __name__ == '__main__':
     run()
