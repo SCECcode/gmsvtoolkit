@@ -83,7 +83,8 @@ def parse_arguments():
                         help="convert from input format: acc, vel, dis")
     parser.add_argument("--output-format", dest="output_format", required=True,
                         help="convert to output format: acc, vel, dis")
-
+    parser.add_argument("--input-suffix", "--suffix", dest="input_suffix",
+                        help="suffix used for input files")
     args = parser.parse_args()
 
     return args
@@ -253,11 +254,13 @@ def run():
     elif args.station_list:
         convert_station_file(args.station_list,
                              args.input_format, args.output_format,
-                             input_dir, output_dir)
+                             input_dir, output_dir,
+                             input_suffix=args.input_suffix)
     elif args.batch_file:
         convert_batch_file(args.batch_file,
                            args.input_format, args.output_format,
-                           input_dir, output_dir)
+                           input_dir, output_dir,
+                           input_suffix=args.input_suffix)
     else:
         print("[ERROR]: Must specify input_file, station_list or batch_file!")
         sys.exit(-1)
@@ -287,6 +290,7 @@ def select_action(input_format, output_format):
 def convert_station_file(station_file,
                          input_format, output_format,
                          input_dir, output_dir,
+                         input_suffix=None,
                          temp_dir=None):
     """
     Process a station list and convert each file as
@@ -305,11 +309,13 @@ def convert_station_file(station_file,
                            input_format, output_format,
                            input_dir, output_dir,
                            action_type, action_count,
-                           temp_dir)
+                           input_suffix=input_suffix,
+                           temp_dir=temp_dir)
 
 def convert_batch_file(batch_file,
                        input_format, output_format,
                        input_dir, output_dir,
+                       input_suffix=None,
                        temp_dir=None):
     """
     Process a batch file and convert each file as
@@ -330,7 +336,8 @@ def convert_batch_file(batch_file,
                            input_format, output_format,
                            input_dir, output_dir,
                            action_type, action_count,
-                           temp_dir)
+                           input_suffix=input_suffix,
+                           temp_dir=temp_dir)
 
     input_list.close()
 
@@ -338,6 +345,7 @@ def run_directory_mode(station_name,
                        input_format, output_format,
                        input_dir, output_dir,
                        action_type, action_count,
+                       input_suffix=None,
                        temp_dir=None):
     """
     Create input and output filenames for station_name and
@@ -350,8 +358,12 @@ def run_directory_mode(station_name,
         atexit.register(cleanup, temp_dir)
 
     # Find input file
-    extension = "%s.bbp" % (input_format)
-    input_list = glob.glob("%s%s*%s*.%s" %
+    if input_suffix is None:
+        extension = ".%s.bbp" % (input_format)
+    else:
+        extension = input_suffix
+    print(extension)
+    input_list = glob.glob("%s%s*%s*%s" %
                            (input_dir, os.sep, station_name, extension))
     if len(input_list) != 1:
         print("[ERROR]: Can't find input file for station %s" % (station_name))
@@ -360,7 +372,11 @@ def run_directory_mode(station_name,
 
     # Build output_file name
     base_file = os.path.basename(input_file)
-    base_tokens = base_file.split('.')[0:-2]
+    if input_suffix is None:
+        base_tokens = base_file.split('.')[0:-2]
+    else:
+        suffix_index = base_file.rfind(input_suffix)
+        base_tokens = [base_file[0:suffix_index]]
     if not base_tokens:
         print("[ERROR]: Invalid BBP filename: %s" % (input_file))
         sys.exit(1)

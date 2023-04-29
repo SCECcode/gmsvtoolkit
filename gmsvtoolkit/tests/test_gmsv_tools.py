@@ -84,6 +84,7 @@ class TestGMSVTools(unittest.TestCase):
         a_vel_file = os.path.join(ref_dir, vel_file)
 
         gmsv_tools.convert_file(a_vel_file, "vel", "acc",
+                                output_dir=self.temp_dir,
                                 temp_dir=self.temp_dir)
 
     def test_gmsvtools_integrate(self):
@@ -97,6 +98,7 @@ class TestGMSVTools(unittest.TestCase):
         a_vel_file = os.path.join(ref_dir, vel_file)
 
         gmsv_tools.convert_file(a_vel_file, "vel", "dis",
+                                output_dir=self.temp_dir,
                                 temp_dir=self.temp_dir)
 
     def test_gmsvtools_station(self):
