@@ -362,7 +362,6 @@ def run_directory_mode(station_name,
         extension = ".%s.bbp" % (input_format)
     else:
         extension = input_suffix
-    print(extension)
     input_list = glob.glob("%s%s*%s*%s" %
                            (input_dir, os.sep, station_name, extension))
     if len(input_list) != 1:
