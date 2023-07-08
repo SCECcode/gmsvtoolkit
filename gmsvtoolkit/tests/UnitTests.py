@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python3
 """
 BSD 3-Clause License
 
@@ -64,6 +64,7 @@ from test_plot_gmpe import TestPlotGMPE
 from test_anderson_gof import TestAndersonGoF
 from test_plot_seismograms import TestPlotSeismograms
 from test_gmsv_tools import TestGMSVTools
+from test_as16 import TestAS16
 
 def cleanup(dir_name):
     """
@@ -119,6 +120,7 @@ TS.addTest(unittest.makeSuite(TestPlotGMPEGoF))
 TS.addTest(unittest.makeSuite(TestAndersonGoF))
 TS.addTest(unittest.makeSuite(TestPlotSeismograms))
 TS.addTest(unittest.makeSuite(TestGMSVTools))
+TS.addTest(unittest.makeSuite(TestAS16))
 
 # Done, run the tests
 print("==> Running GMSVToolkit Unit Tests...")
