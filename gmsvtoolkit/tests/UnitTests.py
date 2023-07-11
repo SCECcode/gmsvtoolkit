@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Top level test suites for BB Platform
+Top level test suites for GMSV Toolkit
 """
 from __future__ import division, print_function
 
@@ -66,6 +66,7 @@ from test_plot_seismograms import TestPlotSeismograms
 from test_gmsv_tools import TestGMSVTools
 from test_as16 import TestAS16
 from test_rzz2015gmpe import TestRZZ2015GMPE
+from test_rzz2015 import TestRZZ2015
 
 def cleanup(dir_name):
     """
@@ -123,6 +124,7 @@ TS.addTest(unittest.makeSuite(TestPlotSeismograms))
 TS.addTest(unittest.makeSuite(TestGMSVTools))
 TS.addTest(unittest.makeSuite(TestAS16))
 TS.addTest(unittest.makeSuite(TestRZZ2015GMPE))
+TS.addTest(unittest.makeSuite(TestRZZ2015))
 
 # Done, run the tests
 print("==> Running GMSVToolkit Unit Tests...")

@@ -291,14 +291,15 @@ class RZZ2015GMPE(object):
             sys.exit(1)
         station_list = os.path.abspath(args.station_list)
 
+        output_file = os.path.abspath(args.output_file)
         create_plots = not args.disable_plots
         if not args.plot_prefix:
             plot_prefix = "rzz2015gmpe"
         else:
             plot_prefix = args.plot_prefix
         
-        self.run_rzz2015_gmpe(args.station_list, args.src_file,
-                              args.output_file, plot_prefix=plot_prefix,
+        self.run_rzz2015_gmpe(station_list, src_file,
+                              output_file, plot_prefix=plot_prefix,
                               plots=create_plots)
 
     def run_rzz2015_gmpe(self, a_station_list, a_src_file,
