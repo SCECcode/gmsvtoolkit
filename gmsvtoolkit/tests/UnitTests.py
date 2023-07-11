@@ -65,6 +65,7 @@ from test_anderson_gof import TestAndersonGoF
 from test_plot_seismograms import TestPlotSeismograms
 from test_gmsv_tools import TestGMSVTools
 from test_as16 import TestAS16
+from test_rzz2015gmpe import TestRZZ2015GMPE
 
 def cleanup(dir_name):
     """
@@ -121,6 +122,7 @@ TS.addTest(unittest.makeSuite(TestAndersonGoF))
 TS.addTest(unittest.makeSuite(TestPlotSeismograms))
 TS.addTest(unittest.makeSuite(TestGMSVTools))
 TS.addTest(unittest.makeSuite(TestAS16))
+TS.addTest(unittest.makeSuite(TestRZZ2015GMPE))
 
 # Done, run the tests
 print("==> Running GMSVToolkit Unit Tests...")
