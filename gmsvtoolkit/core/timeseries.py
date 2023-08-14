@@ -488,14 +488,15 @@ class Timeseries(object):
             fig.clf()
 
             plt.plot(old_times[old_start_idx:old_end_idx],
-                     data[old_start_idx:old_end_idx], 'o',
+                     old_data[1][old_start_idx:old_end_idx], 'o',
                      new_times[new_start_idx:new_end_idx],
-                     new_data[new_start_idx:new_end_idx], 'x')
+                     self.data[1][new_start_idx:new_end_idx], 'x')
             plt.grid(True)
             plt.xlabel('Seconds')
             plt.title(os.path.splitext(os.path.basename(debug_plot))[0])
             plt.savefig(debug_plot, format='png',
-                        transparent=False, dpi=300)
+                        transparent=False,
+                        dpi=plot_config.dpi)
             pylab.close()
 
     def FAS(self, points, fmin, fmax, s_factor):
