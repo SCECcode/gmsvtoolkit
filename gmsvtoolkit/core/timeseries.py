@@ -429,7 +429,7 @@ class Timeseries(object):
 
         self.history.append("Rotated timeseries %3.2f degrees" % (rotation_angle))
 
-    def interp(self, new_dt, debug=False, debug_plot=None):
+    def interp(self, new_dt, fast=False, debug=False, debug_plot=None):
         """
         Calls the sinc interp method
 
@@ -450,7 +450,7 @@ class Timeseries(object):
             return
 
         # Quick interpolation rule for downsampling
-        if new_dt % self.dt == 0.0:
+        if new_dt % self.dt == 0.0 and fast:
             downsample_factor = int(new_dt // self.dt)
             for i in range(0, 4):
                 self.data[i] = decimate(self.data[i], downsample_factor)

@@ -63,6 +63,7 @@ from test_plot_gmpe_gof import TestPlotGMPEGoF
 from test_plot_gmpe import TestPlotGMPE
 from test_anderson_gof import TestAndersonGoF
 from test_plot_seismograms import TestPlotSeismograms
+from test_timeseries import TestTimeseries
 from test_gmsv_tools import TestGMSVTools
 from test_as16 import TestAS16
 from test_rzz2015gmpe import TestRZZ2015GMPE
@@ -122,6 +123,7 @@ TS.addTest(unittest.makeSuite(TestPlotGMPEGoF))
 TS.addTest(unittest.makeSuite(TestAndersonGoF))
 TS.addTest(unittest.makeSuite(TestPlotSeismograms))
 TS.addTest(unittest.makeSuite(TestGMSVTools))
+TS.addTest(unittest.makeSuite(TestTimeseries))
 TS.addTest(unittest.makeSuite(TestAS16))
 TS.addTest(unittest.makeSuite(TestRZZ2015GMPE))
 TS.addTest(unittest.makeSuite(TestRZZ2015))
