@@ -99,9 +99,9 @@ def read_data(datafile, min_period, max_period=MAX_PERIOD):
     # Return data
     return data
 
-def plot_fas_gof(plottitle, gof_fileroot, indir,
-                 outdir, max_cutoff=0, colorset=None,
-                 lfreq=None, hfreq=None):
+def plot_fas_gof(plottitle, comp_label, indir,
+                 outdir, max_cutoff=1000.0, colorset='single',
+                 method=None, lfreq=None, hfreq=None):
     """
     Creates a FAS GOF plot with three subplots (SEAS, FAS_H1, FAS_H2)
     """
@@ -117,7 +117,29 @@ def plot_fas_gof(plottitle, gof_fileroot, indir,
     if colorset is None:
         colorset_idx = 0
     else:
+        colorset = colorset.lower()
+        if colorset != "single" and colorset != "combined":
+            print("[ERROR]: Please use only 'single' or 'combined' for colorset!")
+            sys.exit(1)
         colorset_idx = COLORSETS[colorset]
+
+    # Where to find residuals information
+    gof_fileroot = '%s_r0-%d-fas' % (comp_label, max_cutoff)
+
+    # Use method-specific frequencies if specified by used
+    if method is not None:
+        method = method.lower()
+        freq_ranges = plot_config.FAS_GOF_FREQ
+        m_lfreq = freq_ranges[method]['freq_low']
+        m_hfreq = freq_ranges[method]['freq_high']
+    else:
+        m_lfreq = None
+        m_hfreq = None
+
+    if lfreq is None:
+        lfreq = m_lfreq
+    if hfreq is None:
+        hfreq = m_hfreq
 
     # Set up ticks to match matplotlib 1.x style
     mpl.rcParams['xtick.direction'] = 'in'
@@ -243,10 +265,11 @@ def plot_fas_gof(plottitle, gof_fileroot, indir,
             pylab.vlines(hfreq, min_horiz_y, max_horiz_y,
                          color='violet', linestyles='--')
 
-    if max_cutoff == 0:
-        pylab.suptitle('%s' % (plottitle), size=11)
-    else:
-        pylab.suptitle('%s\nR < %d km' % (plottitle, max_cutoff), size=11)
+    if plottitle is not None:
+        if max_cutoff == 0:
+            pylab.suptitle('%s' % (plottitle), size=11)
+        else:
+            pylab.suptitle('%s\nR < %d km' % (plottitle, max_cutoff), size=11)
     outfile = os.path.join(outdir, "gof-%s.png" % (gof_fileroot))
     print("==> Created GoF plot: %s" % (outfile))
     pylab.savefig(outfile, format="png",
@@ -263,7 +286,7 @@ def parse_arguments():
                         help="input directory with residuals files")
     parser.add_argument("--output-dir", dest="output_dir",
                         help="output directory")
-    parser.add_argument("--comp-label", dest="comp_label",
+    parser.add_argument("--comp-label", dest="comp_label", required=True,
                         help="comparison label used for the output file prefix")
     parser.add_argument("--max-cutoff", dest="max_cutoff", type=float, default=1000.0,
                         help="select max cutoff distance (km) for the comparison")
@@ -299,39 +322,24 @@ def run():
     if args.input_dir:
         input_dir = args.input_dir
 
-    # Other plot parameters
-    if not args.comp_label:
-        print("[ERROR]: Please specify comp-label prefix!")
-        sys,exit(1)
-    max_cutoff = args.max_cutoff
-    if args.colorset.lower() != "single" and args.colorset.lower() != "combined":
-        print("[ERROR]: Please use only 'single' or 'combined' for colorset!")
-        sys.exit(1)
-
-    # Where to find residuals information
-    fileroot = '%s_r0-%d-fas' % (args.comp_label, max_cutoff)
+    # Look at other parameters
+    method = None
+    if args.method is not None:
+        method = args.method
 
     # Check if user specified lfreq and hfreq
     lfreq = None
     hfreq = None
 
-    # Use method-specific frequencies if specified by used
-    if args.method is not None:
-        method = args.method.lower()
-        freq_ranges = plot_config.FAS_GOF_FREQ
-        lfreq = freq_ranges[method]['freq_low']
-        hfreq = freq_ranges[method]['freq_high']
-
-    # But allow user to override one (or both) value(s) via command-line interface
     if args.lfreq is not None:
         lfreq = float(args.lfreq)
     if args.hfreq is not None:
         hfreq = float(args.hfreq)
     
     # Plot GOF for FAS data
-    plot_fas_gof(args.plot_title, fileroot, input_dir,
-                 output_dir, max_cutoff=max_cutoff,
-                 colorset=args.colorset.lower(),
+    plot_fas_gof(args.plot_title, args.comp_label, input_dir,
+                 output_dir, max_cutoff=args.max_cutoff,
+                 colorset=args.colorset.lower(), method=method,
                  lfreq=lfreq, hfreq=hfreq)
 
 if __name__ == '__main__':

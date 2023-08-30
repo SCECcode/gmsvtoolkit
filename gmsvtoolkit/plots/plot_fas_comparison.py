@@ -339,12 +339,16 @@ def run_directory_mode(station_name, lfreq, hfreq,
     """
     # Make list of all input files
     input_files = []
-    for input_dir in input_dirs:
+    for input_dir, label in zip(input_dirs, labels):
         input_list = glob.glob("%s%s*%s.smc8.smooth.fs.col" %
                                (input_dir, os.sep, station_name))
         if len(input_list) != 1:
-            print("[ERROR]: Can't find input file for station %s" % (station_name))
-            sys.exit(1)
+            # Try using the label to pick only one file
+            input_list = glob.glob("%s%s%s*%s.smc8.smooth.fs.col" %
+                                   (input_dir, os.sep, label, station_name))
+            if len(input_list) != 1:
+                print("[ERROR]: Can't find input file for station %s" % (station_name))
+                sys.exit(1)
 
         input_files.append(input_list[0])
             

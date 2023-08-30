@@ -597,10 +597,11 @@ def plot_three_component_gof(plottitle, gof_fileroot, indir, outdir,
             pylab.vlines(pmax, min_horiz_y, max_horiz_y,
                          color='r', linestyles='--')
 
-    if cutoff == 0:
-        pylab.suptitle('%s' % (plottitle), size=11)
-    else:
-        pylab.suptitle('%s\nR < %d km' % (plottitle, cutoff), size=11)
+    if plottitle is not None:
+        if cutoff == 0:
+            pylab.suptitle('%s' % (plottitle), size=11)
+        else:
+            pylab.suptitle('%s\nR < %d km' % (plottitle, cutoff), size=11)
     outfile = os.path.join(outdir, "gof-%s.png" % (gof_fileroot))
     print("==> Created GoF plot: %s" % (outfile))
     pylab.savefig(outfile, format="png",

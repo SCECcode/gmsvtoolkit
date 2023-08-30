@@ -84,19 +84,13 @@ class TestPlotFASGoF(unittest.TestCase):
         plot_title = "GoF Comparison between NR and simulation 10000000"
         method = "gp"
         colorset = "single"
-        freq_ranges = plot_config.FAS_GOF_FREQ
-        lfreq = freq_ranges[method]['freq_low']
-        hfreq = freq_ranges[method]['freq_high']
 
-        fileroot = '%s_r0-%d-fas' % (self.comp_label, self.max_cutoff)
-        
         # Run PSA GoF plotting code
-        plot_fas_gof.plot_fas_gof(plot_title, fileroot,
+        plot_fas_gof.plot_fas_gof(plot_title, self.comp_label,
                                   ref_dir, self.temp_dir,
                                   max_cutoff=self.max_cutoff,
-                                  colorset=colorset,
-                                  lfreq=lfreq, hfreq=hfreq)
-        
+                                  colorset=colorset, method=method)
+
 if __name__ == "__main__":
     SUITE = unittest.TestLoader().loadTestsFromTestCase(TestPlotFASGoF)
     RETURN_CODE = unittest.TextTestRunner(verbosity=2).run(SUITE)
