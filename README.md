@@ -20,12 +20,24 @@ The SCEC Ground Motion Simulation Validation (GMSV) software Toolkit that provid
 
 ## Installation
 
+### Dependencies
+
+In order to install and run the GMSV Toolkit software, users will need to have the following dependencies installed:
+
+1. Python 3.7+
+2. GNU Compilers (gcc/gfortran) 8.3+
+3. Numpy 1.21+
+4. SciPy 1.7+
+5. Matplotlib 3.5.3+
+6. Pyproj 2.6.1+
+7. FFTW library 3.3.8
+
 ## Usage
 
 ## Support
 Support for GMSVToolkit is provided by the Southern California Earthquake Center (SCEC) Research Computing Group. This group supports several research software distributions including GMSVToolkit, the Broadband Platform, and the TS-Process package. Users can report issues and feature requests using GMSVToolkit's github-based issue tracking link below. Developers will also respond to emails sent to the SCEC software contact listed below.
 1. [BBP Github Issue Tracker](https://github.com/SCECcode/gmsvtoolkit/issues)
-2. Email Contact: software@scec.usc.edu
+2. Email Contact: software at scec dot org
 
 ## Citation
 
