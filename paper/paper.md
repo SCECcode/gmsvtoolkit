@@ -1,75 +1,43 @@
 ---
-title: 'Gala: A Python package for galactic dynamics'
+title: 'The SCEC Ground Motioin Simulation Validation (GMSV) Toolkit: Open-Source Tools for Ground Motion Simulation Processing and Validation'
 tags:
   - Python
-  - astronomy
-  - dynamics
-  - galactic dynamics
-  - milky way
+  - seismology
+  - ground motion
+  - validation
+  - goodness of fit
 authors:
-  - name: Adrian M. Price-Whelan
+  - name: Fabio Silva
     orcid: 0000-0000-0000-0000
+    corresponding: true
     equal-contrib: true
-    affiliation: "1, 2" # (Multiple affiliations must be quoted)
-  - name: Author Without ORCID
+    affiliation: 1 
+  - name: Christine A. Goulet
     equal-contrib: true # (This is how you can denote equal contributions between multiple authors)
     affiliation: 2
-  - name: Author with no affiliation
-    corresponding: true # (This is how to denote the corresponding author)
-    affiliation: 3
-  - given-names: Ludwig
-    dropping-particle: van
-    surname: Beethoven
-    affiliation: 3
+  - name: Philip J. Maechling
+    affiliation: 1
 affiliations:
- - name: Lyman Spitzer, Jr. Fellow, Princeton University, USA
+ - name: Statewide California Earthquake Center, University of Southern California, USA
    index: 1
- - name: Institution Name, Country
+ - name: United State Geological Survey
    index: 2
- - name: Independent Researcher, Country
-   index: 3
-date: 13 August 2017
+date: 9 September 2023
 bibliography: paper.bib
 
 # Optional fields if submitting to a AAS journal too, see this blog post:
 # https://blog.joss.theoj.org/2018/12/a-new-collaboration-with-aas-publishing
-aas-doi: 10.3847/xxxxx <- update this with the DOI from AAS once you know it.
-aas-journal: Astrophysical Journal <- The name of the AAS journal.
+# aas-doi: 10.3847/xxxxx <- update this with the DOI from AAS once you know it.
+# aas-journal: Astrophysical Journal <- The name of the AAS journal.
 ---
 
 # Summary
 
-The forces on stars, galaxies, and dark matter under external gravitational
-fields lead to the dynamical evolution of structures in the universe. The orbits
-of these bodies are therefore key to understanding the formation, history, and
-future state of galaxies. The field of "galactic dynamics," which aims to model
-the gravitating components of galaxies to study their structure and evolution,
-is now well-established, commonly taught, and frequently used in astronomy.
-Aside from toy problems and demonstrations, the majority of problems require
-efficient numerical tools, many of which require the same base code (e.g., for
-performing numerical orbit integration).
+The Statewide California Earthquake Center (SCEC) Ground Motion Simulation Validation (GMSV) software Toolkit aims to provide standardized and verified tools to a broad seismological and engineering community of researchers interested in ground motion simulations and their validation. The GMSV Toolkit leverages over a decade of scientific, engineering, and software development work completed by dozens of contributors, with software components coming from the SCEC Broadband Platform (BBP) and from a complementary, but independent, seismogram processing software distribution (TS Process). While the GMSV Toolkit includes basic seismogram processing tools, its functionality is focused on the uniform re-processing of recorded and/or simulated seismograms to allow 1) one-to-one comparisons in time and frequency domains, and 2) statistical computations of various validation metrics.
 
 # Statement of need
 
-`Gala` is an Astropy-affiliated Python package for galactic dynamics. Python
-enables wrapping low-level languages (e.g., C) for speed without losing
-flexibility or ease-of-use in the user-interface. The API for `Gala` was
-designed to provide a class-based and user-friendly interface to fast (C or
-Cython-optimized) implementations of common operations such as gravitational
-potential and force evaluation, orbit integration, dynamical transformations,
-and chaos indicators for nonlinear dynamics. `Gala` also relies heavily on and
-interfaces well with the implementations of physical units and astronomical
-coordinate systems in the `Astropy` package [@astropy] (`astropy.units` and
-`astropy.coordinates`).
-
-`Gala` was designed to be used by both astronomical researchers and by
-students in courses on gravitational dynamics or astronomy. It has already been
-used in a number of scientific publications [@Pearson:2017] and has also been
-used in graduate courses on Galactic dynamics to, e.g., provide interactive
-visualizations of textbook material [@Binney:2008]. The combination of speed,
-design, and support for Astropy functionality in `Gala` will enable exciting
-scientific explorations of forthcoming data releases from the *Gaia* mission
-[@gaia] by students and experts alike.
+Each code included in the GMSV Toolkit was redesigned to work in a standalone package so that its full capabilities are accessible for the validation of any simulated seismograms, without the need to install other software. For each code packaged in the GMSV Toolkit, we include both a command-line interface and a Python API. Each tool can therefore be run directly from the shell, allowing codes to be scripted together in a user-specified way, or with the Python API for use with other Python programs. We preserve full compatibility with the original codes from the BBP, and reproduce metric computation, statistics, and plot results obtained in previous BBP studies.
 
 # Mathematics
 
@@ -113,69 +81,23 @@ Figure sizes can be customized by adding an optional second parameter:
 
 # Acknowledgements
 
-We acknowledge contributions from Brigitta Sipocz, Syrtis Major, and Semyeong
-Oh, and support from Kathryn Johnston during the genesis of this project.
+The GMSV Toolkit software development is supported by the Statewide California Earthquake Center (SCEC), which is funded by NSF Cooperative Agreement EAR-1600087 and USGS Cooperative Agreement G22AC00070. Additional support was provided by Pacific Gas and Electric.
 
 # References
 
 Example paper.bib file:
 
-@article{Pearson:2017,
-  	url = {http://adsabs.harvard.edu/abs/2017arXiv170304627P},
-  	Archiveprefix = {arXiv},
-  	Author = {{Pearson}, S. and {Price-Whelan}, A.~M. and {Johnston}, K.~V.},
-  	Eprint = {1703.04627},
-  	Journal = {ArXiv e-prints},
-  	Keywords = {Astrophysics - Astrophysics of Galaxies},
-  	Month = mar,
-  	Title = {{Gaps in Globular Cluster Streams: Pal 5 and the Galactic Bar}},
-  	Year = 2017
-}
-
-@book{Binney:2008,
-  	url = {http://adsabs.harvard.edu/abs/2008gady.book.....B},
-  	Author = {{Binney}, J. and {Tremaine}, S.},
-  	Booktitle = {Galactic Dynamics: Second Edition, by James Binney and Scott Tremaine.~ISBN 978-0-691-13026-2 (HB).~Published by Princeton University Press, Princeton, NJ USA, 2008.},
-  	Publisher = {Princeton University Press},
-  	Title = {{Galactic Dynamics: Second Edition}},
-  	Year = 2008
-}
-
-@article{gaia,
-    author = {{Gaia Collaboration}},
-    title = "{The Gaia mission}",
-    journal = {Astronomy and Astrophysics},
-    archivePrefix = "arXiv",
-    eprint = {1609.04153},
-    primaryClass = "astro-ph.IM",
-    keywords = {space vehicles: instruments, Galaxy: structure, astrometry, parallaxes, proper motions, telescopes},
-    year = 2016,
-    month = nov,
-    volume = 595,
-    doi = {10.1051/0004-6361/201629272},
-    url = {http://adsabs.harvard.edu/abs/2016A%26A...595A...1G},
-}
-
-@article{astropy,
-    author = {{Astropy Collaboration}},
-    title = "{Astropy: A community Python package for astronomy}",
-    journal = {Astronomy and Astrophysics},
-    archivePrefix = "arXiv",
-    eprint = {1307.6212},
-    primaryClass = "astro-ph.IM",
-    keywords = {methods: data analysis, methods: miscellaneous, virtual observatory tools},
-    year = 2013,
-    month = oct,
-    volume = 558,
-    doi = {10.1051/0004-6361/201322068},
-    url = {http://adsabs.harvard.edu/abs/2013A%26A...558A..33A}
-}
-
-@misc{fidgit,
-  author = {A. M. Smith and K. Thaney and M. Hahnel},
-  title = {Fidgit: An ungodly union of GitHub and Figshare},
-  year = {2020},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  url = {https://github.com/arfon/fidgit}
+@article{10.1785/0220140125,
+    author = {Maechling, Philip J. and Silva, Fabio and Callaghan, Scott and Jordan, Thomas H.},
+    title = "{SCEC Broadband Platform: System Architecture and Software Implementation}",
+    journal = {Seismological Research Letters},
+    volume = {86},
+    number = {1},
+    pages = {27-38},
+    year = {2014},
+    month = {12},
+    issn = {0895-0695},
+    doi = {10.1785/0220140125},
+    url = {https://doi.org/10.1785/0220140125},
+    eprint = {https://pubs.geoscienceworld.org/ssa/srl/article-pdf/86/1/27/3679173/27.pdf},
 }
