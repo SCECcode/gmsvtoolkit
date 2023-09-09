@@ -82,22 +82,3 @@ Figure sizes can be customized by adding an optional second parameter:
 # Acknowledgements
 
 The GMSV Toolkit software development is supported by the Statewide California Earthquake Center (SCEC), which is funded by NSF Cooperative Agreement EAR-1600087 and USGS Cooperative Agreement G22AC00070. Additional support was provided by Pacific Gas and Electric.
-
-# References
-
-Example paper.bib file:
-
-@article{10.1785/0220140125,
-    author = {Maechling, Philip J. and Silva, Fabio and Callaghan, Scott and Jordan, Thomas H.},
-    title = "{SCEC Broadband Platform: System Architecture and Software Implementation}",
-    journal = {Seismological Research Letters},
-    volume = {86},
-    number = {1},
-    pages = {27-38},
-    year = {2014},
-    month = {12},
-    issn = {0895-0695},
-    doi = {10.1785/0220140125},
-    url = {https://doi.org/10.1785/0220140125},
-    eprint = {https://pubs.geoscienceworld.org/ssa/srl/article-pdf/86/1/27/3679173/27.pdf},
-}
