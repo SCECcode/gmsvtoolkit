@@ -41,7 +41,7 @@ Each code included in the GMSV Toolkit was redesigned @ts-process to work in a s
 
 # Time Series Comparisons
 
-The SCEC GMSV Toolkit provides a collection of seismogram processing, comparison, and plotting tools, such as: filtering, rotation, baseline correction, resampling, two, and three component comparison plots, etc.
+The SCEC GMSV Toolkit provides @{Maechling, Philip J. and Silva, Fabio and Callaghan, Scott and Jordan, Thomas H.} a collection of seismogram processing, comparison, and plotting tools, such as: filtering, rotation, baseline correction, resampling, two, and three component comparison plots, etc.
 
 Figure 1: Comparing two velocity timeseries (top left); side-by-side comparison of acceleration, velocity, and displacement timeseries (top-right); side-by-side acceleration, FAS, and PSA comparison (bottom).
 
@@ -82,9 +82,6 @@ Citations to entries in paper.bib should be in
 [rMarkdown](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html)
 format.
 
-If you want to cite a software repository URL (e.g. something on GitHub without a preferred
-citation) then you can do it with the example BibTeX entry below.
-
 # For a quick reference, the following citation commands can be used:
 - `@author:2001`  ->  "Author et al. (2001)"
 - `[@author:2001]` -> "(Author et al., 2001)"
@@ -93,11 +90,11 @@ citation) then you can do it with the example BibTeX entry below.
 # Figures
 
 # Figures can be included like this:
-![Caption for example figure.\label{fig:example}](figure.png)
-and referenced from text using \autoref{fig:example}.
+![Caption for figure 1 (one).\label{fig:one](figure1.png)
+and referenced from text using \autoref{fig:one}.
 
 # Figure sizes can be customized by adding an optional second parameter:
-![Caption for example figure.](figure.png){ width=20% }
+![Caption for figure 2 (two).](figure2.png){ width=20% }
 
 # Acknowledgements
 
