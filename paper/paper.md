@@ -43,7 +43,8 @@ Each code included in the GMSV Toolkit was redesigned @ts-process to work in a s
 
 The SCEC GMSV Toolkit provides @{Maechling, Philip J. and Silva, Fabio and Callaghan, Scott and Jordan, Thomas H.} a collection of seismogram processing, comparison, and plotting tools, such as: filtering, rotation, baseline correction, resampling, two, and three component comparison plots, etc.
 
-Figure 1: Comparing two velocity timeseries (top left); side-by-side comparison of acceleration, velocity, and displacement timeseries (top-right); side-by-side acceleration, FAS, and PSA comparison (bottom).
+![Figure 1: Comparing two velocity timeseries (top left); side-by-side comparison of acceleration, velocity, and displacement timeseries (top-right); side-by-side acceleration, FAS, and PSA comparison (bottom).\label{fig:one](figure1.png)
+and referenced from text using \autoref{fig:one}.
 
 # Metric Computation
 
@@ -56,9 +57,11 @@ The SCEC GMSV Toolkit contains most validation metrics available in the Broadban
 
 # PSA Validation
 
-Figure 2: In the PSA validation workflow, acceleration timeseries go through the RotDXX module where RotD50 is computed. This results is compared station by station with the plot_rotdxx module and aggregated across all stations and compared against a second data set with the PSA GoF tool. The PSA GoF Plot module generates different PSA GoF plots so users can see how two datasets match.
+![Figure 2: In the PSA validation workflow, acceleration timeseries go through the RotDXX module where RotD50 is computed. This results is compared station by station with the plot_rotdxx module and aggregated across all stations and compared against a second data set with the PSA GoF tool. The PSA GoF Plot module generates different PSA GoF plots so users can see how two datasets match. \label{fig:two](figure2.png).
 
-Figure 3: PSA values for the two horizontal components and RotD50 (right). The green line shows calculated data and the blue line shows PSA values for the recorded seismogram. The two vertical lines (purple and red) come from the station list and indicate limits for which the recorded data is valid for this particular station (top). Calculated fourier amplitude spectra (FAS) for the two horizontal components, along with Smoothed Effective Amplitude Spectra (SEAS) (right).
+![Figure 3a: PSA values for the two horizontal components and RotD50 (right). The green line shows calculated data and the blue line shows PSA values for the recorded seismogram. The two vertical lines (purple and red) come from the station list and indicate limits for which the recorded data is valid for this particular station (top).\label{fig:threea](figure3a.png)
+
+![Figure 3b: Calculated fourier amplitude spectra (FAS) for the two horizontal components, along with Smoothed Effective Amplitude Spectra (SEAS) (right)\label{fig:threeb](figure3b.png)
 
 # Statistical Computation and Plot Generation
 
@@ -68,33 +71,13 @@ Multiple tools available for combined calculated per-station metrics and generat
 * Anderson 2004 GoF
 * GMM GoF comparisons
 
-Figure 4: Map PSA GoF plot (top left), showing per-station comparison of simulated against recorded data, useful for checking bias related to station location and directivity effects. Vs30 PSA GoF plot (bottom left), showing the same dataset plotted against each station Vs30 value. PSA GoF plot (right) showing how simulated data compares against recorded data at different periods. The solid red line shows the mean, the narrow band is the 90% confidence interval of the mean, and the wide band shows the standard deviation centered around the mean. Note that for periods between 1s and 5s the red line is close to zero, indicating the two sets are quite close. For periods < 1.0s (higher frequencies) the red line dips below zero, signaling the simulated data is overpredicting the recorded data.
+![Figure 4: Map PSA GoF plot (top left), showing per-station comparison of simulated against recorded data, useful for checking bias related to station location and directivity effects. Vs30 PSA GoF plot (bottom left), showing the same dataset plotted against each station Vs30 value. PSA GoF plot (right) showing how simulated data compares against recorded data at different periods. The solid red line shows the mean, the narrow band is the 90% confidence interval of the mean, and the wide band shows the standard deviation centered around the mean. Note that for periods between 1s and 5s the red line is close to zero, indicating the two sets are quite close. For periods < 1.0s (higher frequencies) the red line dips below zero, signaling the simulated data is overpredicting the recorded data. \label{fig:four](figure4.png)
 
 # GMSV Toolkit Summary
 
 * Makes well-verified and useful software available to a broad seismological and engineering community, leveraging over a decade of scientific, engineering, and software development by dozens of SCEC contributors 
 * Provides a standalone tool with a command-line interface and Python APIs
 * Available on GitHub along with extensive documentation and examples
-
-# Citations
-
-Citations to entries in paper.bib should be in
-[rMarkdown](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html)
-format.
-
-# For a quick reference, the following citation commands can be used:
-- `@author:2001`  ->  "Author et al. (2001)"
-- `[@author:2001]` -> "(Author et al., 2001)"
-- `[@author1:2001; @author2:2001]` -> "(Author1 et al., 2001; Author2 et al., 2002)"
-
-# Figures
-
-# Figures can be included like this:
-![Caption for figure 1 (one).\label{fig:one](figure1.png)
-and referenced from text using \autoref{fig:one}.
-
-# Figure sizes can be customized by adding an optional second parameter:
-![Caption for figure 2 (two).](figure2.png){ width=20% }
 
 # Acknowledgements
 
