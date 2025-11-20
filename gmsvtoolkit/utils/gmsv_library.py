@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2025, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -37,8 +37,14 @@ from __future__ import division, print_function
 # Import Python modules
 import math
 import numpy as np
-from scipy.integrate import cumtrapz
-from scipy.signal import kaiser
+import scipy.integrate
+from scipy.signal.windows import kaiser
+
+# Compatible with SciPy 1.4
+try:
+    cumulative_trapezoid = scipy.integrate.cumulative_trapezoid
+except AttributeError:
+    cumulative_trapezoid = scipy.integrate.cumtrapz
 
 def integrate(data, dt):
     """
@@ -51,7 +57,7 @@ def integrate(data, dt):
     Outputs:
         newdata - data array after integration
     """
-    newdata = cumtrapz(data, dx=dt, initial=0) + data[0] * dt / 2.0
+    newdata = cumulative_trapezoid(data, dx=dt, initial=0) + data[0] * dt / 2.0
 
     return newdata
 

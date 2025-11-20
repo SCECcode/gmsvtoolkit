@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2025, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -104,29 +104,29 @@ sys.stdout = Logger(os.path.join(LOG_DIR, "unit_tests.log"))
 TS = unittest.TestSuite()
 
 # Add GMSVToolkit tests
-TS.addTest(unittest.makeSuite(TestPyNGA))
-TS.addTest(unittest.makeSuite(TestPEERFormat))
-TS.addTest(unittest.makeSuite(TestRotDXX))
-TS.addTest(unittest.makeSuite(TestPlotRotDXX))
-TS.addTest(unittest.makeSuite(TestPSAGoF))
-TS.addTest(unittest.makeSuite(TestPlotPSAGoF))
-TS.addTest(unittest.makeSuite(TestPlotMap))
-TS.addTest(unittest.makeSuite(TestPlotFAS))
-TS.addTest(unittest.makeSuite(TestPlotFASComparison))
-TS.addTest(unittest.makeSuite(TestFAS))
-TS.addTest(unittest.makeSuite(TestFASGoF))
-TS.addTest(unittest.makeSuite(TestPlotFASGoF))
-TS.addTest(unittest.makeSuite(TestCalcGMPE))
-TS.addTest(unittest.makeSuite(TestPlotGMPE))
-TS.addTest(unittest.makeSuite(TestGMPEGoF))
-TS.addTest(unittest.makeSuite(TestPlotGMPEGoF))
-TS.addTest(unittest.makeSuite(TestAndersonGoF))
-TS.addTest(unittest.makeSuite(TestPlotSeismograms))
-TS.addTest(unittest.makeSuite(TestGMSVTools))
-TS.addTest(unittest.makeSuite(TestTimeseries))
-TS.addTest(unittest.makeSuite(TestAS16))
-TS.addTest(unittest.makeSuite(TestRZZ2015GMPE))
-TS.addTest(unittest.makeSuite(TestRZZ2015))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPyNGA))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPEERFormat))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRotDXX))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPlotRotDXX))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPSAGoF))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPlotPSAGoF))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPlotMap))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPlotFAS))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPlotFASComparison))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFAS))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestFASGoF))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPlotFASGoF))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestCalcGMPE))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPlotGMPE))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestGMPEGoF))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPlotGMPEGoF))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAndersonGoF))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestPlotSeismograms))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestGMSVTools))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestTimeseries))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestAS16))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRZZ2015GMPE))
+TS.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(TestRZZ2015))
 
 # Done, run the tests
 print("==> Running GMSVToolkit Unit Tests...")
