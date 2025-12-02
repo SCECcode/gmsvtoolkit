@@ -99,7 +99,7 @@ class TestPlotFAS(unittest.TestCase):
         
         # Run FAS plotting code in batch mode
         plot_fas.run_batch_mode(batch_file, ref_dir,
-                                self.temp_dir)
+                                self.temp_dir, comp_label="10000000.")
         
     def test_plot_fas_station(self):
         """
@@ -111,7 +111,7 @@ class TestPlotFAS(unittest.TestCase):
         
         # Run FAS plotting code in station list mode
         plot_fas.run_station_list_mode(station_list, ref_dir,
-                                       self.temp_dir)
+                                       self.temp_dir, comp_label="10000000.")
 
 if __name__ == "__main__":
     SUITE = unittest.TestLoader().loadTestsFromTestCase(TestPlotFAS)
