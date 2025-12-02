@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2025, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -80,12 +80,14 @@ class TestPlotFAS(unittest.TestCase):
         """
         # Reference directory
         ref_dir = os.path.join(self.install.TEST_REF_DIR, "metrics")
-        input_file = os.path.join(ref_dir, "10000000.2001-SCE.smc8.smooth.fs.col")
+        input_fas_file = os.path.join(ref_dir, "4427745.2001-SCE.eas.fs.col")
+        input_seas_file = os.path.join(ref_dir, "4427745.2001-SCE.seas.fs.col")
         output_file = os.path.join(self.temp_dir, "2001-SCE.fas.png")
         
         # Run FAS plotting code
-        plot_fas.run_single_station(input_file, output_file,
-                                    self.station_id)
+        plot_fas.run_single_station(self.station_id, output_file,
+                                    input_fas_file=input_fas_file,
+                                    input_seas_file=input_seas_file)
         
     def test_plot_fas_batch(self):
         """
@@ -108,8 +110,8 @@ class TestPlotFAS(unittest.TestCase):
         station_list = os.path.join(ref_dir, self.station_list)
         
         # Run FAS plotting code in station list mode
-        plot_fas.run_station_mode(station_list, ref_dir,
-                                  self.temp_dir)
+        plot_fas.run_station_list_mode(station_list, ref_dir,
+                                       self.temp_dir)
 
 if __name__ == "__main__":
     SUITE = unittest.TestLoader().loadTestsFromTestCase(TestPlotFAS)

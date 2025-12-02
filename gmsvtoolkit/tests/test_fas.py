@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2025, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -73,6 +73,56 @@ class TestFAS(unittest.TestCase):
             # Add clean up for later
             atexit.register(cleanup, self.temp_dir)
 
+    def test_fas_nga(self):
+        """
+        Test the NGA scenario with the fas.py module
+        """
+        # Reference directory
+        input_dir = os.path.join(self.install.TEST_REF_DIR, "metrics", "nga")
+        ref_dir = os.path.join(self.install.TEST_REF_DIR,
+                               "metrics", "nga")
+
+        r_station_list = "nga-10-stations.stl"
+        a_station_list = os.path.join(input_dir, r_station_list)
+        a_logfile = os.path.join(self.temp_dir, "fas_nga_unit_test.log")
+        label = "nc73622771.BK"
+
+        fas_obj = fas.FAS()
+        fas_obj.run_fas_seas(a_station_list, [input_dir], [label],
+                             self.temp_dir, logfile=a_logfile,
+                             input_unit="g", output_unit="g",
+                             temp_dir=self.temp_dir)
+
+        # Check results
+        stations = StationList(a_station_list)
+        station_list = stations.get_station_list()
+        ext = "seas.fs.col"
+
+        # Loop through stations
+        for station in station_list:
+            station_name = station.scode
+
+            # Find input reference file
+            input_list = glob.glob("%s%s*%s*%s" %
+                                   (ref_dir, os.sep, station_name, ext))
+            if len(input_list) != 1:
+                print("[ERROR]: Can't find reference file for station %s" % (station_name))
+                sys.exit(1)
+            ref_file = input_list[0]
+
+            # Find input calculated file
+            input_list = glob.glob("%s%s*%s*%s" %
+                                   (self.temp_dir, os.sep, station_name, ext))
+            if len(input_list) != 1:
+                print("[ERROR]: Can't find calculated file for station %s" % (station_name))
+                sys.exit(1)
+            comp_file = input_list[0]
+
+            self.assertFalse(cmp_bbp.cmp_files_generic(ref_file,
+                                                       comp_file) != 0,
+                             "Output file %s does not match reference file: %s" %
+                             (comp_file, ref_file))
+
     def test_fas_scenario(self):
         """
         Test the scenario mode in the fas.py module
@@ -88,14 +138,14 @@ class TestFAS(unittest.TestCase):
         label = "10000000"
 
         fas_obj = fas.FAS()
-        fas_obj.run_scenario(a_station_list, input_dir, label,
+        fas_obj.run_fas_seas(a_station_list, [input_dir], [label],
                              self.temp_dir, logfile=a_logfile,
                              temp_dir=self.temp_dir)
 
         # Check results
         stations = StationList(a_station_list)
         station_list = stations.get_station_list()
-        ext = "smc8.smooth.fs.col"
+        ext = "seas.fs.col"
 
         # Loop through stations
         for station in station_list:
@@ -139,14 +189,14 @@ class TestFAS(unittest.TestCase):
         labels = ["10000000", "obs"]
 
         fas_obj = fas.FAS()
-        fas_obj.run_validation(a_station_list, input_dirs, labels,
-                               self.temp_dir, logfile=a_logfile,
-                               temp_dir=self.temp_dir)
+        fas_obj.run_fas_seas(a_station_list, input_dirs, labels,
+                             self.temp_dir, logfile=a_logfile,
+                             temp_dir=self.temp_dir)
         
         # Check results
         stations = StationList(a_station_list)
         station_list = stations.get_station_list()
-        ext = "smc8.smooth.fs.col"
+        ext = "seas.fs.col"
 
         # Check both sets of FAS results
         for computed_fas_dir, fas_prefix in zip(input_dirs, labels):

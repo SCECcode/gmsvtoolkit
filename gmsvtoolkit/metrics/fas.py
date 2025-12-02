@@ -218,16 +218,17 @@ class FAS(object):
             print("[ERROR] Please specify as many labels as input folders!")
             sys,exit(1)
 
-        self.run_fas_eas(station_file, input_folders, labels,
-                         output_dir, input_unit=input_unit,
-                         output_unit=output_unit,
-                         logfile=logfile, temp_dir=None)
-            
-    def run_fas_eas(self, station_file, input_folders, labels,
-                    output_dir, input_unit, output_unit,
-                    logfile=None, temp_dir=None):
+        self.run_fas_seas(station_file, input_folders, labels,
+                          output_dir, input_unit=input_unit,
+                          output_unit=output_unit,
+                          logfile=logfile, temp_dir=None)
+
+    def run_fas_seas(self, station_file, input_folders, labels,
+                     output_dir, input_unit="cm/s/s",
+                     output_unit="cm/s/s",
+                     logfile=None, temp_dir=None):
         """
-        Run FAS analysis codes
+        Run FAS/SEAS analysis codes
         """
         sta_base = os.path.basename(os.path.splitext(station_file)[0])
 

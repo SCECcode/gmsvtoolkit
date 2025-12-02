@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, Southern California Earthquake Center
+Copyright (c) 2025, Southern California Earthquake Center
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -296,6 +296,11 @@ def read_fas_eas_file(fas_input_file):
     """
     Reads the fas_input_file, returning
     freq, fas_h1, fas_h2, eas, seas
+
+    This is the file format originally supported in
+    the BBP, where both eas and seas were in the same
+    file. See the two functions below for reading the
+    separate fas/eas and seas files.
     """
     freqs = []
     fas_h1 = []
@@ -322,3 +327,61 @@ def read_fas_eas_file(fas_input_file):
     input_file.close()
 
     return freqs, fas_h1, fas_h2, eas, seas
+
+def read_eas_file(eas_input_file):
+    """
+    Reads the eas_input_file, returning
+    freq, fas_h1, fas_h2, eas
+    """
+    freqs = []
+    fas_h1 = []
+    fas_h2 = []
+    eas = []
+
+    input_file = open(eas_input_file, 'r')
+    for line in input_file:
+        line = line.strip()
+        if not line:
+            continue
+        if line.startswith("#") or line.startswith("%"):
+            continue
+        pieces = line.split()
+        if len(pieces) != 4:
+            continue
+        pieces = [float(piece) for piece in pieces]
+        freqs.append(pieces[0])
+        fas_h1.append(pieces[1])
+        fas_h2.append(pieces[2])
+        eas.append(pieces[3])
+    input_file.close()
+
+    return freqs, fas_h1, fas_h2, eas
+
+def read_seas_file(seas_input_file):
+    """
+    Reads the seas_input_file, returning
+    freq and seas
+    """
+    freqs = []
+    seas = []
+
+    input_file = open(seas_input_file, 'r')
+    for line in input_file:
+        line = line.strip()
+        if not line:
+            continue
+        if line.startswith("#") or line.startswith("%"):
+            continue
+        pieces = line.split()
+        if len(pieces) != 2:
+            continue
+
+        # Trim any commas in case we have a csv file
+        pieces = [piece.strip(", ") for piece in pieces]
+
+        pieces = [float(piece) for piece in pieces]
+        freqs.append(pieces[0])
+        seas.append(pieces[1])
+    input_file.close()
+
+    return freqs, seas

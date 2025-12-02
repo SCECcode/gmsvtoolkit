@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2025, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -64,7 +64,7 @@ class TestPlotFASComparison(unittest.TestCase):
         self.station_id = "2001-SCE"
         self.station_list = "nr_v19_06_2_3_stations.stl"
         self.batch_list = "nr_v19_06_2_3_stations.txt"
-        self.labels = ["10000000", "NR"]
+        self.labels = ["4427745", "NR"]
         
         if "GMSVTOOLKIT_TESTDIR" in os.environ:
             self.temp_dir = os.path.join(os.environ["GMSVTOOLKIT_TESTDIR"],
@@ -81,17 +81,22 @@ class TestPlotFASComparison(unittest.TestCase):
         # Reference directory
         ref_dir = os.path.join(self.install.TEST_REF_DIR, "metrics")
         obs_dir = os.path.join(self.install.TEST_REF_DIR, "obs")
-        input_file1 = os.path.join(ref_dir, "10000000.2001-SCE.smc8.smooth.fs.col")
-        input_file2 = os.path.join(obs_dir, "obs.2001-SCE.smc8.smooth.fs.col")
+        input_fas_file1 = os.path.join(ref_dir, "4427745.2001-SCE.eas.fs.col")
+        input_seas_file1 = os.path.join(ref_dir, "4427745.2001-SCE.seas.fs.col")
+        input_fas_file2 = os.path.join(obs_dir, "obs.2001-SCE.eas.fs.col")
+        input_seas_file2 = os.path.join(obs_dir, "obs.2001-SCE.seas.fs.col")
         output_file = os.path.join(self.temp_dir, "2001-SCE.fas.comparison.png")
         lfreq = None
         hfreq = None
         plot_title = None
         
         # Run FAS plotting code
-        plot_fas_comparison.run_single_station(input_file1, input_file2,
+        plot_fas_comparison.run_single_station(self.station_id, output_file,
                                                self.labels[0], self.labels[1],
-                                               output_file, self.station_id,
+                                               input_fas_file1=input_fas_file1,
+                                               input_seas_file1=input_seas_file1,
+                                               input_fas_file2=input_fas_file2,
+                                               input_seas_file2=input_seas_file2,
                                                lfreq=lfreq, hfreq=hfreq,
                                                plot_title=plot_title)
         
@@ -118,8 +123,8 @@ class TestPlotFASComparison(unittest.TestCase):
         station_list = os.path.join(ref_dir, self.station_list)
         
         # Run FAS plotting code in station list mode
-        plot_fas_comparison.run_station_mode(station_list, [ref_dir, obs_dir],
-                                             self.labels, self.temp_dir)
+        plot_fas_comparison.run_station_list_mode(station_list, [ref_dir, obs_dir],
+                                                  self.labels, self.temp_dir)
 
 if __name__ == "__main__":
     SUITE = unittest.TestLoader().loadTestsFromTestCase(TestPlotFASComparison)
