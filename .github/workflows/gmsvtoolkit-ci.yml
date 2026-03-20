@@ -12,7 +12,7 @@ jobs:
     - name: set GMSVTOOLKIT_DIR
       run: echo "GMSVTOOLKIT_BASE_DIR=$RUNNER_WORKSPACE/gmsvtoolkit" >> $GITHUB_ENV
     - name: Setup Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
     - name: configure Python
@@ -24,7 +24,7 @@ jobs:
         pip install scipy
         pip install matplotlib
     - name: checkout GMSVToolkit
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6
     - name: build gmsvtoolkit
       run: ./.github/scripts/gmsvtoolkit-build-ci.sh
       shell: bash

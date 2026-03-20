@@ -59,7 +59,7 @@ echo "===================FFTW=================="
 mkdir -p ${FFTW_BUILD_DIR}
 OLD_DIR=`pwd`
 cd ${FFTW_BUILD_DIR}
-download_untar https://g-c662a6.a78b8.36fe.data.globus.org/bbp/releases/${VERSION}/fftw-3.3.8.tar.gz
+download_untar https://g-3a9041.a78b8.36fe.data.globus.org/bbp/releases/${VERSION}/fftw-3.3.8.tar.gz
 cd fftw-3.3.8
 ./configure --prefix=${FFTW_INSTALL_DIR}
 make
