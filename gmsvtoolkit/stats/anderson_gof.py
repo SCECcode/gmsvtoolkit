@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2025, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -895,13 +895,6 @@ class AndersonGOF(object):
         """
         # Load configuration
         install = gmsvtoolkit_config.GMSVToolKitConfig.get_instance()
-
-        # Now the file paths
-        #self.log = os.path.join(a_logdir, "%d.anderson.log" % (sim_id))
-        # sta_file = os.path.join(a_indir, self.station_list)
-        # sta_base = os.path.basename(os.path.splitext(self.station_list)[0])
-        #sims_dir = a_outdir
-        #obs_dir = os.path.join(a_tmpdir, "obs_seis_%s" % (sta_base))
 
         # Start with first record
         irec = 0
