@@ -1,8 +1,8 @@
-#!/bin/env python
+#!/bin/env python3
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -37,8 +37,11 @@ from __future__ import division, print_function
 # Import Python Modules
 import os
 import sys
+import atexit
+import shutil
 import struct
 import argparse
+import tempfile
 import numpy as np
 import matplotlib as mpl
 if mpl.get_backend() != 'agg':
@@ -60,6 +63,12 @@ GMT_DATA_FORMAT = '<f'
 # The existing GMT topo grid in NetCDF format can be
 # converted to this format with the following command:
 # $ grdreformat calTopo18.grd calTopo18.test=bf -V
+
+def cleanup(dir_name):
+    """
+    This function removes the temporary directory
+    """
+    shutil.rmtree(dir_name)
 
 def in_region(point, plotregion):
     """
@@ -344,7 +353,7 @@ def run():
     if args.plot_title:
         plot_title = args.plot_title
 
-        # Needed parameters
+    # Needed parameters
     if not args.src_file:
         print("[ERROR]: Please specify a source description file!")
         sys.exit(1)
@@ -372,21 +381,31 @@ def run():
 
 def plot_map(station_file, src_file,
              plot_title, output_dir,
-             output_file="station_map.png"):
+             output_file="station_map.png",
+             temp_dir=None):
     """
     Generate map plot with stations and and fault
     """
     # Find plotting data files
     install = gmsvtoolkit_config.GMSVToolKitConfig.get_instance()
 
+    if temp_dir is None:
+        # Create temp directory if needed
+        temp_dir = tempfile.mkdtemp()
+        # And clean up later
+        atexit.register(cleanup, temp_dir)
+
+    # Make paths absolute paths
+    temp_dir = os.path.abspath(temp_dir)
+
     # Define boundaries to plot using the stations in the station file
     (north, south,
      east, west) = fault_utilities.set_boundaries_from_stations(station_file,
                                                                 src_file)
-    trace_file = os.path.join(output_dir,
+    trace_file = os.path.join(temp_dir,
                               "%s.trace" %
                               (os.path.basename(src_file)))
-    simple_station_file = os.path.join(output_dir,
+    simple_station_file = os.path.join(temp_dir,
                                        "%s.simple" %
                                        (os.path.basename(station_file)))
     output_file = os.path.join(output_dir, output_file)
