@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -83,9 +83,9 @@ class TestGMSVTools(unittest.TestCase):
         vel_file = "10000000.2001-SCE.vel.bbp"
         a_vel_file = os.path.join(ref_dir, vel_file)
 
-        gmsv_tools.convert_file(a_vel_file, "vel", "acc",
-                                output_dir=self.temp_dir,
-                                temp_dir=self.temp_dir)
+        gmsv_tools.convert_input_file(a_vel_file, "vel", "acc",
+                                      output_dir=self.temp_dir,
+                                      temp_dir=self.temp_dir)
 
     def test_gmsvtools_integrate(self):
         """
@@ -97,9 +97,9 @@ class TestGMSVTools(unittest.TestCase):
         vel_file = "10000000.2001-SCE.vel.bbp"
         a_vel_file = os.path.join(ref_dir, vel_file)
 
-        gmsv_tools.convert_file(a_vel_file, "vel", "dis",
-                                output_dir=self.temp_dir,
-                                temp_dir=self.temp_dir)
+        gmsv_tools.convert_input_file(a_vel_file, "vel", "dis",
+                                      output_dir=self.temp_dir,
+                                      temp_dir=self.temp_dir)
 
     def test_gmsvtools_station(self):
         """
@@ -112,9 +112,9 @@ class TestGMSVTools(unittest.TestCase):
         a_station_list = os.path.join(ref_dir, r_station_list)
 
         # Run gmsv_tools
-        gmsv_tools.convert_station_file(a_station_list, "acc",
-                                        "dis", ref_dir, self.temp_dir,
-                                        temp_dir=self.temp_dir)
+        gmsv_tools.convert_files_from_station_list(a_station_list, "acc",
+                                                   "dis", ref_dir, self.temp_dir,
+                                                   temp_dir=self.temp_dir)
 
         # Check results
         stations = StationList(a_station_list)
@@ -156,9 +156,9 @@ class TestGMSVTools(unittest.TestCase):
         a_batch_file = os.path.join(ref_dir, r_batch_file)
 
         # Run gmsv_tools
-        gmsv_tools.convert_batch_file(a_batch_file, "acc",
-                                      "dis", ref_dir, self.temp_dir,
-                                      temp_dir=self.temp_dir)
+        gmsv_tools.convert_files_from_batch_file(a_batch_file, "acc",
+                                                 "dis", ref_dir, self.temp_dir,
+                                                 temp_dir=self.temp_dir)
 
         # Loop through stations
         input_file = open(a_batch_file, 'r')

@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -196,7 +196,7 @@ def integrate(bbp_in, bbp_out, temp_dir):
 
 def diff(bbp_in, bbp_out, temp_dir):
     """
-    Generates bbp_out by derivating bbp_in
+    Generates bbp_out by differentiating bbp_in
     """
     units_in = read_bbp_units(bbp_in)
     if units_in == "cm/s/s":
@@ -248,19 +248,19 @@ def run():
     output_dir = os.path.abspath(output_dir)
 
     if args.input_file:
-        convert_file(args.input_file, args.input_format,
-                     args.output_format, output_file=args.output_file,
-                     input_dir=input_dir, output_dir=output_dir)
+        convert_input_file(args.input_file, args.input_format,
+                           args.output_format, output_file=args.output_file,
+                           input_dir=input_dir, output_dir=output_dir)
     elif args.station_list:
-        convert_station_file(args.station_list,
-                             args.input_format, args.output_format,
-                             input_dir, output_dir,
-                             input_suffix=args.input_suffix)
+        convert_files_from_station_list(args.station_list,
+                                        args.input_format, args.output_format,
+                                        input_dir, output_dir,
+                                        input_suffix=args.input_suffix)
     elif args.batch_file:
-        convert_batch_file(args.batch_file,
-                           args.input_format, args.output_format,
-                           input_dir, output_dir,
-                           input_suffix=args.input_suffix)
+        convert_files_from_batch_file(args.batch_file,
+                                      args.input_format, args.output_format,
+                                      input_dir, output_dir,
+                                      input_suffix=args.input_suffix)
     else:
         print("[ERROR]: Must specify input_file, station_list or batch_file!")
         sys.exit(-1)
@@ -287,11 +287,11 @@ def select_action(input_format, output_format):
 
     return action_type, action_count
 
-def convert_station_file(station_file,
-                         input_format, output_format,
-                         input_dir, output_dir,
-                         input_suffix=None,
-                         temp_dir=None):
+def convert_files_from_station_list(station_file,
+                                    input_format, output_format,
+                                    input_dir, output_dir,
+                                    input_suffix=None,
+                                    temp_dir=None):
     """
     Process a station list and convert each file as
     indicated by action_type and action_count
@@ -312,11 +312,11 @@ def convert_station_file(station_file,
                            input_suffix=input_suffix,
                            temp_dir=temp_dir)
 
-def convert_batch_file(batch_file,
-                       input_format, output_format,
-                       input_dir, output_dir,
-                       input_suffix=None,
-                       temp_dir=None):
+def convert_files_from_batch_file(batch_file,
+                                  input_format, output_format,
+                                  input_dir, output_dir,
+                                  input_suffix=None,
+                                  temp_dir=None):
     """
     Process a batch file and convert each file as
     indicated by action_type and action_count
@@ -429,9 +429,9 @@ def convert_single_file(input_file, output_file,
             diff(tmp_input, tmp_output, temp_dir)
         tmp_input = tmp_output        
 
-def convert_file(input_file, input_format, output_format,
-                 output_file=None, input_dir="",
-                 output_dir="", temp_dir=None):
+def convert_input_file(input_file, input_format, output_format,
+                       output_file=None, input_dir="",
+                       output_dir="", temp_dir=None):
     """
     Converts a single file from input format
     to output format

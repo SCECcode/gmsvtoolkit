@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -96,14 +96,14 @@ class TestPlotSeismograms(unittest.TestCase):
         # Run plot seismograms code, test both 2-, and 3-component plotting
         plot_seismograms_obj = plot_seismograms.PlotSeismograms(mode=mode,
                                                                 n_comp=2)
-        plot_seismograms_obj.run_single_station(input_files, labels,
-                                                output_file, station_name,
-                                                xmin, xmax, plot_title=None)
+        plot_seismograms_obj.plot_single_station(input_files, labels,
+                                                 output_file, station_name,
+                                                 xmin, xmax, plot_title=None)
         plot_seismograms_obj = plot_seismograms.PlotSeismograms(mode=mode,
                                                                 n_comp=3)
-        plot_seismograms_obj.run_single_station(input_files, labels,
-                                                output_file, station_name,
-                                                xmin, xmax, plot_title=None)
+        plot_seismograms_obj.plot_single_station(input_files, labels,
+                                                 output_file, station_name,
+                                                 xmin, xmax, plot_title=None)
         
     def test_plot_seismograms_station_list(self):
         """
@@ -119,10 +119,10 @@ class TestPlotSeismograms(unittest.TestCase):
         # Run plot seismograms code
         plot_seismograms_obj = plot_seismograms.PlotSeismograms(mode=mode,
                                                                 n_comp=n_comp)
-        plot_seismograms_obj.run_station_mode(station_file, [self.comp_dir],
-                                              labels, self.temp_dir,
-                                              self.comp_label, xmin, xmax,
-                                              plot_title=None)
+        plot_seismograms_obj.plot_station_mode(station_file, [self.comp_dir],
+                                               labels, self.temp_dir,
+                                               self.comp_label, xmin, xmax,
+                                               plot_title=None)
 
     def test_plot_seismograms_batch(self):
         """
@@ -138,10 +138,10 @@ class TestPlotSeismograms(unittest.TestCase):
         # Run plot seismograms code
         plot_seismograms_obj = plot_seismograms.PlotSeismograms(mode=mode,
                                                                 n_comp=n_comp)
-        plot_seismograms_obj.run_batch_mode(batch_file, [self.comp_dir],
-                                            labels, self.temp_dir,
-                                            self.comp_label, xmin, xmax,
-                                            plot_title=None)
+        plot_seismograms_obj.plot_batch_mode(batch_file, [self.comp_dir],
+                                             labels, self.temp_dir,
+                                             self.comp_label, xmin, xmax,
+                                             plot_title=None)
 
 if __name__ == "__main__":
     SUITE = unittest.TestLoader().loadTestsFromTestCase(TestPlotSeismograms)

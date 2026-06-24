@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -441,26 +441,26 @@ class PlotSeismograms(object):
                     output_file = "%s_%s.png" % (args.station_id, suffix)
             output_file = os.path.join(output_dir, output_file)
             input_files = [os.path.join(input_dir, input_file) for input_file in input_files]
-            self.run_single_station(input_files, labels,
-                                    output_file, args.station_id,
-                                    xmin, xmax, plot_title)
+            self.plot_single_station(input_files, labels,
+                                     output_file, args.station_id,
+                                     xmin, xmax, plot_title)
         elif args.batch_file:
             # Batch file mode
-            self.run_batch_mode(args.batch_file, input_files,
-                                labels, output_dir, args.comp_label,
-                                xmin, xmax, plot_title)
+            self.plot_batch_mode(args.batch_file, input_files,
+                                 labels, output_dir, args.comp_label,
+                                 xmin, xmax, plot_title)
         elif args.station_list:
             # Run through the station list
-            self.run_station_mode(args.station_list, input_files,
-                                  labels, output_dir, args.comp_label,
-                                  xmin, xmax, plot_title)
+            self.plot_station_mode(args.station_list, input_files,
+                                   labels, output_dir, args.comp_label,
+                                   xmin, xmax, plot_title)
         else:
             print("[ERROR]: Must include station_id, batch_file, or station_list!")
             sys.exit(1)
 
-    def run_single_station(self, input_files, labels,
-                           output_file, station_name,
-                           xmin, xmax, plot_title=None):
+    def plot_single_station(self, input_files, labels,
+                            output_file, station_name,
+                            xmin, xmax, plot_title=None):
         """
         Generates seismogram comparison plots for a single station
         """
@@ -477,9 +477,9 @@ class PlotSeismograms(object):
                                 self.orientations,
                                 plot_title=plot_title)
         
-    def run_batch_mode(self, batch_file, input_dirs,
-                       labels, output_dir, comp_label,
-                       xmin, xmax, plot_title):
+    def plot_batch_mode(self, batch_file, input_dirs,
+                        labels, output_dir, comp_label,
+                        xmin, xmax, plot_title):
         """
         Generated seismogram comparison plots for stations in a batch file
         """
@@ -504,9 +504,9 @@ class PlotSeismograms(object):
 
         input_list.close()
 
-    def run_station_mode(self, station_file, input_dirs,
-                         labels, output_dir, comp_label,
-                         xmin, xmax, plot_title):
+    def plot_station_mode(self, station_file, input_dirs,
+                          labels, output_dir, comp_label,
+                          xmin, xmax, plot_title):
         """
         Generates seismogram comparison plots for stations in a station list
         """
@@ -569,9 +569,9 @@ class PlotSeismograms(object):
             output_file = "%s_%s.png" % (station_name, suffix)
         output_file = os.path.join(output_dir, output_file)
 
-        self.run_single_station(input_files, labels,
-                                output_file, station_name,
-                                xmin, xmax, plot_title)
+        self.plot_single_station(input_files, labels,
+                                 output_file, station_name,
+                                 xmin, xmax, plot_title)
             
 if __name__ == '__main__':
     print("Running module: %s" % (os.path.basename(sys.argv[0])))
