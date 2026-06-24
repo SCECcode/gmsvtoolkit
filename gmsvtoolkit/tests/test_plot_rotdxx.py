@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -88,8 +88,8 @@ class TestPlotRotDXX(unittest.TestCase):
 
         plot_rotdxx_obj = plot_rotdxx.PlotRotDXX(mode="rotd50")
         # Run plotting code to make sure we can generate plots
-        plot_rotdxx_obj.run_station_mode(a_station_list, input_dirs, self.labels,
-                                         self.temp_dir, self.comp_label)
+        plot_rotdxx_obj.plot_station_mode(a_station_list, input_dirs, self.labels,
+                                          self.temp_dir, self.comp_label)
 
 if __name__ == "__main__":
     SUITE = unittest.TestLoader().loadTestsFromTestCase(TestPlotRotDXX)
