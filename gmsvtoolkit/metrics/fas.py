@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2025, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -126,7 +126,7 @@ def compute_station_fas(a_tmpdir, a_outdir_fas, acc_file,
     [fas_freq, fas_1, fas_2, eas,
      seas_freq, seas] = compute_fas(acc1, acc2, dt)
     
-    # Write fas/eas file first
+    # Write file with FAS/EAS first
     output_basename = "%s.eas.fs.col" % (output_prefix)
     output_filename = os.path.join(a_outdir_fas, output_basename)
     output_file = open(output_filename, 'w')
@@ -137,7 +137,7 @@ def compute_station_fas(a_tmpdir, a_outdir_fas, acc_file,
                           (f0, f1, f2, e0))
     output_file.close()
 
-    # write seas next
+    # Now, we write the file with the SEAS
     output_basename = "%s.seas.fs.col" % (output_prefix)
     output_filename = os.path.join(a_outdir_fas, output_basename)
     output_file = open(output_filename, 'w')
@@ -177,7 +177,7 @@ class FAS(object):
                             help="input units: (g or cm/s/s)")
         parser.add_argument("--output-unit", dest="output_unit", default="cm/s/s",
                             help="output units: (g or cm/s/s)")
-        parser.add_argument('input_folders', nargs='*')
+        parser.add_argument('input_dirs', nargs='*')
         
         args = parser.parse_args()
         return args
@@ -207,23 +207,23 @@ class FAS(object):
             print("[ERROR]: Output unit must be 'g' or 'cm/s/s'")
             sys.exit(-1)
         
-        # Sort input folders/labels
-        input_folders = args.input_folders
+        # Sort input directories/labels
+        input_dirs = args.input_dirs
         labels = args.labels
-        if len(input_folders) < 1:
-            print("[ERROR]: Please specify at least one input folder!")
+        if len(input_dirs) < 1:
+            print("[ERROR]: Please specify at least one input directory!")
             sys.exit(1)
         labels = [label.strip() for label in labels.split(",")]
-        if len(labels) != len(input_folders):
-            print("[ERROR] Please specify as many labels as input folders!")
+        if len(labels) != len(input_dirs):
+            print("[ERROR]: Please specify as many labels as input directories!")
             sys,exit(1)
 
-        self.run_fas_seas(station_file, input_folders, labels,
+        self.run_fas_seas(station_file, input_dirs, labels,
                           output_dir, input_unit=input_unit,
                           output_unit=output_unit,
                           logfile=logfile, temp_dir=None)
 
-    def run_fas_seas(self, station_file, input_folders, labels,
+    def run_fas_seas(self, station_file, input_dirs, labels,
                      output_dir, input_unit="cm/s/s",
                      output_unit="cm/s/s",
                      logfile=None, temp_dir=None):
@@ -241,7 +241,7 @@ class FAS(object):
         # Make paths absolute paths
         temp_dir = os.path.abspath(temp_dir)
         output_dir = os.path.abspath(output_dir)
-        input_folders = [os.path.abspath(input_folder) for input_folder in input_folders]
+        input_dirs = [os.path.abspath(input_dir) for input_dir in input_dirs]
 
         if logfile is None:
             # Create our own log file
@@ -255,16 +255,16 @@ class FAS(object):
         slo = StationList(station_file)
         site_list = slo.get_station_list()
 
-        for input_folder, label in zip(input_folders, labels):
-            # Process each input folder
+        for input_dir, label in zip(input_dirs, labels):
+            # Process each input directory
             print("==> Processing %s" % (label))
             for station in site_list:
                 # Process each station
                 station_name = station.scode
                 print("===> Processing station: %s..." % (station_name),
                       end="", flush=True)
-                acc_file = find_acc_file(input_folder, station_name, label)
-                input_acc_file = os.path.join(input_folder, acc_file)
+                acc_file = find_acc_file(input_dir, station_name, label)
+                input_acc_file = os.path.join(input_dir, acc_file)
                 output_prefix = "%s.%s" % (label, station_name)
                 
                 # Compute seismogram's FAS

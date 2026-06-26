@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2025, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -91,14 +91,14 @@ class TestPlotFASComparison(unittest.TestCase):
         plot_title = None
         
         # Run FAS plotting code
-        plot_fas_comparison.run_single_station(self.station_id, output_file,
-                                               self.labels[0], self.labels[1],
-                                               input_fas_file1=input_fas_file1,
-                                               input_seas_file1=input_seas_file1,
-                                               input_fas_file2=input_fas_file2,
-                                               input_seas_file2=input_seas_file2,
-                                               lfreq=lfreq, hfreq=hfreq,
-                                               plot_title=plot_title)
+        plot_fas_comparison.plot_station_comparison(self.station_id, output_file,
+                                                    self.labels[0], self.labels[1],
+                                                    input_fas_file1=input_fas_file1,
+                                                    input_seas_file1=input_seas_file1,
+                                                    input_fas_file2=input_fas_file2,
+                                                    input_seas_file2=input_seas_file2,
+                                                    lfreq=lfreq, hfreq=hfreq,
+                                                    plot_title=plot_title)
         
     def test_plot_fas_comparison_batch(self):
         """
@@ -110,8 +110,8 @@ class TestPlotFASComparison(unittest.TestCase):
         batch_file = os.path.join(ref_dir, self.batch_list)
         
         # Run FAS plotting code in batch mode
-        plot_fas_comparison.run_batch_mode(batch_file, [ref_dir, obs_dir],
-                                           self.labels, self.temp_dir)
+        plot_fas_comparison.plot_batch_mode(batch_file, [ref_dir, obs_dir],
+                                            self.labels, self.temp_dir)
 
     def test_plot_fas_comparison_station(self):
         """
@@ -123,8 +123,8 @@ class TestPlotFASComparison(unittest.TestCase):
         station_list = os.path.join(ref_dir, self.station_list)
         
         # Run FAS plotting code in station list mode
-        plot_fas_comparison.run_station_list_mode(station_list, [ref_dir, obs_dir],
-                                                  self.labels, self.temp_dir)
+        plot_fas_comparison.plot_station_list_mode(station_list, [ref_dir, obs_dir],
+                                                   self.labels, self.temp_dir)
 
 if __name__ == "__main__":
     SUITE = unittest.TestLoader().loadTestsFromTestCase(TestPlotFASComparison)
