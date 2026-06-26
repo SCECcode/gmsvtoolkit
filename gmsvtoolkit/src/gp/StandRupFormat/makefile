@@ -27,7 +27,7 @@ CFLAGS = ${UFLAGS} ${LF_FLAGS} ${FFTW_INCFLAGS}
 all : srf_gethypo
 
 srf_gethypo : srf_gethypo.c ${OBJS}
-	${CC} ${CFLAGS} -o srf_gethypo srf_gethypo.c ${LDLIBS} ${INCPAR} ${OBJS}
+	${CC} ${CFLAGS} -o srf_gethypo srf_gethypo.c ${OBJS} ${LDLIBS} ${INCPAR}
 	cp srf_gethypo ../bin/.
 
 ${OBJS} : ${HEADS}
