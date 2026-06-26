@@ -24,13 +24,17 @@ CFLAGS = ${UFLAGS} ${LF_FLAGS} ${FFTW_INCFLAGS}
 
 ##### make options
 
-all : srf_gethypo
+all : srf_gethypo srf2moment
 
 srf_gethypo : srf_gethypo.c ${OBJS}
 	${CC} ${CFLAGS} -o srf_gethypo srf_gethypo.c ${OBJS} ${LDLIBS} ${INCPAR}
 	cp srf_gethypo ../bin/.
 
+srf2moment : srf2moment.c ${OBJS}
+	${CC} ${CFLAGS} -o srf2moment srf2moment.c ${OBJS} ${LDLIBS} ${INCPAR}
+	cp srf2moment ../bin/
+
 ${OBJS} : ${HEADS}
 
 clean :
-	-rm -f *.o srf_gethypo
+	-rm -f *.o srf_gethypo srf2moment
