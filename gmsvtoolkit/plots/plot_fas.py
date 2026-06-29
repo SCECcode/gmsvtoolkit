@@ -54,7 +54,9 @@ def plot_fas(freqs_fas, h1_data, h2_data,
              fas_plot, station, units=None,
              plot_title=None):
     """
-    Create a plot of both FAS components
+    Create a plot of both FAS horizontal components along
+    with the combined SEAS
+
     """
     # Set plot dims
     pylab.gcf().set_size_inches(11, 8.5)

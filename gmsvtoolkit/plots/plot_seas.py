@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2025, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -164,30 +164,30 @@ def run():
             else:
                 output_file = "%s.seas.png" % (args.station_id)
         output_file = os.path.join(output_dir, output_file)
-        run_single_station(args.station_id, output_file,
-                           input_seas_file=input_seas_file,
-                           plot_title=plot_title,
-                           units=units)
+        plot_seas_single_station(args.station_id, output_file,
+                                 input_seas_file=input_seas_file,
+                                 plot_title=plot_title,
+                                 units=units)
     elif args.batch_file:
         # Batch file mode
         batch_file = os.path.abspath(args.batch_file)
-        run_batch_mode(batch_file, input_dir,
-                       output_dir, comp_label,
-                       units)
+        plot_batch_mode(batch_file, input_dir,
+                        output_dir, comp_label,
+                        units)
     elif args.station_list:
         # Run through the station list
         station_list = os.path.abspath(args.station_list)
-        run_station_list_mode(station_list, input_dir,
-                              output_dir, comp_label,
-                              units)
+        plot_station_list_mode(station_list, input_dir,
+                               output_dir, comp_label,
+                               units)
     else:
         print("[ERROR]: Must include station_id, batch_file, or station_list!")
         sys.exit(1)
 
-def run_single_station(station, output_file,
-                       input_seas_file=None,
-                       plot_title=None,
-                       units=None):
+def plot_seas_single_station(station, output_file,
+                             input_seas_file=None,
+                             plot_title=None,
+                             units=None):
 
     print("[PLOTSEAS]: Generating SEAS plot for station %s" % (station))
 
@@ -204,9 +204,9 @@ def run_single_station(station, output_file,
               output_file, station, units=units,
               plot_title=plot_title)
 
-def run_batch_mode(batch_file, input_dir,
-                   output_dir, comp_label=None,
-                   units=None):
+def plot_batch_mode(batch_file, input_dir,
+                    output_dir, comp_label=None,
+                    units=None):
     """
     Generated SEAS plots for stations in a batch file
     """
@@ -219,15 +219,15 @@ def run_batch_mode(batch_file, input_dir,
 
         station_name = line
 
-        run_directory_mode(station_name, input_dir,
-                           output_dir, comp_label,
-                           units)
+        plot_directory_mode(station_name, input_dir,
+                            output_dir, comp_label,
+                            units)
 
     input_list.close()
 
-def run_station_list_mode(station_file, input_dir,
-                          output_dir, comp_label=None,
-                          units=None):
+def plot_station_list_mode(station_file, input_dir,
+                           output_dir, comp_label=None,
+                           units=None):
     """
     Generates SEAS plots for stations in a station list
     """
@@ -238,13 +238,13 @@ def run_station_list_mode(station_file, input_dir,
     for station in station_list:
         station_name = station.scode
 
-        run_directory_mode(station_name, input_dir,
-                           output_dir, comp_label,
-                           units)
+        plot_directory_mode(station_name, input_dir,
+                            output_dir, comp_label,
+                            units)
 
-def run_directory_mode(station_name, input_dir,
-                       output_dir, comp_label=None,
-                       units=None):
+def plot_directory_mode(station_name, input_dir,
+                        output_dir, comp_label=None,
+                        units=None):
     """
     Used by both station_mode and batch_mode, finds files matching
     the station name and generates comparison plot
@@ -281,9 +281,9 @@ def run_directory_mode(station_name, input_dir,
         output_file = "%s.seas.png" % (station_name)
     output_file = os.path.join(output_dir, output_file)
 
-    run_single_station(station_name, output_file,
-                       input_seas_file=input_seas_file,
-                       units=units)
+    plot_seas_single_station(station_name, output_file,
+                             input_seas_file=input_seas_file,
+                             units=units)
 
 if __name__ == '__main__':
     run()
