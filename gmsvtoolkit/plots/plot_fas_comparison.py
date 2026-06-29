@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -37,6 +37,7 @@ from __future__ import division, print_function
 # Import Python modules
 import os
 import sys
+import numpy as np
 import matplotlib as mpl
 mpl.use('AGG')
 import glob
@@ -48,12 +49,14 @@ from plots import plot_config
 from core.station_list import StationList
 from utils import file_utilities
 
-def plot_fas_comparison(station, input_file1, input_file2, label1, label2,
-                        outfile, lfreq=None, hfreq=None, plot_title=None):
+def plot_fas_comparison(station, outfile, label1, label2,
+                        input_fas_file1=None, input_seas_file1=None,
+                        input_fas_file2=None, input_seas_file2=None,
+                        lfreq=None, hfreq=None, plot_title=None,
+                        units=None):
     """
     Plots the FAS comparison between simulated and observed seismograms
     """
-
     # Set up ticks to match matplotlib 1.x style
     mpl.rcParams['xtick.direction'] = 'in'
     mpl.rcParams['ytick.direction'] = 'in'
@@ -64,19 +67,39 @@ def plot_fas_comparison(station, input_file1, input_file2, label1, label2,
     mpl.rcParams['lines.scale_dashes'] = False
 
     # Read data
-    (input1_freqs, input1_fas_h1,
-     input1_fas_h2, input1_eas,
-     input1_s_eas) = file_utilities.read_fas_eas_file(input_file1)
-    (input2_freqs, input2_fas_h1,
-     input2_fas_h2, input2_eas,
-     input2_s_eas) = file_utilities.read_fas_eas_file(input_file2)
+    if (input_fas_file1 is not None and input_seas_file1 is not None and
+          input_fas_file2 is not None and input_seas_file2 is not None):
+        (input1_freqs, input1_fas_h1,
+         input1_fas_h2,
+         input1_eas) = file_utilities.read_eas_file(input_fas_file1)
+        (freqs_seas1,
+         input1_s_eas) = file_utilities.read_seas_file(input_seas_file1)
+        (input2_freqs, input2_fas_h1,
+         input2_fas_h2,
+         input2_eas) = file_utilities.read_eas_file(input_fas_file2)
+        (freqs_seas2,
+         input2_s_eas) = file_utilities.read_seas_file(input_seas_file2)
+        input1_fas_h1 = np.abs(input1_fas_h1)
+        input1_fas_h2 = np.abs(input1_fas_h2)
+        input2_fas_h1 = np.abs(input2_fas_h1)
+        input2_fas_h2 = np.abs(input2_fas_h2)
+    else:
+        print("[ERROR]: Must specify "
+              "input_eas_file[1-2] and input_seas_file[1-2]!")
+        sys.exit(1)
 
     # Start plot
     pylab.clf()
 
     # Figure out limits for x and y axis
-    min_x = min([min((input1_freqs)), min(input2_freqs)])
-    max_x = max([max((input1_freqs)), max(input2_freqs)])
+    min_x = min([min(input1_freqs),
+                 min(input2_freqs),
+                 min(freqs_seas1),
+                 min(freqs_seas2)])
+    max_x = max([max(input1_freqs),
+                 max(input2_freqs),
+                 max(freqs_seas1),
+                 max(freqs_seas2)])
     min_horiz_y = min([min(input1_fas_h1), min(input2_fas_h1),
                        min(input1_fas_h2), min(input2_fas_h2)]) / 1.1
     max_horiz_y = 1.1 * max([max(input1_fas_h1), max(input2_fas_h1),
@@ -97,6 +120,17 @@ def plot_fas_comparison(station, input_file1, input_file2, label1, label2,
     pylab.subplots_adjust(hspace=0.3)
     pylab.subplots_adjust(wspace=0.3)
 
+    # Adjust units
+    if units == "g":
+        y_label = "Fourier Amplitude (g)"
+        scale_y_min = 0.000001
+        scale_y_max = 1
+    else:
+        y_label = "Fourier Amplitude (cm/s/s)"
+        scale_y_min = 0.001
+        scale_y_max = 1000
+    plot_scale = [0.01, 100, scale_y_min, scale_y_max]
+
     # First plot
     ax1 = pylab.subplot(131)
     ax1.set_title('FAS H1', fontsize='small')
@@ -107,16 +141,16 @@ def plot_fas_comparison(station, input_file1, input_file2, label1, label2,
     pylab.xscale('log')
     pylab.yscale('log')
     pylab.xlabel('Frequency (Hz)')
-    pylab.ylabel("Fourier Amplitude")
-    pylab.axis([0.01, 100, 0.001, 1000])
+    pylab.ylabel(y_label)
+    pylab.axis(plot_scale)
     pylab.grid(True)
     pylab.grid(which='major', linestyle='-', color='lightgray')
     #pylab.grid(b=True, which='minor', linewidth=0.5, color='gray')
     if lfreq is not None:
-        pylab.vlines(lfreq, 0.001, 1000,
+        pylab.vlines(lfreq, scale_y_min, scale_y_max,
                      color='violet', linestyles='--')
     if hfreq is not None:
-        pylab.vlines(hfreq, 0.001, 1000,
+        pylab.vlines(hfreq, scale_y_min, scale_y_max,
                      color='r', linestyles='--')
     pylab.legend(prop=mpl.font_manager.FontProperties(size=8))
 
@@ -130,37 +164,37 @@ def plot_fas_comparison(station, input_file1, input_file2, label1, label2,
     pylab.xscale('log')
     pylab.yscale('log')
     pylab.xlabel('Frequency (Hz)')
-    pylab.ylabel("Fourier Amplitude")
-    pylab.axis([0.01, 100, 0.001, 1000])
+    pylab.ylabel(y_label)
+    pylab.axis(plot_scale)
     pylab.grid(True)
     pylab.grid(which='major', linestyle='-', color='lightgray')
     if lfreq is not None:
-        pylab.vlines(lfreq, 0.001, 1000,
+        pylab.vlines(lfreq, scale_y_min, scale_y_max,
                      color='violet', linestyles='--')
     if hfreq is not None:
-        pylab.vlines(hfreq, 0.001, 1000,
+        pylab.vlines(hfreq, scale_y_min, scale_y_max,
                      color='r', linestyles='--')
     pylab.legend(prop=mpl.font_manager.FontProperties(size=8))
 
     # Third plot
     ax3 = pylab.subplot(133)
     ax3.set_title('Smoothed EAS', fontsize='small')
-    pylab.plot(input2_freqs, input2_s_eas, label=str(label2),
+    pylab.plot(freqs_seas2, input2_s_eas, label=str(label2),
                linewidth=0.5, color='k')
-    pylab.plot(input1_freqs, input1_s_eas, label=str(label1),
+    pylab.plot(freqs_seas1, input1_s_eas, label=str(label1),
                linewidth=0.5, color='r')
     pylab.xscale('log')
     pylab.yscale('log')
     pylab.xlabel('Frequency (Hz)')
-    pylab.ylabel("Fourier Amplitude")
-    pylab.axis([0.01, 100, 0.001, 1000])
+    pylab.ylabel(y_label)
+    pylab.axis(plot_scale)
     pylab.grid(True)
     pylab.grid(which='major', linestyle='-', color='lightgray')
     if lfreq is not None:
-        pylab.vlines(lfreq, 0.001, 1000,
+        pylab.vlines(lfreq, scale_y_min, scale_y_max,
                      color='violet', linestyles='--')
     if hfreq is not None:
-        pylab.vlines(hfreq, 0.001, 1000,
+        pylab.vlines(hfreq, scale_y_min, scale_y_max,
                      color='r', linestyles='--')
     pylab.legend(prop=mpl.font_manager.FontProperties(size=8))
 
@@ -194,14 +228,20 @@ def parse_arguments():
                         help="adds vertical line at this low frequency corner")
     parser.add_argument("--high-freq", "--hf", dest="hfreq",
                         help="adds vertical line at this high frequency corner")
-    parser.add_argument("--input-file1", dest="input_file1",
-                        help="input file 1")
-    parser.add_argument("--input-file2", dest="input_file2",
-                        help="input file 2")
+    parser.add_argument("--input-fas-file1", dest="input_fas_file1",
+                        help="input fas file 1")
+    parser.add_argument("--input-seas-file1", dest="input_seas_file1",
+                        help="input seas file 1")
+    parser.add_argument("--input-fas-file2", dest="input_fas_file2",
+                        help="input fas file 2")
+    parser.add_argument("--input-seas-file2", dest="input_seas_file2",
+                        help="input seas file 2")
     parser.add_argument("--labels", "-l", dest="labels",
                         help="comma-separated comparison labels")
     parser.add_argument("--comp-label", dest="comp_label",
                         help="comparison label used for the output file prefix")
+    parser.add_argument("--units", dest="units",
+                        help="units, g or cm/s/s (default)")
     parser.add_argument('input_dirs', nargs='*')
     args = parser.parse_args()
 
@@ -220,6 +260,7 @@ def run():
     output_dir = ""
     plot_title = None
     comp_label = None
+    units = "cm/s/s"
     input_dirs = args.input_dirs
     if args.output_dir:
         output_dir = args.output_dir
@@ -232,12 +273,39 @@ def run():
     labels = args.labels
     if labels is not None:
         labels = [label.strip() for label in labels.split(",")]
+    if args.units:
+        units = args.units.lower()
+    if units != "g" and units != "cm/s/s":
+        print("[ERROR]: Units must be either g or cm/s/s!")
+        sys.exit(1)
 
     if args.station_id:
-        # Single comparison mode
-        if not args.input_file1 or not args.input_file2:
-            print("[ERROR]: Must include both input_file1 and input_file2!")
+        # Single station comparison mode, we need two sets of files,
+        # each set includes a file with FAS/EAS and a second file
+        # with the SEAS data
+
+        # Look for set of input files (1)
+        if args.input_fas_file1 and args.input_seas_file1:
+            input_fas_file1 = os.path.join(input_dir,
+                                           args.input_fas_file1)
+            input_seas_file1 = os.path.join(input_dir,
+                                            args.input_seas_file1)
+        else:
+            print("[ERROR]: Must specify "
+                  "input_fas_file1 and input_seas_file1!")
             sys.exit(1)
+
+        # Look for set of input files (2)
+        if args.input_fas_file2 and args.input_seas_file2:
+            input_fas_file2 = os.path.join(input_dir,
+                                           args.input_fas_file2)
+            input_seas_file2 = os.path.join(input_dir,
+                                            args.input_seas_file2)
+        else:
+            print("[ERROR]: Must specify "
+                  "input_fas_file2 and input_seas_file2!")
+            sys.exit(1)
+        # Look for labels
         if len(labels) != 2:
             print("[ERROR]: Must include two labels for the comparison plot!")
             sys.exit(1)
@@ -256,42 +324,66 @@ def run():
             lfreq = args.lfreq
         if args.hfreq:
             hfreq = args.hfreq
-        input_file1 = os.path.join(input_dir, args.input_file1)
-        input_file2 = os.path.join(input_dir, args.input_file2)
-        run_single_station(input_file1, input_file2,
-                           labels[0], labels[1],
-                           output_file, args.station_id,
-                           lfreq=lfreq, hfreq=hfreq,
-                           plot_title=plot_title)
-    elif args.batch_file:
-        # Batch file mode
-        batch_file = os.path.abspath(args.batch_file)
-        run_batch_mode(batch_file, args.input_dirs, labels,
-                       output_dir, comp_label)
-    elif args.station_list:
-        # Run through the station list
-        station_list = os.path.abspath(args.station_list)
-        run_station_mode(station_list, input_dirs, labels,
-                         output_dir, comp_label)
+        plot_station_comparison(args.station_id, output_file,
+                                labels[0], labels[1],
+                                input_fas_file1=input_fas_file1,
+                                input_seas_file1=input_seas_file1,
+                                input_fas_file2=input_fas_file2,
+                                input_seas_file2=input_seas_file2,
+                                lfreq=lfreq, hfreq=hfreq,
+                                plot_title=plot_title,
+                                units=units)
     else:
-        print("[ERROR]: Must include station_id, batch_file, or station_list!")
-        sys.exit(1)
+        if len(input_dirs) < 1:
+            print("[ERROR]: Please specify at least one input directory!")
+            sys.exit(1)
+        if labels is None:
+            print("[ERROR]: Please specify as many labels as input directories!")
+            sys,exit(1)
+        if len(labels) != len(input_dirs):
+            print("[ERROR]: Please specify as many labels as input directories!")
+            sys,exit(1)
+        if args.batch_file:
+            # Batch file mode
+            batch_file = os.path.abspath(args.batch_file)
+            plot_batch_mode(batch_file, input_dirs, labels,
+                            output_dir, comp_label,
+                            units)
+        elif args.station_list:
+            # Run through the station list
+            station_list = os.path.abspath(args.station_list)
+            plot_station_list_mode(station_list, input_dirs, labels,
+                                   output_dir, comp_label,
+                                   units)
+        else:
+            print("[ERROR]: Must specify station_id, batch_file, or station_list!")
+            sys.exit(1)
 
-def run_single_station(input_file1, input_file2,
-                       label1, label2,
-                       output_file, station,
-                       lfreq=None, hfreq=None,
-                       plot_title=None):
-    
+def plot_station_comparison(station, output_file,
+                            label1, label2,
+                            input_fas_file1=None,
+                            input_seas_file1=None,
+                            input_fas_file2=None,
+                            input_seas_file2=None,
+                            lfreq=None, hfreq=None,
+                            plot_title=None,
+                            units=None):
+
     print("[PLOTFASCOMPARISON]: Generating FAS comparison plot for station %s" % (station))
     # Create comparison plot
-    plot_fas_comparison(station, input_file1, input_file2,
-                        label1, label2, output_file,
+    plot_fas_comparison(station, output_file,
+                        label1, label2,
+                        input_fas_file1=input_fas_file1,
+                        input_seas_file1=input_seas_file1,
+                        input_fas_file2=input_fas_file2,
+                        input_seas_file2=input_seas_file2,
                         lfreq=lfreq, hfreq=hfreq,
-                        plot_title=plot_title)
+                        plot_title=plot_title,
+                        units=units)
 
-def run_batch_mode(batch_file, input_dirs, labels,
-                   output_dir, comp_label=None):
+def plot_batch_mode(batch_file, input_dirs, labels,
+                    output_dir, comp_label=None,
+                    units=None):
     """
     Generated FAS comparison plots for stations in a batch file
     """
@@ -305,15 +397,17 @@ def run_batch_mode(batch_file, input_dirs, labels,
         station_name = line
         lfreq = None
         hfreq = None
-            
-        run_directory_mode(station_name, lfreq,
-                           hfreq, input_dirs, labels,
-                           output_dir, comp_label)
+
+        plot_directory_mode(station_name, lfreq,
+                            hfreq, input_dirs, labels,
+                            output_dir, comp_label,
+                            units)
 
     input_list.close()
 
-def run_station_mode(station_file, input_dirs, labels,
-                     output_dir, comp_label=None):
+def plot_station_list_mode(station_file, input_dirs, labels,
+                           output_dir, comp_label=None,
+                           units=None):
     """
     Generates FAS comparison plots for stations in a station list
     """
@@ -326,32 +420,64 @@ def run_station_mode(station_file, input_dirs, labels,
         lfreq = station.low_freq_corner
         hfreq = station.high_freq_corner
 
-        run_directory_mode(station_name, lfreq,
-                           hfreq, input_dirs, labels,
-                           output_dir, comp_label)
+        plot_directory_mode(station_name, lfreq,
+                            hfreq, input_dirs, labels,
+                            output_dir, comp_label,
+                            units)
 
-def run_directory_mode(station_name, lfreq, hfreq,
-                       input_dirs, labels, output_dir,
-                       comp_label=None):
+def plot_directory_mode(station_name, lfreq, hfreq,
+                        input_dirs, labels, output_dir,
+                        comp_label=None, units=None):
     """
     Used by both station_mode and batch_mode, finds files matching
     the station name and generates comparison plot
     """
+    if comp_label is None:
+        comp_label = ""
+
     # Make list of all input files
-    input_files = []
+    input_fas_files = []
+    input_seas_files = []
+
     for input_dir, label in zip(input_dirs, labels):
-        input_list = glob.glob("%s%s*%s.smc8.smooth.fs.col" %
+        input_list = glob.glob("%s%s*%s.eas.fs.col" %
                                (input_dir, os.sep, station_name))
-        if len(input_list) != 1:
-            # Try using the label to pick only one file
-            input_list = glob.glob("%s%s%s*%s.smc8.smooth.fs.col" %
-                                   (input_dir, os.sep, label, station_name))
-            if len(input_list) != 1:
-                print("[ERROR]: Can't find input file for station %s" % (station_name))
+        if len(input_list) == 1:
+            # Found fas file!
+            input_fas_files.append(input_list[0])
+        else:
+            # Add label to see if we can get one match
+            input_list = glob.glob("%s%s%s*%s.eas.fs.col" %
+                                   (input_dir, os.sep, label,
+                                    station_name))
+            if len(input_list) == 1:
+                # Found fas file!
+                input_fas_files.append(input_list[0])
+            else:
+                # EAS file not found, abort!
+                print("[ERROR]: Can't find fas/eas input file for station %s" %
+                      (station_name))
+                sys.exit(1)
+        # Now look for seas file
+        input_list = glob.glob("%s%s*%s.seas.fs.col" %
+                               (input_dir, os.sep, station_name))
+        if len(input_list) == 1:
+            # Found seas file, use it!
+            input_seas_files.append(input_list[0])
+        else:
+            # Add label to see if we can get a single match
+            input_list = glob.glob("%s%s%s*%s.seas.fs.col" %
+                                   (input_dir, os.sep, label,
+                                    station_name))
+            if len(input_list) == 1:
+                # Found seas file, use it!
+                input_seas_files.append(input_list[0])
+            else:
+                # SEAS file not found, abort!
+                print("[ERROR]: Can't find seas input file for station %s" %
+                      (station_name))
                 sys.exit(1)
 
-        input_files.append(input_list[0])
-            
     # Set up output file
     if comp_label:
         output_file = "%s.%s.fas.comparison.png" % (comp_label,
@@ -360,10 +486,19 @@ def run_directory_mode(station_name, lfreq, hfreq,
         output_file = "%s.fas.comparison.png" % (station_name)
     output_file = os.path.join(output_dir, output_file)
 
-    run_single_station(input_files[0], input_files[1],
-                       labels[0], labels[1],
-                       output_file, station_name,
-                       lfreq=lfreq, hfreq=hfreq)
+    input_fas_file1 = input_fas_files[0]
+    input_seas_file1 = input_seas_files[0]
+    input_fas_file2 = input_fas_files[1]
+    input_seas_file2 = input_seas_files[1]
+    
+    plot_station_comparison(station_name, output_file,
+                            labels[0], labels[1],
+                            input_fas_file1=input_fas_file1,
+                            input_seas_file1=input_seas_file1,
+                            input_fas_file2=input_fas_file2,
+                            input_seas_file2=input_seas_file2,
+                            lfreq=lfreq, hfreq=hfreq,
+                            units=units)
 
 if __name__ == '__main__':
     run()
