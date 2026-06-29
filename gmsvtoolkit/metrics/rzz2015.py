@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2025, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -434,7 +434,7 @@ class RZZ2015(object):
         return self.zhatcalc(zetadiff, tlp)
 
     def process(self, station_name, comp, output_file, plot_prefix,
-                label, obs_times, obs_data, sim_times, sim_data):
+                comp_label, obs_times, obs_data, sim_times, sim_data):
         """
         This function computes the validation metrics of RZZ2015 for a
         given pair of timeseries
@@ -449,7 +449,7 @@ class RZZ2015(object):
         fig, axs = pylab.plt.subplots(2, 3)
         fig.set_size_inches(17, 8.5)
         fig.suptitle("RZZ2015 - %s - %s - %03d" %
-                     (label, station_name, comp), size=16)
+                     (comp_label, station_name, comp), size=16)
         fig.subplots_adjust(hspace=0.4)
         fig.subplots_adjust(left=0.05)
         fig.subplots_adjust(right=0.98)
@@ -856,6 +856,8 @@ class RZZ2015(object):
         """
         parser = argparse.ArgumentParser(description="Calculates Afshari and Stewart (2016_ "
                                          " GMPE for significant duration.")
+        parser.add_argument("--output-dir", dest="output_dir",
+                            help="output directory")
         parser.add_argument("--output-file", dest="output_file", required=True,
                             help="output file")
         parser.add_argument("--station-list", "-s", dest="station_list", required=True,
@@ -866,7 +868,7 @@ class RZZ2015(object):
                             help="input directory with observed data")
         parser.add_argument("--plot-prefix", dest="plot_prefix",
                             help="prefix used for each plot")
-        parser.add_argument("--label", dest="label", required=True,
+        parser.add_argument("--comp-label", dest="comp_label", required=True,
                             help="comparison label used in plots")
         args = parser.parse_args()
 
@@ -878,23 +880,32 @@ class RZZ2015(object):
         """
         args = self.parse_arguments()
 
+        output_dir = ""
+        if args.output_dir is not None:
+            output_dir = os.path.abspath(args.output_dir)
+            # Make sure the output directory exists
+            os_utilities.mkdirs([output_dir], print_cmd=False)
+        else:
+            output_dir = os.path.abspath(output_dir)
         # Clean paths
         station_list = os.path.abspath(args.station_list)
-        output_file = os.path.abspath(args.output_file)
         sim_dir = os.path.abspath(args.sims_dir)
         obs_dir = os.path.abspath(args.obs_dir)
+
+        # Combine output_dir and output_file
+        output_file = os.path.join(output_dir, args.output_file)
 
         if not args.plot_prefix:
             plot_prefix = "rzz2015"
         else:
             plot_prefix = args.plot_prefix
 
-        self.run_rzz2015(station_list, args.label,
+        self.run_rzz2015(station_list, args.comp_label,
                          sim_dir, obs_dir,
                          output_file,
                          plot_prefix=plot_prefix)
         
-    def run_rzz2015(self, a_station_list, label,
+    def run_rzz2015(self, a_station_list, comp_label,
                     sim_dir, obs_dir,
                     output_file,
                     plot_prefix="rzz2015"):
@@ -933,7 +944,7 @@ class RZZ2015(object):
             # Process each component separately
             for comp in range(1, 3):
                 self.process(station_name, comp,
-                             output_file, plot_prefix, label,
+                             output_file, plot_prefix, comp_label,
                              obs_data[0], obs_data[comp],
                              sim_data[0], sim_data[comp])
 
