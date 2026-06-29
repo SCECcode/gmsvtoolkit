@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -141,9 +141,6 @@ class CalculateGMPE(object):
                             help="output directory")
         parser.add_argument("--gmpe-group", dest="gmpe_group", required=True,
                             help="GMPE group %s" % (self.gmpe_groups))
-        parser.add_argument("-o", "--output", "--output-file",
-                            dest="output_file",
-                            help="output rd100 file")
         parser.add_argument("--station-list", "-s", dest="station_list", required=True,
                             help="station list for batch processing")
         parser.add_argument("--src-file", "--src", dest="src_file", required=True,

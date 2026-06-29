@@ -526,7 +526,10 @@ class CB08_nga(object):
         sigmaArb = np.sqrt(sigmaT**2 + self.sigma_C[indT]**2)
 
         # standard deviations are in logarithm scale !!!
-        return (sigma, tau, sigmaT, sigmaArb)
+        return (np.float64(sigma[0]),
+                np.float64(tau[0]),
+                np.float64(sigmaT[0]),
+                np.float64(sigmaArb[0]))
 
 def CB08nga_test(T, CoefTerms):
     """

@@ -434,9 +434,13 @@ class BA08_nga(object):
         try:
             ind = (np.array(self.periods) == self.T).nonzero()[0]
             if FT == 'U':
-                return (self.sigma_TU[ind], self.tau_U[ind], self.sigma0[ind])
+                return (np.float64(self.sigma_TU[ind][0]),
+                        np.float64(self.tau_U[ind][0]),
+                        np.float64(self.sigma0[ind][0]))
             else:
-                return (self.sigma_TM[ind], self.tau_M[ind], self.sigma0[ind])
+                return (np.float64(self.sigma_TM[ind][0]),
+                        np.float64(self.tau_M[ind][0]),
+                        np.float64(self.sigma0[ind][0]))
         except:
             print('inputed T not found in the available periods list, try to do interpolation')
             raise ValueError

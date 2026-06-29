@@ -710,7 +710,7 @@ class AS08_nga(object):
                       2. * alpha * tauB_T * tauB_PGA * self.rho[indT])
         sigmaTot = np.sqrt(sigma**2 + tau**2)
 
-        return (sigma, tau, sigmaTot)
+        return (np.float64(sigma[0]), np.float64(tau[0]), np.float64(sigmaTot[0]))
 
 def AS08nga_test(T, CoefTerms):
     """

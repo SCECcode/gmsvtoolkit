@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -318,9 +318,13 @@ def run():
     output_dir = os.path.abspath(output_dir)
     station_file = os.path.abspath(args.station_list)
     
-    # Plot GMPE GOF plot
-    plot_title = "Comparison between GMPEs and %s" % (args.comp_label)
+    # Set up plot title
+    if args.plot_title is not None:
+        plot_title = args.plot_title
+    else:
+        plot_title = "Comparison between GMPEs and %s" % (args.comp_label)
 
+    # Plot GMPE GOF plot
     plot_gmpe_gof(station_file, args.gmpe_group, args.comp_label,
                   plot_title, input_dir, output_dir, args.run_prefix)
     

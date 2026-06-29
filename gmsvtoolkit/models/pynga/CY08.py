@@ -525,7 +525,9 @@ class CY08_nga(object):
         sigmaT = np.sqrt(sigma**2 + tauNL**2)
 
         #return (sigma, tau, sigmaT)
-        return (sigma, tauNL, sigmaT)
+        return (np.float64(sigma[0]),
+                np.float64(tauNL[0]),
+                np.float64(sigmaT[0]))
 
 def CY08nga_test(T, CoefTerms):
     """
