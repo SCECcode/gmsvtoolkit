@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -50,6 +50,7 @@ import pylab
 from plots import plot_config
 from core import gmsvtoolkit_config
 from core.station_list import StationList
+from utils import os_utilities
 from utils.src_utilities import parse_src_file
 
 # Import Pynga and its utilities
@@ -260,6 +261,8 @@ class RZZ2015GMPE(object):
         """
         parser = argparse.ArgumentParser(description="Calculates Afshari and Stewart (2016_ "
                                          " GMPE for significant duration.")
+        parser.add_argument("--output-dir", dest="output_dir",
+                            help="output directory")
         parser.add_argument("--output-file", dest="output_file", required=True,
                             help="output file")
         parser.add_argument("--src-file", "--src", dest="src_file", required=True,
@@ -291,7 +294,17 @@ class RZZ2015GMPE(object):
             sys.exit(1)
         station_list = os.path.abspath(args.station_list)
 
-        output_file = os.path.abspath(args.output_file)
+        output_dir = ""
+        if args.output_dir is not None:
+            output_dir = os.path.abspath(args.output_dir)
+            # Make sure the output directory exists
+            os_utilities.mkdirs([output_dir], print_cmd=False)
+        else:
+            output_dir = os.path.abspath(output_dir)
+
+        # Combine output_dir and output_file
+        output_file = os.path.join(output_dir, args.output_file)
+
         create_plots = not args.disable_plots
         if not args.plot_prefix:
             plot_prefix = "rzz2015gmpe"
