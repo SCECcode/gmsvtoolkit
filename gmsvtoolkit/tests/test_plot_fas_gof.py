@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -44,7 +44,8 @@ import unittest
 # Import GMSVToolkit modules
 import seqnum
 from core import gmsvtoolkit_config
-from plots import plot_fas_gof
+from plots import plot_fas_eas_gof
+from plots import plot_fas_seas_gof
 from core.station_list import StationList
 from plots import plot_config
 
@@ -56,7 +57,7 @@ def cleanup(dir_name):
 
 class TestPlotFASGoF(unittest.TestCase):
     """
-    Unit test for the FAS plot_fas_gof modules
+    Unit test for the FAS plot_fas_eas_gof and plot_fas_seas_gof modules
     """
 
     def setUp(self):
@@ -75,9 +76,9 @@ class TestPlotFASGoF(unittest.TestCase):
             # Add clean up for later
             atexit.register(cleanup, self.temp_dir)
             
-    def test_plot_fas_gof(self):
+    def test_plot_fas_eas_gof(self):
         """
-        Test the plot_fas_gof module
+        Test the plot_fas_eas_gof module
         """
         # Reference directory
         ref_dir = os.path.join(self.install.TEST_REF_DIR, "stats")
@@ -85,11 +86,27 @@ class TestPlotFASGoF(unittest.TestCase):
         method = "gp"
         colorset = "single"
 
-        # Run PSA GoF plotting code
-        plot_fas_gof.plot_fas_gof(plot_title, self.comp_label,
-                                  ref_dir, self.temp_dir,
-                                  max_cutoff=self.max_cutoff,
-                                  colorset=colorset, method=method)
+        # Run FAS EAS GoF plotting code
+        plot_fas_eas_gof.plot_fas_eas_gof(plot_title, self.comp_label,
+                                          ref_dir, self.temp_dir,
+                                          max_cutoff=self.max_cutoff,
+                                          colorset=colorset, method=method)
+
+    def test_plot_fas_seas_gof(self):
+        """
+        Test the plot_fas_seas_gof module
+        """
+        # Reference directory
+        ref_dir = os.path.join(self.install.TEST_REF_DIR, "stats")
+        plot_title = "GoF Comparison between NR and simulation 10000000"
+        method = "gp"
+        colorset = "single"
+
+        # Run FAS SEAS GoF plotting code
+        plot_fas_seas_gof.plot_fas_seas_gof(plot_title, self.comp_label,
+                                            ref_dir, self.temp_dir,
+                                            max_cutoff=self.max_cutoff,
+                                            colorset=colorset, method=method)
 
 if __name__ == "__main__":
     SUITE = unittest.TestLoader().loadTestsFromTestCase(TestPlotFASGoF)

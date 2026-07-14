@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -43,7 +43,8 @@ import unittest
 # Import GMSVToolkit modules
 import seqnum
 from core import gmsvtoolkit_config
-from stats import fas_gof
+from stats import fas_eas_gof
+from stats import fas_seas_gof
 from core.station_list import StationList
 import cmp_bbp
 
@@ -55,7 +56,7 @@ def cleanup(dir_name):
 
 class TestFASGoF(unittest.TestCase):
     """
-    Unit test for the fas_gof.py module
+    Unit test for both fas_eas_gof.py and fas_seas_gof.py modules
     """
 
     def setUp(self):
@@ -72,15 +73,15 @@ class TestFASGoF(unittest.TestCase):
             # Add clean up for later
             atexit.register(cleanup, self.temp_dir)
             
-    def test_fas_gof(self):
+    def test_fas_eas_gof(self):
         """
-        Test the fas_gof module
+        Test the fas_eas_gof module
         """
         # Reference directory
         acc_dir = os.path.join(self.install.TEST_REF_DIR, "metrics")
         ref_dir = os.path.join(self.install.TEST_REF_DIR, "stats")
-        obs_dir = os.path.join(ref_dir, "obs")
-        sims_dir = os.path.join(ref_dir, "sims")
+        obs_dir = os.path.join(self.install.TEST_REF_DIR, "obs")
+        sims_dir = os.path.join(self.install.TEST_REF_DIR, "metrics")
 
         r_station_list = "nr_v19_06_2_3_stations.stl"
         r_src_file = "nr-gp-0000.src"
@@ -92,22 +93,58 @@ class TestFASGoF(unittest.TestCase):
         sim_prefix = "10000000"
         obs_prefix = "obs"
 
-        fas_gof_obj = fas_gof.FASGoF(max_cutoff=max_cutoff,
-                                     comp_label=comp_label)
-        fas_gof_obj.run_fas_gof(a_station_list, a_src_file,
-                                obs_dir, sims_dir, self.temp_dir,
-                                acc_dir=acc_dir, acc_prefix=acc_prefix,
-                                sim_prefix=sim_prefix, obs_prefix=obs_prefix)
+        fas_eas_gof_obj = fas_eas_gof.FASGoF(max_cutoff=max_cutoff,
+                                             comp_label=comp_label)
+        fas_eas_gof_obj.run_fas_eas_gof(a_station_list, a_src_file,
+                                        obs_dir, sims_dir, self.temp_dir,
+                                        acc_dir=acc_dir, acc_prefix=acc_prefix,
+                                        sim_prefix=sim_prefix, obs_prefix=obs_prefix)
 
         # Check results
-        resid_ref_file = os.path.join(ref_dir, "NR-10000000.fas-resid.txt")
-        resid_file = os.path.join(self.temp_dir, "NR-10000000.fas-resid.txt")
+        resid_ref_file = os.path.join(ref_dir, "NR-10000000.fas-eas-resid.txt")
+        resid_file = os.path.join(self.temp_dir, "NR-10000000.fas-eas-resid.txt")
         self.assertFalse(cmp_bbp.cmp_resid(resid_ref_file,
                                            resid_file,
                                            tolerance=0.005) != 0,
                          "output resid file %s does not match reference resid file %s" %
                          (resid_file, resid_ref_file))
-        
+
+    def test_fas_seas_gof(self):
+        """
+        Test the fas_seas_gof module
+        """
+        # Reference directory
+        acc_dir = os.path.join(self.install.TEST_REF_DIR, "metrics")
+        ref_dir = os.path.join(self.install.TEST_REF_DIR, "stats")
+        obs_dir = os.path.join(self.install.TEST_REF_DIR, "obs")
+        sims_dir = os.path.join(self.install.TEST_REF_DIR, "metrics")
+
+        r_station_list = "nr_v19_06_2_3_stations.stl"
+        r_src_file = "nr-gp-0000.src"
+        a_station_list = os.path.join(ref_dir, r_station_list)
+        a_src_file = os.path.join(ref_dir, r_src_file)
+        max_cutoff = 120
+        comp_label = "NR-10000000"
+        acc_prefix = "10000000."
+        sim_prefix = "10000000"
+        obs_prefix = "obs"
+
+        fas_seas_gof_obj = fas_seas_gof.FASGoF(max_cutoff=max_cutoff,
+                                               comp_label=comp_label)
+        fas_seas_gof_obj.run_fas_seas_gof(a_station_list, a_src_file,
+                                          obs_dir, sims_dir, self.temp_dir,
+                                          acc_dir=acc_dir, acc_prefix=acc_prefix,
+                                          sim_prefix=sim_prefix, obs_prefix=obs_prefix)
+
+        # Check results
+        resid_ref_file = os.path.join(ref_dir, "NR-10000000.fas-seas-resid.txt")
+        resid_file = os.path.join(self.temp_dir, "NR-10000000.fas-seas-resid.txt")
+        self.assertFalse(cmp_bbp.cmp_resid(resid_ref_file,
+                                           resid_file,
+                                           tolerance=0.005) != 0,
+                         "output resid file %s does not match reference resid file %s" %
+                         (resid_file, resid_ref_file))
+
 if __name__ == "__main__":
     SUITE = unittest.TestLoader().loadTestsFromTestCase(TestFASGoF)
     RETURN_CODE = unittest.TextTestRunner(verbosity=2).run(SUITE)

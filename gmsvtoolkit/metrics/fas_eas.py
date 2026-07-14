@@ -164,4 +164,10 @@ def get_smooth_eas(acc1, acc2, dt, b, w):
                      95.49926, 97.723724, 100])
     fc = fc[fc<=np.max(freq)]
     eas_s = smoothed_fas(np.abs(eas), freq, fc, b, w)
+
+    # Since we also return the FAS results(f1 and f2), we
+    # need to convert any complex numbers into real amplitudes
+    f1 = np.abs(f1)
+    f2 = np.abs(f2)
+
     return([freq, f1, f2, eas, fc, np.sqrt(eas_s)])
