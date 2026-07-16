@@ -127,7 +127,7 @@ class FASGoF(object):
 
     def summarize_fas(self, site_list, a_outdir):
         """
-        Summarizes all FAS data and creates the FAS GOF plot
+        Summarizes all FAS/EAS data
         """
         fas_residfile = os.path.join(a_outdir, "%s.fas-eas-resid.txt" %
                                      (self.comp_label))

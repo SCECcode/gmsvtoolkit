@@ -105,7 +105,7 @@ def compute_fas(acc1, acc2, dt):
 def compute_station_fas(a_tmpdir, a_outdir_fas, acc_file,
                         station_name, output_prefix,
                         input_unit="cm/s/s", output_unit="cm/s/s",
-                        logfile=None):
+                        output_mode="both", logfile=None):
     """
     Computes FAS for a station
     """
@@ -127,26 +127,28 @@ def compute_station_fas(a_tmpdir, a_outdir_fas, acc_file,
      seas_freq, seas] = compute_fas(acc1, acc2, dt)
     
     # Write file with FAS/EAS first
-    output_basename = "%s.eas.fs.col" % (output_prefix)
-    output_filename = os.path.join(a_outdir_fas, output_basename)
-    output_file = open(output_filename, 'w')
-    output_file.write("# Freq(Hz)      FAS H1 (%s)      FAS H2 (%s)      EAS (%s)\n" %
-                      (output_unit, output_unit, output_unit))
-    for f0, f1, f2, e0 in zip(fas_freq, fas_1, fas_2, eas):
-        output_file.write("%2.7E\t%2.7E\t%2.7E\t%2.7E\n" %
-                          (f0, f1, f2, e0))
-    output_file.close()
+    if output_mode == "both" or output_mode == "fas":
+        output_basename = "%s.eas.fs.col" % (output_prefix)
+        output_filename = os.path.join(a_outdir_fas, output_basename)
+        output_file = open(output_filename, 'w')
+        output_file.write("# Freq(Hz)      FAS H1 (%s)      FAS H2 (%s)      EAS (%s)\n" %
+                          (output_unit, output_unit, output_unit))
+        for f0, f1, f2, e0 in zip(fas_freq, fas_1, fas_2, eas):
+            output_file.write("%2.7E\t%2.7E\t%2.7E\t%2.7E\n" %
+                              (f0, f1, f2, e0))
+        output_file.close()
 
     # Now, we write the file with the SEAS
-    output_basename = "%s.seas.fs.col" % (output_prefix)
-    output_filename = os.path.join(a_outdir_fas, output_basename)
-    output_file = open(output_filename, 'w')
-    output_file.write("# Freq(Hz)      Smoothed EAS (%s) b=%3.4f\n" %
-                      (output_unit, B_PARAM))
-    for f0, s0 in zip(seas_freq, seas):
-        output_file.write("%2.7E\t%2.7E\n" %
-                          (f0, s0))
-    output_file.close()
+    if output_mode == "both" or output_mode == "seas":
+        output_basename = "%s.seas.fs.col" % (output_prefix)
+        output_filename = os.path.join(a_outdir_fas, output_basename)
+        output_file = open(output_filename, 'w')
+        output_file.write("# Freq(Hz)      Smoothed EAS (%s) b=%3.4f\n" %
+                          (output_unit, B_PARAM))
+        for f0, s0 in zip(seas_freq, seas):
+            output_file.write("%2.7E\t%2.7E\n" %
+                              (f0, s0))
+        output_file.close()
 
 class FAS(object):
     """
@@ -177,6 +179,10 @@ class FAS(object):
                             help="input units: (g or cm/s/s)")
         parser.add_argument("--output-unit", dest="output_unit", default="cm/s/s",
                             help="output units: (g or cm/s/s)")
+        parser.add_argument("--fas-only", dest="fas_only", action="store_true",
+                            help="outputs only the FAS/EAS file, default is both FAS/EAS and SEAS files")
+        parser.add_argument("--seas-only", dest="seas_only", action="store_true",
+                            help="outputs only the SEAS file, default is both FAS/EAS and SEAS files")
         parser.add_argument('input_dirs', nargs='*')
         
         args = parser.parse_args()
@@ -198,6 +204,17 @@ class FAS(object):
             logfile = os.path.abspath(args.logfile)
         station_file = os.path.abspath(args.station_list)
 
+        # Find what users want to output
+        if args.fas_only and args.seas_only:
+            print("[ERROR]: Specify only one of --fas-only and --seas-only")
+            sys.exit(-1)
+        output_mode = "both"
+        if args.fas_only:
+            output_mode = "fas"
+        if args.seas_only:
+            output_mode = "seas"
+
+        # Figure out units
         input_unit = args.input_unit.lower()
         output_unit = args.output_unit.lower()
         if input_unit != "g" and input_unit != "cm/s/s":
@@ -221,11 +238,12 @@ class FAS(object):
         self.run_fas_seas(station_file, input_dirs, labels,
                           output_dir, input_unit=input_unit,
                           output_unit=output_unit,
+                          output_mode=output_mode,
                           logfile=logfile, temp_dir=None)
 
     def run_fas_seas(self, station_file, input_dirs, labels,
                      output_dir, input_unit="cm/s/s",
-                     output_unit="cm/s/s",
+                     output_unit="cm/s/s", output_mode="both",
                      logfile=None, temp_dir=None):
         """
         Run FAS/SEAS analysis codes
@@ -272,7 +290,7 @@ class FAS(object):
                 compute_station_fas(temp_dir, output_dir, input_acc_file,
                                     station_name, output_prefix=output_prefix,
                                     input_unit=input_unit, output_unit=output_unit,
-                                    logfile=logfile)
+                                    output_mode=output_mode, logfile=logfile)
                 t2 = time.time()
                 print("%10.2f s" % (t2 - t1))
                 

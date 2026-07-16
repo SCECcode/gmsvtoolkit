@@ -57,6 +57,7 @@ from models.pynga import utils as putils
 
 # Some constants used in the code
 COMPS_FAS = ["seas1", "seas2", "seas"]
+COMPS_FAS_OUTPUT = ["seas"]
 MIN_CDST = 0
 MAX_CDST = 25
 
@@ -127,11 +128,11 @@ class FASGoF(object):
 
     def summarize_fas(self, site_list, a_outdir):
         """
-        Summarizes all FAS data and creates the FAS GOF plot
+        Summarizes all FAS/SEAS data
         """
         fas_residfile = os.path.join(a_outdir, "%s.fas-seas-resid.txt" %
                                      (self.comp_label))
-        for comp in COMPS_FAS:
+        for comp in COMPS_FAS_OUTPUT:
             # Build paths and check lengths
             fileroot = os.path.join(a_outdir, "%s_r%d-%d-fas-seas-%s" %
                                     (self.comp_label, MIN_CDST,
