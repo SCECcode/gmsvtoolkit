@@ -93,8 +93,8 @@ class TestFASGoF(unittest.TestCase):
         sim_prefix = "10000000"
         obs_prefix = "obs"
 
-        fas_eas_gof_obj = fas_eas_gof.FASGoF(max_cutoff=max_cutoff,
-                                             comp_label=comp_label)
+        fas_eas_gof_obj = fas_eas_gof.FASEASGoF(max_cutoff=max_cutoff,
+                                                comp_label=comp_label)
         fas_eas_gof_obj.run_fas_eas_gof(a_station_list, a_src_file,
                                         obs_dir, sims_dir, self.temp_dir,
                                         acc_dir=acc_dir, acc_prefix=acc_prefix,
@@ -129,8 +129,8 @@ class TestFASGoF(unittest.TestCase):
         sim_prefix = "10000000"
         obs_prefix = "obs"
 
-        fas_seas_gof_obj = fas_seas_gof.FASGoF(max_cutoff=max_cutoff,
-                                               comp_label=comp_label)
+        fas_seas_gof_obj = fas_seas_gof.FASSEASGoF(max_cutoff=max_cutoff,
+                                                   comp_label=comp_label)
         fas_seas_gof_obj.run_fas_seas_gof(a_station_list, a_src_file,
                                           obs_dir, sims_dir, self.temp_dir,
                                           acc_dir=acc_dir, acc_prefix=acc_prefix,

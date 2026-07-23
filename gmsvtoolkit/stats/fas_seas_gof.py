@@ -114,7 +114,7 @@ def rewrite_fas_seas_file(fas_input_file, fas_output_file):
     input_file.close()
     output_file.close()
 
-class FASGoF(object):
+class FASSEASGoF(object):
     """
     This class generates GOF plots for the FAS data
     """
@@ -331,5 +331,5 @@ class FASGoF(object):
 
 if __name__ == "__main__":
     print("Running module: %s" % (os.path.basename(sys.argv[0])))
-    ME = FASGoF()
+    ME = FASSEASGoF()
     ME.run()
