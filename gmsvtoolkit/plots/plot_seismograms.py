@@ -75,7 +75,7 @@ def plot_overlay_timeseries(input_files, labels,
     # Check num_components
     if num_components != 2 and num_components != 3:
         print("[ERROR]: num_components must be 2 or 3!")
-        sys.exit(-1)
+        sys.exit(1)
 
     # Orientation for each component
     if orientations is None:
@@ -85,7 +85,7 @@ def plot_overlay_timeseries(input_files, labels,
     if len(input_files) > len(all_styles):
         print("[ERROR]: Too many timeseries to plot (%d), maximum number is %d!" %
               (len(input_files), len(all_styles)))
-        sys.exit(-1)
+        sys.exit(1)
 
     # Read input files
     all_data = []
@@ -168,7 +168,7 @@ def plot_overlay_timeseries(input_files, labels,
     else:
         if len(labels) != len(all_data):
             print("[ERROR]: Must provide as many labels as data files!")
-            sys.exit(-1)
+            sys.exit(1)
         labels_acc = labels
         labels_vel = labels
         labels_dis = labels
@@ -274,7 +274,7 @@ def plot_overlay_timeseries(input_files, labels,
         fmt = 'pdf'
     else:
         print("[ERROR]: Unknown format!")
-        sys.exit(-1)
+        sys.exit(1)
 
     plt.savefig(output_file, format=fmt,
                 transparent=False,
@@ -337,6 +337,8 @@ class PlotSeismograms(object):
                             help="orientation for the 2 or 3 components, default: 0.0, 90.0, UP")
         parser.add_argument("--plot-title", "--title", dest="plot_title",
                             help="plot title")
+        parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                            help="runs in quiet mode, only print error messages")
         parser.add_argument('input_files', nargs='*')
         args = parser.parse_args()
 
@@ -348,6 +350,11 @@ class PlotSeismograms(object):
         """
         # Parse command-line options
         args = self.parse_arguments()
+
+        # Check for quiet mode
+        verbose = True
+        if args.quiet is True:
+            verbose = False
 
         # Make sure we have something to do
         if len(args.input_files) == 0:
@@ -385,7 +392,7 @@ class PlotSeismograms(object):
                 orientations.append("UP")
             if len(orientations) != 3:
                 print("[ERROR]: orientation must include 2 or 3 labels!")
-                sys.exit(-1)
+                sys.exit(1)
             self.orientations = orientations
 
         # Check for plot limits
@@ -443,29 +450,34 @@ class PlotSeismograms(object):
             input_files = [os.path.join(input_dir, input_file) for input_file in input_files]
             self.plot_single_station(input_files, labels,
                                      output_file, args.station_id,
-                                     xmin, xmax, plot_title)
+                                     xmin, xmax, plot_title=plot_title,
+                                     verbose=verbose)
         elif args.batch_file:
             # Batch file mode
             self.plot_batch_mode(args.batch_file, input_files,
                                  labels, output_dir, args.comp_label,
-                                 xmin, xmax, plot_title)
+                                 xmin, xmax, plot_title=plot_title,
+                                 verbose=verbose)
         elif args.station_list:
             # Run through the station list
             self.plot_station_mode(args.station_list, input_files,
                                    labels, output_dir, args.comp_label,
-                                   xmin, xmax, plot_title)
+                                   xmin, xmax, plot_title=plot_title,
+                                   verbose=verbose)
         else:
             print("[ERROR]: Must include station_id, batch_file, or station_list!")
             sys.exit(1)
 
     def plot_single_station(self, input_files, labels,
                             output_file, station_name,
-                            xmin, xmax, plot_title=None):
+                            xmin, xmax, plot_title=None,
+                            verbose=False):
         """
         Generates seismogram comparison plots for a single station
         """
-        print("[PlotSeismograms]: Generating seismogram comparison plot for station %s" %
-              (station_name))
+        if verbose:
+            print("[PlotSeismograms]: Generating seismogram comparison plot for station %s" %
+                  (station_name))
         if plot_title is None:
             if len(input_files) > 1:
                 plot_title = "Seismogram comparison for station: %s" % (station_name)
@@ -479,7 +491,8 @@ class PlotSeismograms(object):
         
     def plot_batch_mode(self, batch_file, input_dirs,
                         labels, output_dir, comp_label,
-                        xmin, xmax, plot_title):
+                        xmin, xmax, plot_title=None,
+                        verbose=False):
         """
         Generated seismogram comparison plots for stations in a batch file
         """
@@ -500,13 +513,15 @@ class PlotSeismograms(object):
 
             self.run_directory_mode(station_name, input_dirs,
                                     labels, output_dir, comp_label,
-                                    xmin, xmax, plot_title)
+                                    xmin, xmax, plot_title=plot_title,
+                                    verbose=verbose)
 
         input_list.close()
 
     def plot_station_mode(self, station_file, input_dirs,
                           labels, output_dir, comp_label,
-                          xmin, xmax, plot_title):
+                          xmin, xmax, plot_title=None,
+                          verbose=False):
         """
         Generates seismogram comparison plots for stations in a station list
         """
@@ -525,12 +540,15 @@ class PlotSeismograms(object):
 
             self.run_directory_mode(station_name, input_dirs,
                                     labels, output_dir, comp_label,
-                                    xmin, xmax, plot_title)
+                                    xmin, xmax, plot_title=plot_title,
+                                    verbose=verbose)
 
     def run_directory_mode(self, station_name,
                            input_dirs, labels,
                            output_dir, comp_label,
-                           xmin, xmax, plot_title):
+                           xmin, xmax,
+                           plot_title=None,
+                           verbose=False):
         """
         Used by both station_mode and batch_mode, finds files matching
         the station name and generates comparison plot
@@ -543,7 +561,7 @@ class PlotSeismograms(object):
             extension = "dis.bbp"
         else:
             print("[ERROR]: Unknown mode %s!" % (self.mode))
-            sys.exit(-1)
+            sys.exit(1)
 
         # Make list of all input files
         input_files = []
@@ -571,7 +589,9 @@ class PlotSeismograms(object):
 
         self.plot_single_station(input_files, labels,
                                  output_file, station_name,
-                                 xmin, xmax, plot_title)
+                                 xmin, xmax,
+                                 plot_title=plot_title,
+                                 verbose=verbose)
             
 if __name__ == '__main__':
     print("Running module: %s" % (os.path.basename(sys.argv[0])))

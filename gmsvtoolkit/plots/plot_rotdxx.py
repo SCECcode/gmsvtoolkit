@@ -72,7 +72,7 @@ def create_rdxx_plot(station_id, input_files, labels, output_file,
                   'brown', 'gold', 'blueviolet', 'grey', 'pink']
     if len(input_files) > len(all_styles):
         print("[ERROR]: Too many files to plot!")
-        sys.exit(-1)
+        sys.exit(1)
     styles = all_styles[0:len(input_files)]
 
     # Convert min/max frequencies to periods

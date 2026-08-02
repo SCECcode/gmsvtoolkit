@@ -207,7 +207,7 @@ class FAS(object):
         # Find what users want to output
         if args.fas_only and args.seas_only:
             print("[ERROR]: Specify only one of --fas-only and --seas-only")
-            sys.exit(-1)
+            sys.exit(1)
         output_mode = "both"
         if args.fas_only:
             output_mode = "fas"
@@ -219,10 +219,10 @@ class FAS(object):
         output_unit = args.output_unit.lower()
         if input_unit != "g" and input_unit != "cm/s/s":
             print("[ERROR]: Input unit must be 'g' or 'cm/s/s'")
-            sys.exit(-1)
+            sys.exit(1)
         if output_unit != "g" and output_unit != "cm/s/s":
             print("[ERROR]: Output unit must be 'g' or 'cm/s/s'")
-            sys.exit(-1)
+            sys.exit(1)
         
         # Sort input directories/labels
         input_dirs = args.input_dirs

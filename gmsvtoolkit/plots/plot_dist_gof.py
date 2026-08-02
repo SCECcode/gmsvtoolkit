@@ -287,7 +287,7 @@ def plot_dist_gof(input_dir, output_dir,
     plot_mode = plot_mode.lower()
     if plot_mode not in ["rd50", "rd100"]:
         print("[ERROR]: plot_mode must be rd50 or rd100!")
-        sys.exit(-1)
+        sys.exit(1)
 
     # Select the residuals file
     resid_file = os.path.join(input_dir, "%s.%s-resid.txt" %

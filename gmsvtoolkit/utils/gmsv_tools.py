@@ -136,19 +136,19 @@ def read_bbp_units(filename):
         input_file.close()
     except IOError:
         print("[ERROR]: Cannot open file %s, exiting...." % (filename))
-        sys.exit(-1)
+        sys.exit(1)
 
     # Make sure we got something
     if units is None:
         print("[ERROR]: Cannot find units in bbp file!")
-        sys.exit(-1)
+        sys.exit(1)
 
     # Parse and figure what what we got
     units_start = units.find("(")
     units_end = units.find(")")
     if units_start < 0 or units_end < 0:
         print("[ERROR]: Cannot parse units in bbp file!")
-        sys.exit(-1)
+        sys.exit(1)
 
     units = units[units_start+1:units_end]
 
@@ -158,7 +158,7 @@ def read_bbp_units(filename):
 
     # Invalid units in this file
     print("[ERROR]: Cannot parse units in bbp file!")
-    sys.exit(-1)
+    sys.exit(1)
 # end of read_bbp_units
 
 def integrate(bbp_in, bbp_out, temp_dir):
@@ -168,14 +168,14 @@ def integrate(bbp_in, bbp_out, temp_dir):
     units_in = read_bbp_units(bbp_in)
     if units_in == "cm":
         print("[ERROR]: Already have a displacement file!")
-        sys.exit(-1)
+        sys.exit(1)
     if units_in == "cm/s/s":
         units_out = "cm/s"
     elif units_in == "cm/s":
         units_out = "cm"
     else:
         print("[ERROR]: Unknown unit in the input file!")
-        sys.exit(-1)
+        sys.exit(1)
 
     # Split file to get each component separate
     prefix = "gmsv_tools_tmp"
@@ -201,14 +201,14 @@ def diff(bbp_in, bbp_out, temp_dir):
     units_in = read_bbp_units(bbp_in)
     if units_in == "cm/s/s":
         print("[ERROR]: Already have an acceleration file!")
-        sys.exit(-1)
+        sys.exit(1)
     if units_in == "cm":
         units_out = "cm/s"
     elif units_in == "cm/s":
         units_out = "cm/s/s"
     else:
         print("[ERROR]: Unknown unit in the input file!")
-        sys.exit(-1)
+        sys.exit(1)
 
     # Split file to get each component separate
     prefix = "gmsv_tools_tmp"
@@ -263,7 +263,7 @@ def run():
                                       input_suffix=args.input_suffix)
     else:
         print("[ERROR]: Must specify input_file, station_list or batch_file!")
-        sys.exit(-1)
+        sys.exit(1)
 
 def select_action(input_format, output_format):
     """
@@ -273,10 +273,10 @@ def select_action(input_format, output_format):
     output_format = output_format.lower()
     if input_format not in VALID_FORMATS:
         print("[ERROR]: input format must be one of %s" % (VALID_FORMATS))
-        sys.exit(-1)
+        sys.exit(1)
     if output_format not in VALID_FORMATS:
         print("[ERROR]: output format must be one of %s" % (VALID_FORMATS))
-        sys.exit(-1)
+        sys.exit(1)
     input_index = VALID_FORMATS.index(input_format)
     output_index = VALID_FORMATS.index(output_format)
     if input_index > output_index:

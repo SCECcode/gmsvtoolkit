@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2023, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -60,7 +60,7 @@ class StationList(object):
         """
         if a_station_list is None:
             print("Error reading station list - Null Station List")
-            sys.exit(-1)
+            sys.exit(1)
         self.a_station_filename = a_station_list
 
         # Start with empty station list
@@ -71,7 +71,7 @@ class StationList(object):
             station_file = open(self.a_station_filename, "r")
         except OSError:
             print("Error opening station list file : ", a_station_list)
-            sys.exit(-1)
+            sys.exit(1)
 
         # Read lines one by one
         for line in station_file:
@@ -90,7 +90,7 @@ class StationList(object):
                 if len(station.scode) > MAX_STATION_NAME_LEN:
                     print("Error: station name %s too long!" % (station.scode))
                     print("Maximum limit is %d!" % (MAX_STATION_NAME_LEN))
-                    sys.exit(-1)
+                    sys.exit(1)
                 if len(sta) >= 4:
                     station.vs30 = int(float(sta[3]))
                 if len(sta) >= 6:
@@ -116,7 +116,7 @@ class StationList(object):
         # Error message if we weren't able to read any stations
         if len(self.site_list) == 0:
             print("No stations read from station file :", a_station_list)
-            sys.exit(-1)
+            sys.exit(1)
 
     @staticmethod
     def build(stat_list, output_file):

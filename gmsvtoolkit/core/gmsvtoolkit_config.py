@@ -78,7 +78,7 @@ class GMSVToolKitConfig(object):
             self.GMSVTOOLKIT_ROOT = os.path.normpath(os.environ["GMSVTOOLKIT_DIR"])
         else:
             print("GMSVTOOLKIT_DIR is not set. Please configure it and try again.")
-            sys.exit(-1)
+            sys.exit(1)
 
         #
         # Make sure these exist before continuing and that you have permissions
@@ -88,14 +88,14 @@ class GMSVToolKitConfig(object):
                   (self.GMSVTOOLKIT_ROOT))
             print("Please make sure to set GMSVTOOLKIT_DIR correctly to point to")
             print("your GMSVToolkit root directory and try again.")
-            sys.exit(-1)
+            sys.exit(1)
         if not (os.access(self.GMSVTOOLKIT_ROOT, os.R_OK)):
             print("You don't have read access to %s, which is your " %
                   (self.GMSVTOOLKIT_ROOT))
             print("GMSVToolkit root directory. If this is incorrect,")
             print("please set GMSVTOOLKIT_DIR correctly to point to your")
             print("GMSVToolkit root directory and try again.")
-            sys.exit(-2)
+            sys.exit(1)
 
         #
         # Component installation info
@@ -125,7 +125,7 @@ class GMSVToolKitConfig(object):
             print("Can't find GP bin directory %s." % (self.GP_BIN_DIR))
             print("Did you successfully build the executables?")
             print("If not, please run make in %s." % (self.SRC_DIR))
-            sys.exit(3)
+            sys.exit(1)
 
         #
         # UCB Directories
@@ -135,7 +135,7 @@ class GMSVToolKitConfig(object):
             print("Can't find UCB bin directory %s." % (self.UCB_BIN_DIR))
             print("Did you successfully build the executables?")
             print("If not, please run make in %s." % (self.SRC_DIR))
-            sys.exit(3)
+            sys.exit(1)
 
         #
         # USGS Directories
@@ -146,4 +146,4 @@ class GMSVToolKitConfig(object):
                   (self.USGS_BIN_DIR))
             print("Did you successfully build the executables?")
             print("If not, please run make in %s." % (self.SRC_DIR))
-            sys.exit(3)
+            sys.exit(1)
