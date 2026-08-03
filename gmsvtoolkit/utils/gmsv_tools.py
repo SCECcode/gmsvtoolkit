@@ -85,6 +85,8 @@ def parse_arguments():
                         help="convert to output format: acc, vel, dis")
     parser.add_argument("--input-suffix", "--suffix", dest="input_suffix",
                         help="suffix used for input files")
+    parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                        help="runs in quiet mode, only print error messages")
     args = parser.parse_args()
 
     return args
@@ -237,6 +239,14 @@ def run():
     """
     args = parse_arguments()
 
+    # Check for quiet mode
+    verbose = True
+    if args.quiet is True:
+        verbose = False
+
+    if verbose:
+        print("Running module: %s" % (os.path.basename(sys.argv[0])))
+
     # Check paths
     input_dir = ""
     output_dir = ""
@@ -250,17 +260,20 @@ def run():
     if args.input_file:
         convert_input_file(args.input_file, args.input_format,
                            args.output_format, output_file=args.output_file,
-                           input_dir=input_dir, output_dir=output_dir)
+                           input_dir=input_dir, output_dir=output_dir,
+                           verbose=verbose)
     elif args.station_list:
         convert_files_from_station_list(args.station_list,
                                         args.input_format, args.output_format,
                                         input_dir, output_dir,
-                                        input_suffix=args.input_suffix)
+                                        input_suffix=args.input_suffix,
+                                        verbose=verbose)
     elif args.batch_file:
         convert_files_from_batch_file(args.batch_file,
                                       args.input_format, args.output_format,
                                       input_dir, output_dir,
-                                      input_suffix=args.input_suffix)
+                                      input_suffix=args.input_suffix,
+                                      verbose=verbose)
     else:
         print("[ERROR]: Must specify input_file, station_list or batch_file!")
         sys.exit(1)
@@ -291,7 +304,8 @@ def convert_files_from_station_list(station_file,
                                     input_format, output_format,
                                     input_dir, output_dir,
                                     input_suffix=None,
-                                    temp_dir=None):
+                                    temp_dir=None,
+                                    verbose=False):
     """
     Process a station list and convert each file as
     indicated by action_type and action_count
@@ -310,13 +324,15 @@ def convert_files_from_station_list(station_file,
                            input_dir, output_dir,
                            action_type, action_count,
                            input_suffix=input_suffix,
-                           temp_dir=temp_dir)
+                           temp_dir=temp_dir,
+                           verbose=verbose)
 
 def convert_files_from_batch_file(batch_file,
                                   input_format, output_format,
                                   input_dir, output_dir,
                                   input_suffix=None,
-                                  temp_dir=None):
+                                  temp_dir=None,
+                                  verbose=False):
     """
     Process a batch file and convert each file as
     indicated by action_type and action_count
@@ -337,7 +353,8 @@ def convert_files_from_batch_file(batch_file,
                            input_dir, output_dir,
                            action_type, action_count,
                            input_suffix=input_suffix,
-                           temp_dir=temp_dir)
+                           temp_dir=temp_dir,
+                           verbose=verbose)
 
     input_list.close()
 
@@ -346,7 +363,8 @@ def run_directory_mode(station_name,
                        input_dir, output_dir,
                        action_type, action_count,
                        input_suffix=None,
-                       temp_dir=None):
+                       temp_dir=None,
+                       verbose=False):
     """
     Create input and output filenames for station_name and
     then call convert_single_file
@@ -386,11 +404,11 @@ def run_directory_mode(station_name,
     
     convert_single_file(input_file, output_file,
                         action_type, action_count,
-                        temp_dir)
+                        temp_dir=temp_dir, verbose=verbose)
 
 def convert_single_file(input_file, output_file,
                         action_type, action_count,
-                        temp_dir=None):
+                        temp_dir=None, verbose=False):
     """
     Convert a single file by differentiation or integration,
     can be used more than once to go from displacement to
@@ -404,15 +422,17 @@ def convert_single_file(input_file, output_file,
 
     if action_count == 0:
         # Nothing to do, just copy file to destination
-        print("[GMSV_TOOLS]: Copying %s --> %s" %
-              (os.path.basename(input_file),
-               os.path.basename(output_file)))
+        if verbose:
+            print("[GMSV_TOOLS]: Copying %s --> %s" %
+                  (os.path.basename(input_file),
+                   os.path.basename(output_file)))
         shutil.copy(input_file, output_file)
         return
 
-    print("[GMSV_TOOLS]: Converting %s --> %s" %
-          (os.path.basename(input_file),
-           os.path.basename(output_file)))
+    if verbose:
+        print("[GMSV_TOOLS]: Converting %s --> %s" %
+              (os.path.basename(input_file),
+               os.path.basename(output_file)))
 
     # Itereate action_count times
     tmp_input = input_file
@@ -431,7 +451,8 @@ def convert_single_file(input_file, output_file,
 
 def convert_input_file(input_file, input_format, output_format,
                        output_file=None, input_dir="",
-                       output_dir="", temp_dir=None):
+                       output_dir="", temp_dir=None,
+                       verbose=False):
     """
     Converts a single file from input format
     to output format
@@ -455,7 +476,7 @@ def convert_input_file(input_file, input_format, output_format,
 
     convert_single_file(input_file, output_file,
                         action_type, action_count,
-                        temp_dir=temp_dir)
+                        temp_dir=temp_dir, verbose=verbose)
 
 if __name__ == '__main__':
     run()

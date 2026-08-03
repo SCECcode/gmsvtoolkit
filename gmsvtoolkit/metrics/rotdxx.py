@@ -2,7 +2,7 @@
 """
 BSD 3-Clause License
 
-Copyright (c) 2022, University of Southern California
+Copyright (c) 2026, University of Southern California
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -185,6 +185,8 @@ class RotDXX(object):
                             help="enable RotD100 output")
         parser.add_argument("--rotd50", dest="rotd50", action="store_true",
                             help="enable RotD50 output (default)")
+        parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                        help="runs in quiet mode, only print error messages")
         args = parser.parse_args()
 
         return args
@@ -195,6 +197,14 @@ class RotDXX(object):
         """
         # Parse command-line options
         args = self.parse_arguments()
+
+        # Check for quiet mode
+        verbose = True
+        if args.quiet is True:
+            verbose = False
+
+        if verbose:
+            print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
         # Set mode
         self.mode = "rotd50"
@@ -230,10 +240,13 @@ class RotDXX(object):
         # Run in batch mode
         if input_file is None:
             if batch_file is not None:
-                self.run_batch_mode(batch_file, input_dir, output_dir)
+                self.run_batch_mode(batch_file, input_dir,
+                                    output_dir, verbose=verbose)
             else:
-                self.run_station_mode(station_file, input_dir,
-                                      output_dir, input_suffix=args.input_suffix)
+                self.run_station_mode(station_file,
+                                      input_dir, output_dir,
+                                      input_suffix=args.input_suffix,
+                                      verbose=verbose)
         else:
             if args.output_file is not None:
                 output_base = os.path.splitext(args.output_file)[0]
@@ -242,10 +255,12 @@ class RotDXX(object):
 
             # Run RotD100
             self.run_single_file(input_file, output_base,
-                                 input_dir, output_dir)
+                                 input_dir, output_dir,
+                                 verbose=verbose)
 
     def run_single_file(self, input_file, output_base,
-                        input_dir, output_dir, temp_dir=None):
+                        input_dir, output_dir,
+                        temp_dir=None, verbose=False):
         """
         Calculate RotDXX for a single acceleration seismogram
         """
@@ -254,8 +269,9 @@ class RotDXX(object):
             temp_dir = tempfile.mkdtemp()
             # And clean up later
             atexit.register(cleanup, temp_dir)
-        
-        print("[ROTDXX]: Processing %s" % (input_file))
+
+        if verbose:
+            print("[ROTDXX]: Processing %s" % (input_file))
         peer_n_file = "temp-peer_n.peer"
         peer_e_file = "temp-peer_e.peer"
         peer_z_file = "temp-peer_z.peer"
@@ -287,7 +303,7 @@ class RotDXX(object):
                             "rotd100")
 
     def run_batch_mode(self, batch_file, input_dir,
-                       output_dir, temp_dir=None):
+                       output_dir, temp_dir=None, verbose=False):
         """
         Calculates RotDXX for a list of acceleration seismograms
         """
@@ -308,13 +324,14 @@ class RotDXX(object):
 
             # Run RotDXX
             self.run_single_file(input_file, output_base,
-                                 input_dir, output_dir, temp_dir)
+                                 input_dir, output_dir,
+                                 temp_dir, verbose=verbose)
 
         input_list.close()
 
     def run_station_mode(self, station_file, input_dir,
                          output_dir, input_suffix=".acc.bbp",
-                         temp_dir=None):
+                         temp_dir=None, verbose=False):
         """
         Calculates RotDXX for stations in a station list
         """
@@ -344,9 +361,9 @@ class RotDXX(object):
 
             # Run RotDXX
             self.run_single_file(input_file, output_base,
-                                 input_dir, output_dir, temp_dir)
+                                 input_dir, output_dir,
+                                 temp_dir, verbose=verbose)
 
 if __name__ == '__main__':
-    print("Running module: %s" % (os.path.basename(sys.argv[0])))
     ME = RotDXX()
     ME.run()
