@@ -889,7 +889,7 @@ class AndersonGOF(object):
 
         return y
 
-    def run_anderson_gof(self, obs_dir, comp_dir, output_dir):
+    def run_anderson_gof(self, obs_dir, comp_dir, output_dir, verbose=False):
         """
         Runs the Anderson GoF code
         """
@@ -912,7 +912,8 @@ class AndersonGOF(object):
         for station in station_list:
             station_name = station.scode
 
-            print("==> Processing station: %s" % (station_name))
+            if verbose:
+                print("==> Processing station: %s" % (station_name))
 
             file_comp_acc = os.path.join(comp_dir, find_acc_file(comp_dir, station_name))
             file_comp_rd50 = os.path.join(comp_dir, find_rd50_file(comp_dir, station_name))
@@ -1161,11 +1162,13 @@ class AndersonGOF(object):
                                            "gof-%s-anderson-%s.png" %
                                            (self.event_name, station_name))
             self.cplots(irec, station_name, output_file)
-            print('===> Station score :', "{:3.1f}".format(self.S1[irec]))
+            if verbose:
+                print('===> Station score :', "{:3.1f}".format(self.S1[irec]))
 
             irec = irec + 1
 
-        print('==> Total number of stations processed: %d' % (irec))
+        if verbose:
+            print('==> Total number of stations processed: %d' % (irec))
         self.C1 = self.C1[0:irec, :]
         self.C2 = self.C2[0:irec, :]
         self.C3 = self.C3[0:irec, :]
@@ -1189,7 +1192,8 @@ class AndersonGOF(object):
         c9conf = [self.statts(self.C9[:, i]) for i in range(self.BMAX)]
         c10conf = [self.statts(self.C10[:, i]) for i in range(self.BMAX)]
         s1_event = np.nanmean(self.S1)
-        print('==> Overall event score:', "{:3.1f}".format(s1_event))
+        if verbose:
+            print('==> Overall event score:', "{:3.1f}".format(s1_event))
 
         if self.run_prefix is not None:
             output_file = os.path.join(output_dir,
@@ -1245,6 +1249,8 @@ class AndersonGOF(object):
                             help="comparison label used for the output file prefix")
         parser.add_argument("--run-prefix", dest="run_prefix",
                             help="prefix to be added to the comparison files")
+        parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                            help="runs in quiet mode, only print error messages")
         args = parser.parse_args()
 
         return args
@@ -1256,6 +1262,14 @@ class AndersonGOF(object):
         """
         # Parse command-line options
         args = self.parse_arguments()
+
+        # Check for quiet mode
+        verbose = True
+        if args.quiet is True:
+            verbose = False
+
+        if verbose:
+            print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
         self.station_file = os.path.abspath(args.station_list)
         self.event_name = args.comp_label
@@ -1274,7 +1288,8 @@ class AndersonGOF(object):
 
         # Run Anderson GoF module
         self.run_anderson_gof(obs_dir, comp_dir,
-                              output_dir)
+                              output_dir,
+                              verbose=verbose)
 
 if __name__ == "__main__":
     ANDERSON_GOF = AndersonGOF()

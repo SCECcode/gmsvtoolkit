@@ -186,7 +186,7 @@ class RotDXX(object):
         parser.add_argument("--rotd50", dest="rotd50", action="store_true",
                             help="enable RotD50 output (default)")
         parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
-                        help="runs in quiet mode, only print error messages")
+                            help="runs in quiet mode, only print error messages")
         args = parser.parse_args()
 
         return args

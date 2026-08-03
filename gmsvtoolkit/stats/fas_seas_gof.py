@@ -174,6 +174,8 @@ class FASSEASGoF(object):
                             help="prefix for observation SEAS FAS files")
         parser.add_argument("--sim-prefix", dest="sim_prefix", default="",
                             help="prefix for simulation SEAS FAS files")
+        parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                            help="runs in quiet mode, only print error messages")
         args = parser.parse_args()
 
         return args
@@ -184,6 +186,14 @@ class FASSEASGoF(object):
         """
         # Parse command-line options
         args = self.parse_arguments()
+
+        # Check for quiet mode
+        verbose = True
+        if args.quiet is True:
+            verbose = False
+
+        if verbose:
+            print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
         # Check input parameters
         if not args.src_file:
@@ -221,13 +231,15 @@ class FASSEASGoF(object):
                               acc_dir=acc_dir, acc_prefix=args.acc_prefix,
                               acc_suffix=args.acc_suffix,
                               sim_prefix=args.sim_prefix,
-                              obs_prefix=args.obs_prefix)
+                              obs_prefix=args.obs_prefix,
+                              verbose=verbose)
 
     def run_fas_seas_gof(self, a_station_list, a_src_file,
                          obs_dir, sims_dir, output_dir,
                          acc_dir=None, acc_prefix="",
                          acc_suffix=".acc.bbp",
-                         sim_prefix="", obs_prefix=""):
+                         sim_prefix="", obs_prefix="",
+                         verbose=False):
         """
         Generates data files used to plot FAS GoF
         """
@@ -284,7 +296,7 @@ class FASSEASGoF(object):
                 syn_dt = read_bbp_dt(input_acc_file)
                 max_syn_freq = 1.0 / (syn_dt * 2)
                 if max_syn_freq < station.high_freq_corner:
-                    print("station %s: freq: %f, syn_dt: %f" %
+                    print("[INFO]: station %s: freq: %f, syn_dt: %f" %
                           (station_name, station.high_freq_corner, max_syn_freq))
             else:
                 # Just use frequency from station list
@@ -330,6 +342,5 @@ class FASSEASGoF(object):
             self.summarize_fas(station_list, output_dir)
 
 if __name__ == "__main__":
-    print("Running module: %s" % (os.path.basename(sys.argv[0])))
     ME = FASSEASGoF()
     ME.run()

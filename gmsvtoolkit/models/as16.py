@@ -394,6 +394,8 @@ class AS16(object):
                             help="source description file (SRC file)")
         parser.add_argument("--station-list", "-s", dest="station_list", required=True,
                             help="station list")
+        parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                            help="runs in quiet mode, only print error messages")
         args = parser.parse_args()
 
         return args
@@ -405,6 +407,14 @@ class AS16(object):
         """
         args = self.parse_arguments()
         
+        # Check for quiet mode
+        verbose = True
+        if args.quiet is True:
+            verbose = False
+
+        if verbose:
+            print("Running module: %s" % (os.path.basename(sys.argv[0])))
+
         # Check input parameters
         if not args.src_file:
             print("[ERROR]: Please specify source description file!")
@@ -467,7 +477,7 @@ class AS16(object):
         elif rake < -30 and rake > -150:
             mechanism = 1
         else:
-            print("Warning: unknown mechanism for rake = %f" % (rake))
+            print("[WARNING]: Unknown mechanism for rake = %f" % (rake))
             mechanism = 0
 
         # Create output file, add header
@@ -503,6 +513,5 @@ class AS16(object):
         out_file.close()
 
 if __name__ == '__main__':
-    print("Running module: %s" % (os.path.basename(sys.argv[0])))
     ME = AS16()
     ME.run()

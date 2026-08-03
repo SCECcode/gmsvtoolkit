@@ -246,6 +246,8 @@ class GMPEGoF(object):
                             help="prefix to be added to the comparison files")
         parser.add_argument("--gmpe-group", dest="gmpe_group", required=True,
                             help="GMPE group %s" % (self.gmpe_groups))
+        parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                            help="runs in quiet mode, only print error messages")
         args = parser.parse_args()
 
         return args
@@ -256,6 +258,14 @@ class GMPEGoF(object):
         """
         # Parse command-line options
         args = self.parse_arguments()
+
+        # Check for quiet mode
+        verbose = True
+        if args.quiet is True:
+            verbose = False
+
+        if verbose:
+            print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
         src_file = os.path.abspath(args.src_file)
         station_list = os.path.abspath(args.station_list)
@@ -276,10 +286,12 @@ class GMPEGoF(object):
 
         # Run GMPE GoF module
         self.run_gmpe_gof(station_list, src_file,
-                          gmpe_dir, comp_dir, output_dir)
+                          gmpe_dir, comp_dir, output_dir,
+                          verbose=verbose)
         
     def run_gmpe_gof(self, station_file, src_file,
-                     gmpe_dir, comp_dir, output_dir):
+                     gmpe_dir, comp_dir, output_dir,
+                     verbose=False):
         """
         Calculates the residuals for the GMPE GoF
         """
@@ -360,6 +372,5 @@ class GMPEGoF(object):
             os_utilities.runprog(cmd, abort_on_error=True, print_cmd=False)
 
 if __name__ == "__main__":
-    print("Running module: %s" % (os.path.basename(sys.argv[0])))
     ME = GMPEGoF()
     ME.run()

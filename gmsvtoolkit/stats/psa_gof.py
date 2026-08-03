@@ -85,6 +85,8 @@ class PSAGoF(object):
                             help="select RotD50 comparison (default)")
         parser.add_argument("--max-cutoff", dest="max_cutoff", type=float, default=1000.0,
                             help="select max cutoff distance (km) for the comparison")
+        parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                            help="runs in quiet mode, only print error messages")
         args = parser.parse_args()
 
         return args
@@ -95,6 +97,14 @@ class PSAGoF(object):
         """
         # Parse command-line options
         args = self.parse_arguments()
+
+        # Check for quiet mode
+        verbose = True
+        if args.quiet is True:
+            verbose = False
+
+        if verbose:
+            print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
         # Check input parameters
         if not args.src_file:
@@ -134,10 +144,12 @@ class PSAGoF(object):
 
         # Run PSA GoF module
         self.run_psa_gof(args.station_list, args.src_file,
-                         args.obs_dir, args.sims_dir, output_dir)
+                         args.obs_dir, args.sims_dir, output_dir,
+                         verbose=verbose)
 
     def run_psa_gof(self, a_station_list, a_src_file,
-                    obs_dir, sims_dir, output_dir):
+                    obs_dir, sims_dir, output_dir,
+                    verbose=False):
         """
         Calculate residuals between data from obs_dir and sims_dir
         """
@@ -244,6 +256,5 @@ class PSAGoF(object):
             os_utilities.runprog(cmd, abort_on_error=True, print_cmd=False)
 
 if __name__ == '__main__':
-    print("Running module: %s" % (os.path.basename(sys.argv[0])))
     ME = PSAGoF()
     ME.run()

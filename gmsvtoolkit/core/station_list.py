@@ -59,7 +59,7 @@ class StationList(object):
         put into a dictionary accessible with iterators.
         """
         if a_station_list is None:
-            print("Error reading station list - Null Station List")
+            print("[ERROR]: Reading station list - Null Station List")
             sys.exit(1)
         self.a_station_filename = a_station_list
 
@@ -70,7 +70,7 @@ class StationList(object):
         try:
             station_file = open(self.a_station_filename, "r")
         except OSError:
-            print("Error opening station list file : ", a_station_list)
+            print("[ERROR]: Could not open station list file : ", a_station_list)
             sys.exit(1)
 
         # Read lines one by one
@@ -88,21 +88,21 @@ class StationList(object):
                 station.lat = float(sta[1])
                 station.scode = sta[2]
                 if len(station.scode) > MAX_STATION_NAME_LEN:
-                    print("Error: station name %s too long!" % (station.scode))
-                    print("Maximum limit is %d!" % (MAX_STATION_NAME_LEN))
+                    print("[ERROR]: Station name %s too long!" % (station.scode))
+                    print("[ERROR]: Maximum limit is %d!" % (MAX_STATION_NAME_LEN))
                     sys.exit(1)
                 if len(sta) >= 4:
                     station.vs30 = int(float(sta[3]))
                 if len(sta) >= 6:
                     # We have lf and hf, make sure they are not zero!
                     if float(sta[4]) <= 0:
-                        print("warning: station %s has lf<=0, using 1e-15" %
+                        print("[WARNING]: Station %s has lf<=0, using 1e-15" %
                               (sta[2]))
                         station.low_freq_corner = 1.0e-15
                     else:
                         station.low_freq_corner = float(sta[4])
                     if float(sta[5]) <= 0:
-                        print("warning: station %s has hf<=0, using 1e+15" %
+                        print("[WARNING]: Station %s has hf<=0, using 1e+15" %
                               (sta[2]))
                         station.high_freq_corner = 1.0e+15
                     else:
@@ -112,10 +112,10 @@ class StationList(object):
         try:
             station_file.close
         except OSError:
-            print("Error closing station list file :", a_station_list)
+            print("[ERROR]: Closing station list file :", a_station_list)
         # Error message if we weren't able to read any stations
         if len(self.site_list) == 0:
-            print("No stations read from station file :", a_station_list)
+            print("[ERROR]: No stations read from station file :", a_station_list)
             sys.exit(1)
 
     @staticmethod

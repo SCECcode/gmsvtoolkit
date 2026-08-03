@@ -273,6 +273,8 @@ class RZZ2015GMPE(object):
                             help="prefix used for each plot")
         parser.add_argument("--disable-plots", dest="disable_plots", action="store_true",
                             default=False, help="disable plot generation")
+        parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                            help="runs in quiet mode, only print error messages")
         args = parser.parse_args()
 
         return args
@@ -283,6 +285,14 @@ class RZZ2015GMPE(object):
         for the six parameters in Rezaeian (2015)
         """
         args = self.parse_arguments()
+
+        # Check for quiet mode
+        verbose = True
+        if args.quiet is True:
+            verbose = False
+
+        if verbose:
+            print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
         # Check input parameters
         if not args.src_file:
@@ -313,11 +323,11 @@ class RZZ2015GMPE(object):
         
         self.run_rzz2015_gmpe(station_list, src_file,
                               output_file, plot_prefix=plot_prefix,
-                              plots=create_plots)
+                              plots=create_plots, verbose=verbose)
 
     def run_rzz2015_gmpe(self, a_station_list, a_src_file,
                          a_output_file, plot_prefix="rzz2015gmpe",
-                         plots=True):
+                         plots=True, verbose=False):
         """
         Runs the GMPEs for the six parameters in Rezaeian (2015)
         """
@@ -341,7 +351,8 @@ class RZZ2015GMPE(object):
         # Go through each station
         for station in station_list:
             stat = station.scode
-            print("==> Processing station: %s" % (stat))
+            if verbose:
+                print("==> Processing station: %s" % (stat))
 
             # Calculate Rrup
             origin = (src_keys['lon_top_center'],
@@ -506,6 +517,5 @@ class RZZ2015GMPE(object):
         out_file.close()
 
 if __name__ == '__main__':
-    print("Running module: %s" % (os.path.basename(sys.argv[0])))
     ME = RZZ2015GMPE()
     ME.run()
