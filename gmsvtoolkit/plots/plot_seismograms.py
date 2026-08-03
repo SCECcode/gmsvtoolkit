@@ -356,6 +356,9 @@ class PlotSeismograms(object):
         if args.quiet is True:
             verbose = False
 
+        if verbose:
+            print("Running module: %s" % (os.path.basename(sys.argv[0])))
+
         # Make sure we have something to do
         if len(args.input_files) == 0:
             print("[ERROR]: Must specify at least one input file/directory!")
@@ -507,13 +510,14 @@ class PlotSeismograms(object):
 
             if plot_title is None:
                 if len(input_dirs) > 1:
-                    plot_title = "Seismogram comparison for station %s" % (station_name)
+                    current_plot_title = "Seismogram comparison for station %s" % (station_name)
                 else:
-                    plot_title = "Seismogram for station %s" % (station_name)
+                    current_plot_title = "Seismogram for station %s" % (station_name)
 
             self.run_directory_mode(station_name, input_dirs,
                                     labels, output_dir, comp_label,
-                                    xmin, xmax, plot_title=plot_title,
+                                    xmin, xmax,
+                                    plot_title=current_plot_title,
                                     verbose=verbose)
 
         input_list.close()
@@ -534,13 +538,13 @@ class PlotSeismograms(object):
 
             if plot_title is None:
                 if len(input_dirs) > 1:
-                    plot_title = "Seismogram comparison for station %s" % (station_name)
+                    current_plot_title = "Seismogram comparison for station %s" % (station_name)
                 else:
-                    plot_title = "Seismogram for station %s" % (station_name)
+                    current_plot_title = "Seismogram for station %s" % (station_name)
 
             self.run_directory_mode(station_name, input_dirs,
                                     labels, output_dir, comp_label,
-                                    xmin, xmax, plot_title=plot_title,
+                                    xmin, xmax, plot_title=current_plot_title,
                                     verbose=verbose)
 
     def run_directory_mode(self, station_name,
@@ -594,6 +598,5 @@ class PlotSeismograms(object):
                                  verbose=verbose)
             
 if __name__ == '__main__':
-    print("Running module: %s" % (os.path.basename(sys.argv[0])))
     ME = PlotSeismograms()
     ME.run()

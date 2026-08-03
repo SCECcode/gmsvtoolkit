@@ -220,7 +220,8 @@ def read_topo(filename, plotregion):
     return masked
 
 def plot_station_map(plottitle, plotregion, topo, coastal, border,
-                     fault, sta, output_file, hypocenter_list=None):
+                     fault, sta, output_file, hypocenter_list=None,
+                     verbose=False):
     """
     Genereate the station map plot
     """
@@ -309,7 +310,8 @@ def plot_station_map(plottitle, plotregion, topo, coastal, border,
     for tick in pylab.gca().get_yticklabels():
         tick.set_fontsize(8)
 
-    print("==> Creating Plot: %s" % (output_file))
+    if verbose:
+        print("==> Creating Plot: %s" % (output_file))
     pylab.savefig('%s' % (output_file), format="png",
                   transparent=False, dpi=plot_config.dpi)
     pylab.close()
@@ -332,6 +334,8 @@ def parse_arguments():
                         help="output filename for station map plot")
     parser.add_argument("--plot-title", "--title", dest="plot_title",
                         help="set plot title")
+    parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                        help="runs in quiet mode, only print error messages")
     args = parser.parse_args()
 
     return args
@@ -341,6 +345,14 @@ def run():
     Generate station plot
     """
     args = parse_arguments()
+
+    # Check for quiet mode
+    verbose = True
+    if args.quiet is True:
+        verbose = False
+
+    if verbose:
+        print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
     # Look at paths
     input_dir = ""
@@ -377,12 +389,14 @@ def run():
     # All good, create map plot
     plot_map(station_list, src_file,
              plot_title, output_dir,
-             output_file=args.output_file)
+             output_file=args.output_file,
+             verbose=verbose)
 
 def plot_map(station_file, src_file,
              plot_title, output_dir,
              output_file="station_map.png",
-             temp_dir=None):
+             temp_dir=None,
+             verbose=False):
     """
     Generate map plot with stations and and fault
     """
@@ -429,7 +443,7 @@ def plot_map(station_file, src_file,
 
     plot_station_map(plot_title, plot_region, topo, coastal,
                      border, trace_file, simple_station_file,
-                     output_file, [hypo_coord])
+                     output_file, [hypo_coord], verbose=verbose)
 
 if __name__ == '__main__':
     run()

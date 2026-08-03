@@ -115,7 +115,7 @@ def read_data(datafile, min_period, max_period=MAX_PERIOD):
 
 def plot_single_component_gof(plottitle, gof_fileroot, indir, outdir,
                               cutoff=0, min_period=0.01, colorset=None,
-                              lfreq=None, hfreq=None):
+                              lfreq=None, hfreq=None, verbose=False):
     """
     Creates a single component GOF plot (e.g. RotD50)
     """
@@ -208,7 +208,7 @@ def plot_single_component_gof(plottitle, gof_fileroot, indir, outdir,
     # Make sure all components have same number of data points
     npts = [len(component) for component in period]
     if npts[1:] != npts[:-1]:
-        print("Number of data points unequal across components")
+        print("[ERROR]: Number of data points unequal across components")
         return
 
     # Construct baseline
@@ -264,14 +264,15 @@ def plot_single_component_gof(plottitle, gof_fileroot, indir, outdir,
     else:
         pylab.suptitle('%s\nR < %d km' % (plottitle, cutoff), size=11)
     outfile = os.path.join(outdir, "gof-%s.png" % (gof_fileroot))
-    print("==> Created GoF plot: %s" % (outfile))
+    if verbose:
+        print("==> Created GoF plot: %s" % (outfile))
     pylab.savefig(outfile, format="png",
                   transparent=False, dpi=plot_config.dpi)
     pylab.close()
 
 def plot_single_component_freq_gof(plottitle, gof_fileroot, indir, outdir,
                                    cutoff=0, min_period=0.01, colorset=None,
-                                   lfreq=None, hfreq=None):
+                                   lfreq=None, hfreq=None, verbose=False):
     """
     Creates a single component GOF plot using frequencies instead of periods
     """
@@ -374,7 +375,7 @@ def plot_single_component_freq_gof(plottitle, gof_fileroot, indir, outdir,
     # Make sure all components have same number of data points
     npts = [len(component) for component in freq]
     if npts[1:] != npts[:-1]:
-        print("Number of data points unequal across components")
+        print("[ERROR]: Number of data points unequal across components")
         return
 
     # Construct baseline
@@ -430,14 +431,15 @@ def plot_single_component_freq_gof(plottitle, gof_fileroot, indir, outdir,
     else:
         pylab.suptitle('%s\nR < %d km' % (plottitle, cutoff), size=11)
     outfile = os.path.join(outdir, "gof-%s-freq.png" % (gof_fileroot))
-    print("==> Created GoF plot: %s" % (outfile))
+    if verbose:
+        print("==> Created GoF plot: %s" % (outfile))
     pylab.savefig(outfile, format="png",
                   transparent=False, dpi=plot_config.dpi)
     pylab.close()
 
 def plot_three_component_gof(plottitle, gof_fileroot, indir, outdir,
                              cutoff=0, min_period=0.01, mode=None, colorset=None,
-                             lfreq=None, hfreq=None):
+                             lfreq=None, hfreq=None, verbose=False):
     """
     Creates a GOF plot with three subplots (e.g. RotD50/PSA5n/PSA5e)
     """
@@ -538,7 +540,7 @@ def plot_three_component_gof(plottitle, gof_fileroot, indir, outdir,
     # Make sure all components have same number of data points
     npts = [len(component) for component in period]
     if npts[1:] != npts[:-1]:
-        print("Number of data points unequal across components")
+        print("[ERROR]: Number of data points unequal across components")
         return
 
     # Construct baseline
@@ -603,14 +605,15 @@ def plot_three_component_gof(plottitle, gof_fileroot, indir, outdir,
         else:
             pylab.suptitle('%s\nR < %d km' % (plottitle, cutoff), size=11)
     outfile = os.path.join(outdir, "gof-%s.png" % (gof_fileroot))
-    print("==> Created GoF plot: %s" % (outfile))
+    if verbose:
+        print("==> Created GoF plot: %s" % (outfile))
     pylab.savefig(outfile, format="png",
                   transparent=False, dpi=plot_config.dpi)
     pylab.close()
 
 def plot(plottitle, gof_fileroot, indir, outdir,
          cutoff=0, min_period=0.01, mode=None, colorset=None,
-         lfreq=None, hfreq=None):
+         lfreq=None, hfreq=None, verbose=False):
     """
     Creates the GOF plot
     """
@@ -620,21 +623,24 @@ def plot(plottitle, gof_fileroot, indir, outdir,
                                        cutoff=cutoff,
                                        min_period=min_period,
                                        colorset=colorset,
-                                       lfreq=lfreq, hfreq=hfreq)
+                                       lfreq=lfreq, hfreq=hfreq,
+                                       verbose=verbose)
     elif mode == "rd50-single":
         plot_single_component_gof(plottitle, gof_fileroot,
                                   indir, outdir,
                                   cutoff=cutoff,
                                   min_period=min_period,
                                   colorset=colorset,
-                                  lfreq=lfreq, hfreq=hfreq)
+                                  lfreq=lfreq, hfreq=hfreq,
+                                  verbose=verbose)
     elif mode == "rd50" or mode == "rd100":
         plot_three_component_gof(plottitle, gof_fileroot,
                                  indir, outdir,
                                  cutoff=cutoff,
                                  min_period=min_period,
                                  mode=mode, colorset=colorset,
-                                 lfreq=lfreq, hfreq=hfreq)
+                                 lfreq=lfreq, hfreq=hfreq,
+                                 verbose=verbose)
     else:
         raise exceptions.ParameterError("plot mode %s unsupported" %
                                         (mode))
@@ -669,6 +675,8 @@ def parse_arguments():
     parser.add_argument("--plot-title", "--title", dest="plot_title",
                         default="GOF Comparison Plot",
                         help="select plot title for the GoF plot")
+    parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                        help="runs in quiet mode, only print error messages")
     args = parser.parse_args()
     
     return args
@@ -679,6 +687,14 @@ def run():
     """
     # Parse command-line options
     args = parse_arguments()
+
+    # Check for quiet mode
+    verbose = True
+    if args.quiet is True:
+        verbose = False
+
+    if verbose:
+        print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
     # Look at paths
     input_dir = ""
@@ -694,13 +710,14 @@ def run():
                  min_period=args.plot_limit,
                  max_cutoff=args.max_cutoff,
                  colorset=args.colorset.lower(),
-                 lfreq=args.lfreq, hfreq=args.hfreq)
+                 lfreq=args.lfreq, hfreq=args.hfreq,
+                 verbose=verbose)
 
 def plot_psa_gof(input_dir, output_dir,
                  plot_title, comp_label,
                  plot_mode='rd50', min_period=0.01,
                  max_cutoff=1000.0, colorset='single',
-                 lfreq=None, hfreq=None):
+                 lfreq=None, hfreq=None, verbose=False):
     """
     Calls the plotting code with the required parameters
     """
@@ -728,7 +745,7 @@ def plot_psa_gof(input_dir, output_dir,
     plot(plot_title, fileroot, input_dir, output_dir,
          cutoff=max_cutoff, min_period=min_period,
          mode=plot_mode, colorset=colorset.lower(),
-         lfreq=lfreq, hfreq=hfreq)
+         lfreq=lfreq, hfreq=hfreq, verbose=verbose)
 
 if __name__ == '__main__':
     run()

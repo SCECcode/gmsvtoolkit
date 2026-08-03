@@ -52,7 +52,7 @@ from utils import file_utilities
 def plot_fas(freqs_fas, h1_data, h2_data,
              freqs_seas,eas_smoothed_data,
              fas_plot, station, units=None,
-             plot_title=None):
+             plot_title=None, verbose=False):
     """
     Create a plot of both FAS horizontal components along
     with the combined SEAS
@@ -127,6 +127,8 @@ def parse_arguments():
                         help="comparison label used for the output file prefix")
     parser.add_argument("--units", dest="units",
                         help="units, g or cm/s/s (default)")
+    parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                        help="runs in quiet mode, only print error messages")
     args = parser.parse_args()
 
     return args
@@ -138,6 +140,14 @@ def run():
 
     # Parse command-line options
     args = parse_arguments()
+
+    # Check for quiet mode
+    verbose = True
+    if args.quiet is True:
+        verbose = False
+
+    if verbose:
+        print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
     # Look at paths
     input_dir = ""
@@ -181,19 +191,19 @@ def run():
                                 input_fas_file=input_fas_file,
                                 input_seas_file=input_seas_file,
                                 plot_title=plot_title,
-                                units=units)
+                                units=units, verbose=verbose)
     elif args.batch_file:
         # Batch file mode
         batch_file = os.path.abspath(args.batch_file)
         plot_batch_mode(batch_file, input_dir,
                         output_dir, comp_label,
-                        units)
+                        units, verbose=verbose)
     elif args.station_list:
         # Run through the station list
         station_list = os.path.abspath(args.station_list)
         plot_station_list_mode(station_list, input_dir,
                                output_dir, comp_label,
-                               units)
+                               units, verbose=verbose)
     else:
         print("[ERROR]: Must include station_id, batch_file, or station_list!")
         sys.exit(1)
@@ -202,9 +212,11 @@ def plot_fas_single_station(station, output_file,
                             input_fas_file=None,
                             input_seas_file=None,
                             plot_title=None,
-                            units=None):
+                            units=None,
+                            verbose=False):
 
-    print("[PLOTFAS]: Generating FAS plot for station %s" % (station))
+    if verbose:
+        print("[PLOTFAS]: Generating FAS plot for station %s" % (station))
 
     # Find input file(s) to load
     if input_fas_file is not None and input_seas_file is not None:
@@ -220,11 +232,11 @@ def plot_fas_single_station(station, output_file,
     # Create comparison plot
     plot_fas(freqs_fas, fas_h1, fas_h2, freqs_seas, smoothed_eas,
              output_file, station, units=units,
-             plot_title=plot_title)
+             plot_title=plot_title, verbose=verbose)
 
 def plot_batch_mode(batch_file, input_dir,
                     output_dir, comp_label=None,
-                    units=None):
+                    units=None, verbose=False):
     """
     Generated FAS comparison plots for stations in a batch file
     """
@@ -239,13 +251,13 @@ def plot_batch_mode(batch_file, input_dir,
 
         plot_directory_mode(station_name, input_dir,
                             output_dir, comp_label,
-                            units)
+                            units, verbose=verbose)
 
     input_list.close()
 
 def plot_station_list_mode(station_file, input_dir,
                            output_dir, comp_label=None,
-                           units=None):
+                           units=None, verbose=False):
     """
     Generates FAS plots for stations in a station list
     """
@@ -258,11 +270,11 @@ def plot_station_list_mode(station_file, input_dir,
 
         plot_directory_mode(station_name, input_dir,
                             output_dir, comp_label,
-                            units)
+                            units, verbose=verbose)
 
 def plot_directory_mode(station_name, input_dir,
                         output_dir, comp_label=None,
-                        units=None):
+                        units=None, verbose=False):
     """
     Used by both station_mode and batch_mode, finds files matching
     the station name and generates comparison plot
@@ -307,7 +319,7 @@ def plot_directory_mode(station_name, input_dir,
     plot_fas_single_station(station_name, output_file,
                             input_fas_file=input_fas_file,
                             input_seas_file=input_seas_file,
-                            units=units)
+                            units=units, verbose=verbose)
 
 if __name__ == '__main__':
     run()

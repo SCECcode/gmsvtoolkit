@@ -101,7 +101,7 @@ def read_data(datafile, min_period, max_period=MAX_PERIOD):
 
 def plot_fas_seas_gof(plottitle, comp_label, indir,
                       outdir, max_cutoff=1000.0, colorset='single',
-                      method=None, lfreq=None, hfreq=None):
+                      method=None, lfreq=None, hfreq=None, verbose=False):
     """
     Creates a FAS SEAS GOF plot
     """
@@ -207,7 +207,7 @@ def plot_fas_seas_gof(plottitle, comp_label, indir,
     npts = [len(component) for component in period]
     #print(npts)
     if npts[1:] != npts[:-1]:
-        print("Number of data points unequal across components")
+        print("[ERROR]: Number of data points unequal across components")
         return
 
     # Construct baseline
@@ -276,7 +276,8 @@ def plot_fas_seas_gof(plottitle, comp_label, indir,
     pylab.xlim(min_x, max_x)
 
     outfile = os.path.join(outdir, "gof-%s.png" % (gof_fileroot))
-    print("==> Created GoF plot: %s" % (outfile))
+    if verbose:
+        print("==> Created GoF plot: %s" % (outfile))
     pylab.savefig(outfile, format="png",
                   transparent=False, dpi=plot_config.dpi)
     pylab.close()
@@ -308,6 +309,8 @@ def parse_arguments():
     parser.add_argument("--plot-title", "--title", dest="plot_title",
                         default="GOF FAS SEAS Comparison Plot",
                         help="select plot title for the GoF plot")
+    parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                        help="runs in quiet mode, only print error messages")
     args = parser.parse_args()
     
     return args
@@ -318,6 +321,14 @@ def run():
     """
     # Parse command-line options
     args = parse_arguments()
+
+    # Check for quiet mode
+    verbose = True
+    if args.quiet is True:
+        verbose = False
+
+    if verbose:
+        print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
     # Look at paths
     input_dir = ""
@@ -345,7 +356,7 @@ def run():
     plot_fas_seas_gof(args.plot_title, args.comp_label, input_dir,
                       output_dir, max_cutoff=args.max_cutoff,
                       colorset=args.colorset.lower(), method=method,
-                      lfreq=lfreq, hfreq=hfreq)
+                      lfreq=lfreq, hfreq=hfreq, verbose=verbose)
 
 if __name__ == '__main__':
     run()

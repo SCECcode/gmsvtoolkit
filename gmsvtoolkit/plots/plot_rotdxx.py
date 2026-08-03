@@ -50,12 +50,12 @@ from utils.file_utilities import read_rdxx
 
 def create_rdxx_plot(station_id, input_files, labels, output_file,
                      lfreq=None, hfreq=None, mode="rotd50",
-                     quiet=False):
+                     verbose=False):
     """
     This function generates the a plot with three subplots showing
     psa5 and rotdxx comparisons for the input files
     """
-    if not quiet:
+    if verbose:
         print("[PLOTRDXX]: Plotting comparison for station %s..." % (station_id))
 
     # Select plot titles
@@ -245,6 +245,8 @@ class PlotRotDXX(object):
                             help="adds vertical line at this low frequency corner")
         parser.add_argument("--high-freq", "--hf", dest="hfreq",
                             help="adds vertical line at this high frequency corner")
+        parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                            help="runs in quiet mode, only print error messages")
         parser.add_argument('input_files', nargs='*')
         args = parser.parse_args()
 
@@ -256,6 +258,14 @@ class PlotRotDXX(object):
         """
         # Parse command-line options
         args = self.parse_arguments()
+
+        # Check for quiet mode
+        verbose = True
+        if args.quiet is True:
+            verbose = False
+
+        if verbose:
+            print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
         # Make sure we have something to do
         if len(args.input_files) == 0:
@@ -302,31 +312,35 @@ class PlotRotDXX(object):
             if args.hfreq:
                 hfreq = args.hfreq
             self.plot_single_station(input_files, labels, output_file,
-                                     args.station_id, lfreq=lfreq, hfreq=hfreq)
+                                     args.station_id, lfreq=lfreq, hfreq=hfreq,
+                                     verbose=verbose)
         elif args.batch_file:
             # Batch file mode
             self.plot_batch_mode(args.batch_file, input_files, labels,
-                                 output_dir, args.comp_label)
+                                 output_dir, args.comp_label,
+                                 verbose=verbose)
         elif args.station_list:
             # Run through the station list
             self.plot_station_mode(args.station_list, input_files, labels,
-                                   output_dir, args.comp_label)
+                                   output_dir, args.comp_label,
+                                   verbose=verbose)
         else:
             print("[ERROR]: Must include station_id, batch_file, or station_list!")
             sys.exit(1)
 
     def plot_single_station(self, input_files, labels, output_file,
-                            station, lfreq=None, hfreq=None):
+                            station, lfreq=None, hfreq=None, verbose=False):
         """
         Generates RotDXX comparison plots for a single station
         """
-        print("[PLOTRDXX]: Generating RotDXX comparison plot for station %s" % (station))
+        if verbose:
+            print("[PLOTRDXX]: Generating RotDXX comparison plot for station %s" % (station))
         create_rdxx_plot(station, input_files, labels, output_file,
                          lfreq=lfreq, hfreq=hfreq, mode=self.mode,
-                         quiet=True)
+                         verbose=verbose)
 
     def plot_batch_mode(self, batch_file, input_dirs, labels,
-                        output_dir, comp_label):
+                        output_dir, comp_label, verbose=False):
         """
         Generated RotDXX comparison plots for stations in a batch file
         """
@@ -351,12 +365,13 @@ class PlotRotDXX(object):
             
             self.plot_directory_mode(station_name, extension, lfreq,
                                      hfreq, input_dirs, labels,
-                                     output_dir, comp_label)
+                                     output_dir, comp_label,
+                                     verbose=verbose)
 
         input_list.close()
 
     def plot_station_mode(self, station_file, input_dirs, labels,
-                          output_dir, comp_label):
+                          output_dir, comp_label, verbose=False):
         """
         Generates RotDXX comparison plots for stations in a station list
         """
@@ -379,10 +394,11 @@ class PlotRotDXX(object):
 
             self.plot_directory_mode(station_name, extension, lfreq,
                                      hfreq, input_dirs, labels,
-                                     output_dir, comp_label)
+                                     output_dir, comp_label, verbose=verbose)
 
     def plot_directory_mode(self, station_name, extension, lfreq, hfreq,
-                            input_dirs, labels, output_dir, comp_label):
+                            input_dirs, labels, output_dir, comp_label,
+                            verbose=False):
         """
         Used by both station_mode and batch_mode, finds files matching
         the station name and generates comparison plot
@@ -409,10 +425,10 @@ class PlotRotDXX(object):
         output_file = os.path.join(output_dir, output_file)
 
         self.plot_single_station(input_files, labels, output_file,
-                                 station_name, lfreq=lfreq, hfreq=hfreq)
+                                 station_name, lfreq=lfreq, hfreq=hfreq,
+                                 verbose=verbose)
             
 if __name__ == '__main__':
-    print("Running module: %s" % (os.path.basename(sys.argv[0])))
     ME = PlotRotDXX()
     ME.run()
     

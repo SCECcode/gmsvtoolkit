@@ -123,7 +123,7 @@ def read_resid(resid_file, component, period, summary_output):
     return data, distance
 
 def _plot_dist_gof(resid_file, comp_label, input_dir,
-                   output_dir, plot_title=None,
+                   output_dir, plot_title=None, verbose=False,
                    plot_periods=None, component=COMP_EXT_RD50):
     """
     Reads data from resid_file and plots a gof distance plot all
@@ -150,15 +150,18 @@ def _plot_dist_gof(resid_file, comp_label, input_dir,
     dist_linear_file = os.path.join(output_dir, "gof-dist-linear-%s-%s.png" %
                                     (comp_label, component))
     create_dist_gof(all_data, all_distances, plot_title,
-                    plot_periods, comp_label, dist_linear_file)
+                    plot_periods, comp_label, dist_linear_file,
+                    verbose=verbose)
 
     dist_log_file = os.path.join(output_dir, "gof-dist-log-%s-%s.png" %
                                  (comp_label, component))
     create_dist_gof(all_data, all_distances, plot_title,
-                    plot_periods, comp_label, dist_log_file, log_scale=True)
+                    plot_periods, comp_label, dist_log_file, log_scale=True,
+                    verbose=verbose)
 
 def create_dist_gof(all_data, all_distances, plot_title,
-                    plot_periods, comp_label, dist_gof_file, log_scale=False):
+                    plot_periods, comp_label, dist_gof_file,
+                    log_scale=False, verbose=False):
     """
     Creates a gof distance plots for all the data and distances
     provided
@@ -221,7 +224,8 @@ def create_dist_gof(all_data, all_distances, plot_title,
         subfig.set_xlabel("Distance (km)", size=8)
 
     fig.suptitle('%s' % (plot_title), size=12)
-    print("==> Created Distance GoF plot: %s" % (dist_gof_file))
+    if verbose:
+        print("==> Created Distance GoF plot: %s" % (dist_gof_file))
     fig.savefig(dist_gof_file, format="png", transparent=False, dpi=plot_config.dpi)
     pylab.close()
 
@@ -244,6 +248,8 @@ def parse_arguments():
                         help="select RotD50 comparison (default)")
     parser.add_argument("--plot-title", "--title", dest="plot_title",
                         help="set plot title")
+    parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                        help="runs in quiet mode, only print error messages")
     args = parser.parse_args()
 
     return args
@@ -254,6 +260,14 @@ def run():
     """
     # Parse command-line options
     args = parse_arguments()
+
+    # Check for quiet mode
+    verbose = True
+    if args.quiet is True:
+        verbose = False
+
+    if verbose:
+        print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
     # Look at paths
     input_dir = ""
@@ -276,11 +290,13 @@ def run():
 
     plot_dist_gof(input_dir, output_dir,
                   args.comp_label, plot_mode,
-                  plot_title=plot_title)
+                  plot_title=plot_title,
+                  verbose=verbose)
 
 def plot_dist_gof(input_dir, output_dir,
                   comp_label, plot_mode,
-                  plot_title=None):
+                  plot_title=None,
+                  verbose=False):
     """
     Calls plot_dist_gof method
     """
@@ -293,7 +309,8 @@ def plot_dist_gof(input_dir, output_dir,
     resid_file = os.path.join(input_dir, "%s.%s-resid.txt" %
                               (comp_label, plot_mode))
     _plot_dist_gof(resid_file, comp_label, input_dir,
-                   output_dir, plot_title)
+                   output_dir, plot_title=plot_title,
+                   verbose=verbose)
 
 if __name__ == '__main__':
     run()

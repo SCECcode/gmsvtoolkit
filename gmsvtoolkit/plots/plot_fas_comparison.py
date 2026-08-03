@@ -53,7 +53,7 @@ def plot_fas_comparison(station, outfile, label1, label2,
                         input_fas_file1=None, input_seas_file1=None,
                         input_fas_file2=None, input_seas_file2=None,
                         lfreq=None, hfreq=None, plot_title=None,
-                        units=None):
+                        units=None, verbose=False):
     """
     Plots the FAS comparison between simulated and observed seismograms
     """
@@ -242,6 +242,8 @@ def parse_arguments():
                         help="comparison label used for the output file prefix")
     parser.add_argument("--units", dest="units",
                         help="units, g or cm/s/s (default)")
+    parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                        help="runs in quiet mode, only print error messages")
     parser.add_argument('input_dirs', nargs='*')
     args = parser.parse_args()
 
@@ -254,6 +256,14 @@ def run():
 
     # Parse command-line options
     args = parse_arguments()
+
+    # Check for quiet mode
+    verbose = True
+    if args.quiet is True:
+        verbose = False
+
+    if verbose:
+        print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
     # Look at paths
     input_dir = ""
@@ -332,7 +342,7 @@ def run():
                                 input_seas_file2=input_seas_file2,
                                 lfreq=lfreq, hfreq=hfreq,
                                 plot_title=plot_title,
-                                units=units)
+                                units=units, verbose=verbose)
     else:
         if len(input_dirs) < 1:
             print("[ERROR]: Please specify at least one input directory!")
@@ -347,14 +357,14 @@ def run():
             # Batch file mode
             batch_file = os.path.abspath(args.batch_file)
             plot_batch_mode(batch_file, input_dirs, labels,
-                            output_dir, comp_label,
-                            units)
+                            output_dir, comp_label=comp_label,
+                            units=units, verbose=verbose)
         elif args.station_list:
             # Run through the station list
             station_list = os.path.abspath(args.station_list)
             plot_station_list_mode(station_list, input_dirs, labels,
-                                   output_dir, comp_label,
-                                   units)
+                                   output_dir, comp_label=comp_label,
+                                   units=units, verbose=verbose)
         else:
             print("[ERROR]: Must specify station_id, batch_file, or station_list!")
             sys.exit(1)
@@ -367,9 +377,11 @@ def plot_station_comparison(station, output_file,
                             input_seas_file2=None,
                             lfreq=None, hfreq=None,
                             plot_title=None,
-                            units=None):
+                            units=None,
+                            verbose=False):
 
-    print("[PLOTFASCOMPARISON]: Generating FAS comparison plot for station %s" % (station))
+    if verbose:
+        print("[PLOTFASCOMPARISON]: Generating FAS comparison plot for station %s" % (station))
     # Create comparison plot
     plot_fas_comparison(station, output_file,
                         label1, label2,
@@ -379,11 +391,12 @@ def plot_station_comparison(station, output_file,
                         input_seas_file2=input_seas_file2,
                         lfreq=lfreq, hfreq=hfreq,
                         plot_title=plot_title,
-                        units=units)
+                        units=units,
+                        verbose=verbose)
 
 def plot_batch_mode(batch_file, input_dirs, labels,
                     output_dir, comp_label=None,
-                    units=None):
+                    units=None, verbose=False):
     """
     Generated FAS comparison plots for stations in a batch file
     """
@@ -400,14 +413,14 @@ def plot_batch_mode(batch_file, input_dirs, labels,
 
         plot_directory_mode(station_name, lfreq,
                             hfreq, input_dirs, labels,
-                            output_dir, comp_label,
-                            units)
+                            output_dir, comp_label=comp_label,
+                            units=units, verbose=verbose)
 
     input_list.close()
 
 def plot_station_list_mode(station_file, input_dirs, labels,
                            output_dir, comp_label=None,
-                           units=None):
+                           units=None, verbose=False):
     """
     Generates FAS comparison plots for stations in a station list
     """
@@ -422,12 +435,13 @@ def plot_station_list_mode(station_file, input_dirs, labels,
 
         plot_directory_mode(station_name, lfreq,
                             hfreq, input_dirs, labels,
-                            output_dir, comp_label,
-                            units)
+                            output_dir, comp_label=comp_label,
+                            units=units, verbose=verbose)
 
 def plot_directory_mode(station_name, lfreq, hfreq,
                         input_dirs, labels, output_dir,
-                        comp_label=None, units=None):
+                        comp_label=None, units=None,
+                        verbose=False):
     """
     Used by both station_mode and batch_mode, finds files matching
     the station name and generates comparison plot
@@ -498,7 +512,7 @@ def plot_directory_mode(station_name, lfreq, hfreq,
                             input_fas_file2=input_fas_file2,
                             input_seas_file2=input_seas_file2,
                             lfreq=lfreq, hfreq=hfreq,
-                            units=units)
+                            units=units, verbose=verbose)
 
 if __name__ == '__main__':
     run()

@@ -90,7 +90,8 @@ def read_data(datafile, min_period, max_period=MAX_PERIOD):
     return data
 
 def multi_plot(plottitle, gof_fileroot, indir,
-               outdir, legends, num_stations, mode="P"):
+               outdir, legends, num_stations, mode="P",
+               verbose=False):
     """
     Creates several GOF plots using the files specified in the
     gof_fileroot array. mode selects periods (P) or frequencies (F)
@@ -98,7 +99,7 @@ def multi_plot(plottitle, gof_fileroot, indir,
     """
     mode = mode.upper()
     if mode != "P" and mode != "F":
-        print("Invalid mode, must specify 'P' for periods or 'F' for frequencies!")
+        print("[ERROR]: Invalid mode, must specify 'P' for periods or 'F' for frequencies!")
         return
     # Pick components and labels
     if mode == "P":
@@ -168,7 +169,7 @@ def multi_plot(plottitle, gof_fileroot, indir,
     num_periods = len(periods[0])
     for comp in periods:
         if len(comp) != num_periods:
-            print("Number of data points unequal across components")
+            print("[ERROR]: Number of data points unequal across components")
             return
 
     # Calculate frequencies
@@ -268,7 +269,8 @@ def multi_plot(plottitle, gof_fileroot, indir,
         outfile = os.path.join(outdir, "gof-%s.png" % (outfile))
     elif mode == "F":
         outfile = os.path.join(outdir, "gof-%s-freq.png" % (outfile))
-    print("==> Created GoF plot: %s" % (outfile))
+    if verbose:
+        print("==> Created GoF plot: %s" % (outfile))
     fig.savefig(outfile, format="png",
                 transparent=False, dpi=plot_config.dpi)
     pylab.close()
@@ -296,6 +298,8 @@ def parse_arguments():
     parser.add_argument("--plot-title", "--title", dest="plot_title",
                         default="GOF GMPE Comparison Plot",
                         help="select plot title for the GoF plot")
+    parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                        help="runs in quiet mode, only print error messages")
     args = parser.parse_args()
     
     return args
@@ -306,6 +310,14 @@ def run():
     """
     # Parse command-line options
     args = parse_arguments()
+
+    # Check for quiet mode
+    verbose = True
+    if args.quiet is True:
+        verbose = False
+
+    if verbose:
+        print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
     # Look at paths
     input_dir = ""
@@ -326,12 +338,14 @@ def run():
 
     # Plot GMPE GOF plot
     plot_gmpe_gof(station_file, args.gmpe_group, args.comp_label,
-                  plot_title, input_dir, output_dir, args.run_prefix)
+                  plot_title, input_dir, output_dir,
+                  run_prefix=args.run_prefix, verbose=verbose)
     
 def plot_gmpe_gof(station_file, gmpe_group,
                   comp_label, plot_title,
                   input_dir, output_dir,
-                  run_prefix=None):
+                  run_prefix=None,
+                  verbose=False):
     """
     Generate GMPE GoF plot
     """
@@ -351,10 +365,10 @@ def plot_gmpe_gof(station_file, gmpe_group,
     dataroot = ["%s%s" % (fileroot, model.lower()) for model in gmpe_models]
     multi_plot(plot_title, dataroot, input_dir,
                output_dir, gmpe_labels, len(site_list),
-               mode="P")
+               mode="P", verbose=verbose)
     multi_plot(plot_title, dataroot, input_dir,
                output_dir, gmpe_labels, len(site_list),
-               mode="F")
+               mode="F", verbose=verbose)
 
 if __name__ == '__main__':
     run()

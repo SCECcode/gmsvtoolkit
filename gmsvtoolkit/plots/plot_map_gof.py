@@ -132,7 +132,7 @@ def read_resid(resid_file, component, period, summary_output):
 
 def _plot_map_gof(src_file, station_file, resid_file, comp_label, input_dir,
                   output_dir, plot_title=None, plot_periods=None,
-                  component=COMP_EXT_RD50):
+                  component=COMP_EXT_RD50, verbose=False):
     """
     Reads data from resid_file and plots a map gof plot with a number
     of periods
@@ -199,12 +199,13 @@ def _plot_map_gof(src_file, station_file, resid_file, comp_label, input_dir,
     create_map_gof(all_sta_x_data, all_sta_y_data, all_sta_resid_data,
                    plot_title, plot_region, topo, coastal, border, trace_file,
                    plot_periods, comp_label, map_gof_file, hypo_lat=hypo_lat,
-                   hypo_lon=hypo_lon)
+                   hypo_lon=hypo_lon, verbose=verbose)
 
 def create_map_gof(all_sta_x_data, all_sta_y_data, all_sta_resid_data,
                    plot_title, plot_region, topo, coastal, border, fault,
                    plot_periods, comp_label, map_gof_file,
-                   hypo_lat=None, hypo_lon=None):
+                   hypo_lat=None, hypo_lon=None,
+                   verbose=False):
     """
     Creates a gof distance plots for all the data and distances
     provided
@@ -330,7 +331,8 @@ def create_map_gof(all_sta_x_data, all_sta_y_data, all_sta_resid_data,
     colorbar_ax = fig.add_axes([0.93, 0.20, 0.02, 0.6])
     fig.colorbar(im, cax=colorbar_ax)
     fig.suptitle('%s' % (plot_title), size=12)
-    print("==> Created Map GoF plot: %s" % (map_gof_file))
+    if verbose:
+        print("==> Created Map GoF plot: %s" % (map_gof_file))
     fig.savefig(map_gof_file, format="png", transparent=False, dpi=plot_config.dpi)
     pylab.close()
 
@@ -357,6 +359,8 @@ def parse_arguments():
                         help="select RotD50 comparison (default)")
     parser.add_argument("--plot-title", "--title", dest="plot_title",
                         help="set plot title")
+    parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                        help="runs in quiet mode, only print error messages")
     args = parser.parse_args()
 
     return args
@@ -367,6 +371,14 @@ def run():
     """
     # Parse command-line options
     args = parse_arguments()
+
+    # Check for quiet mode
+    verbose = True
+    if args.quiet is True:
+        verbose = False
+
+    if verbose:
+        print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
     # Look at paths
     input_dir = ""
@@ -402,12 +414,14 @@ def run():
     plot_map_gof(input_dir, output_dir,
                  args.comp_label, plot_mode,
                  src_file, station_file,
-                 plot_title=plot_title)
+                 plot_title=plot_title,
+                 verbose=verbose)
 
 def plot_map_gof(input_dir, output_dir,
                  comp_label, plot_mode,
                  src_file, station_file,
-                 plot_title=None):
+                 plot_title=None,
+                 verbose=False):
     """
     Calls plot_map_gof code
     """
@@ -420,7 +434,8 @@ def plot_map_gof(input_dir, output_dir,
     resid_file = os.path.join(input_dir, "%s.%s-resid.txt" %
                               (comp_label, plot_mode))
     _plot_map_gof(src_file, station_file, resid_file, comp_label,
-                  input_dir, output_dir, plot_title)
+                  input_dir, output_dir, plot_title=plot_title,
+                  verbose=verbose)
     
 if __name__ == '__main__':
     run()

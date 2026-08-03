@@ -123,7 +123,7 @@ def read_resid(resid_file, component, period, summary_output):
     return data, vs30s
 
 def _plot_vs30_gof(resid_file, comp_label, input_dir,
-                   output_dir, plot_title=None,
+                   output_dir, plot_title=None, verbose=False,
                    plot_periods=None, component=COMP_EXT_RD50):
     """
     Reads data from resid_file and creates a GoF Vs30 plot
@@ -150,10 +150,12 @@ def _plot_vs30_gof(resid_file, comp_label, input_dir,
     vs30_gof_file = os.path.join(output_dir,
                                  "gof-vs30-%s-%s.png" % (comp_label, component))
     create_vs30_gof(all_data, all_vs30s, plot_title,
-                    plot_periods, comp_label, vs30_gof_file)
+                    plot_periods, comp_label, vs30_gof_file,
+                    verbose=verbose)
 
 def create_vs30_gof(all_data, all_vs30s, plot_title,
-                    plot_periods, comp_label, vs30_gof_file):
+                    plot_periods, comp_label, vs30_gof_file,
+                    verbose=False):
     """
     Creates a Vs30 GoF plot
     """
@@ -207,7 +209,8 @@ def create_vs30_gof(all_data, all_vs30s, plot_title,
         subfig.set_xlabel("Vs30 (m/s)", size=8)
 
     fig.suptitle('%s' % (plot_title), size=12)
-    print("==> Created Vs30 GoF plot: %s" % (vs30_gof_file))
+    if verbose:
+        print("==> Created Vs30 GoF plot: %s" % (vs30_gof_file))
     fig.savefig(vs30_gof_file, format="png", transparent=False, dpi=plot_config.dpi)
     pylab.close()
 
@@ -230,6 +233,8 @@ def parse_arguments():
                         help="select RotD50 comparison (default)")
     parser.add_argument("--plot-title", "--title", dest="plot_title",
                         help="set plot title")
+    parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                        help="runs in quiet mode, only print error messages")
     args = parser.parse_args()
 
     return args
@@ -240,6 +245,14 @@ def run():
     """
     # Parse command-line options
     args = parse_arguments()
+
+    # Check for quiet mode
+    verbose = True
+    if args.quiet is True:
+        verbose = False
+
+    if verbose:
+        print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
     # Look at paths
     input_dir = ""
@@ -262,11 +275,13 @@ def run():
 
     plot_vs30_gof(input_dir, output_dir,
                   args.comp_label, plot_mode,
-                  plot_title=plot_title)
+                  plot_title=plot_title,
+                  verbose=verbose)
 
 def plot_vs30_gof(input_dir, output_dir,
                   comp_label, plot_mode,
-                  plot_title=None):
+                  plot_title=None,
+                  verbose=False):
     """
     Calls plotting code
     """
@@ -279,7 +294,8 @@ def plot_vs30_gof(input_dir, output_dir,
     resid_file = os.path.join(input_dir, "%s.%s-resid.txt" %
                               (comp_label, plot_mode))
     _plot_vs30_gof(resid_file, comp_label, input_dir,
-                   output_dir, plot_title)
+                   output_dir, plot_title=plot_title,
+                   verbose=verbose)
 
 if __name__ == '__main__':
     run()

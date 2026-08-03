@@ -189,6 +189,8 @@ def parse_arguments():
                         help="prefix to be added to the comparison files")
     parser.add_argument("--gmpe-group", dest="gmpe_group", required=True,
                             help="GMPE group %s" % (gmpe_groups))
+    parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                        help="runs in quiet mode, only print error messages")
     args = parser.parse_args()
 
     return args
@@ -199,6 +201,14 @@ def run():
     """
     # Parse command-line options
     args = parse_arguments()
+
+    # Check for quiet mode
+    verbose = True
+    if args.quiet is True:
+        verbose = False
+
+    if verbose:
+        print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
     # Figure out gmpe labels
     gmpe_groups = [item for item in gmpe_config.GMPES]
@@ -237,29 +247,32 @@ def run():
         output_file = os.path.join(output_dir, output_file)
 
         run_single_station(args.station_id, gmpe_dir, comp_dir,
-                           output_file, gmpe_labels)
+                           output_file, gmpe_labels, verbose=verbose)
     elif args.batch_file:
         # Batch file mode
         batch_file = os.path.abspath(args.batch_file)
         run_batch_mode(batch_file, gmpe_dir, comp_dir,
                        output_dir, gmpe_labels,
-                       args.comp_label, args.run_prefix)
+                       args.comp_label, args.run_prefix,
+                       verbose=verbose)
     elif args.station_list:
         # Run through the station list mode
         station_file = os.path.abspath(args.station_list)
         run_station_mode(station_file, gmpe_dir, comp_dir,
                          output_dir, gmpe_labels,
-                         args.comp_label, args.run_prefix)
+                         args.comp_label, args.run_prefix,
+                         verbose=verbose)
     else:
         print("[ERROR]: Must include station_id, batch_file, or station_list!")
         sys.exit(1)
     
 def run_single_station(station_name, gmpe_dir, comp_dir,
-                       output_file, gmpe_labels):
+                       output_file, gmpe_labels, verbose=False):
     """
     Create a GMPE comparison plot for a single station
     """
-    print("[PLOTGMPE]: Generating GMPE comparison plot for station %s" % (station_name))
+    if verbose:
+        print("[PLOTGMPE]: Generating GMPE comparison plot for station %s" % (station_name))
 
     # Find input files for this station
     gmpe_files = glob.glob("%s%s*%s*.ri50" %
@@ -289,7 +302,8 @@ def run_single_station(station_name, gmpe_dir, comp_dir,
 def run_batch_mode(batch_file, gmpe_dir,
                    comp_dir, output_dir,
                    gmpe_labels,
-                   comp_label, run_prefix):
+                   comp_label, run_prefix,
+                   verbose=False):
     """
     Generated FAS comparison plots for stations in a batch file
     """
@@ -306,14 +320,16 @@ def run_batch_mode(batch_file, gmpe_dir,
                            comp_dir, output_dir,
                            gmpe_labels,
                            comp_label=comp_label,
-                           run_prefix=run_prefix)
+                           run_prefix=run_prefix,
+                           verbose=verbose)
 
     input_list.close()
 
 def run_station_mode(station_file, gmpe_dir,
                      comp_dir, output_dir,
                      gmpe_labels,
-                     comp_label, run_prefix):
+                     comp_label, run_prefix,
+                     verbose=False):
     """
     Generates GMPE comparison plots for a list of stations
     """
@@ -328,12 +344,14 @@ def run_station_mode(station_file, gmpe_dir,
                            comp_dir, output_dir,
                            gmpe_labels,
                            comp_label=comp_label,
-                           run_prefix=run_prefix)
+                           run_prefix=run_prefix,
+                           verbose=verbose)
 
 def run_directory_mode(station_name, gmpe_dir, comp_dir,
                        output_dir, gmpe_labels,
                        comp_label=None,
-                       run_prefix=None):
+                       run_prefix=None,
+                       verbose=False):
     """
     Used by both station_mode and batch_mode, finds files matching
     the station name and generates comparison plot
@@ -352,7 +370,7 @@ def run_directory_mode(station_name, gmpe_dir, comp_dir,
     output_file = os.path.join(output_dir, output_file)
 
     run_single_station(station_name, gmpe_dir, comp_dir,
-                       output_file, gmpe_labels)
+                       output_file, gmpe_labels, verbose=verbose)
 
 if __name__ == '__main__':
     run()
