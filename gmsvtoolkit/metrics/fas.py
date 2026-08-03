@@ -183,6 +183,8 @@ class FAS(object):
                             help="outputs only the FAS/EAS file, default is both FAS/EAS and SEAS files")
         parser.add_argument("--seas-only", dest="seas_only", action="store_true",
                             help="outputs only the SEAS file, default is both FAS/EAS and SEAS files")
+        parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                            help="runs in quiet mode, only print error messages")
         parser.add_argument('input_dirs', nargs='*')
         
         args = parser.parse_args()
@@ -194,6 +196,14 @@ class FAS(object):
         """
         # Parse command-line options
         args = self.parse_arguments()
+
+        # Check for quiet mode
+        verbose = True
+        if args.quiet is True:
+            verbose = False
+
+        if verbose:
+            print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
         output_dir = ""
         logfile = None
@@ -239,12 +249,14 @@ class FAS(object):
                           output_dir, input_unit=input_unit,
                           output_unit=output_unit,
                           output_mode=output_mode,
-                          logfile=logfile, temp_dir=None)
+                          logfile=logfile, temp_dir=None,
+                          verbose=verbose)
 
     def run_fas_seas(self, station_file, input_dirs, labels,
                      output_dir, input_unit="cm/s/s",
                      output_unit="cm/s/s", output_mode="both",
-                     logfile=None, temp_dir=None):
+                     logfile=None, temp_dir=None,
+                     verbose=False):
         """
         Run FAS/SEAS analysis codes
         """
@@ -275,12 +287,14 @@ class FAS(object):
 
         for input_dir, label in zip(input_dirs, labels):
             # Process each input directory
-            print("==> Processing %s" % (label))
+            if verbose:
+                print("==> Processing %s" % (label))
             for station in site_list:
                 # Process each station
                 station_name = station.scode
-                print("===> Processing station: %s..." % (station_name),
-                      end="", flush=True)
+                if verbose:
+                    print("===> Processing station: %s..." % (station_name),
+                          end="", flush=True)
                 acc_file = find_acc_file(input_dir, station_name, label)
                 input_acc_file = os.path.join(input_dir, acc_file)
                 output_prefix = "%s.%s" % (label, station_name)
@@ -292,10 +306,12 @@ class FAS(object):
                                     input_unit=input_unit, output_unit=output_unit,
                                     output_mode=output_mode, logfile=logfile)
                 t2 = time.time()
-                print("%10.2f s" % (t2 - t1))
+                if verbose:
+                    print("%10.2f s" % (t2 - t1))
                 
         # All done
-        print("=> Processing done!")
+        if verbose:
+            print("=> Processing done!")
 
 if __name__ == '__main__':
     ME = FAS()

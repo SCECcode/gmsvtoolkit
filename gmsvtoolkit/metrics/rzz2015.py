@@ -434,7 +434,8 @@ class RZZ2015(object):
         return self.zhatcalc(zetadiff, tlp)
 
     def process(self, station_name, comp, output_file, plot_prefix,
-                comp_label, obs_times, obs_data, sim_times, sim_data):
+                comp_label, obs_times, obs_data, sim_times, sim_data,
+                verbose=False):
         """
         This function computes the validation metrics of RZZ2015 for a
         given pair of timeseries
@@ -480,22 +481,28 @@ class RZZ2015(object):
         obs_delta_t = obs_times[1] - obs_times[0]
         deltat = sim_times[1] - sim_times[0]
 
-        print("==> Processing station: "
-              "%s - Comp: %s - obs dt = %4.3f - sim dt = %4.3f" %
-              (station_name, comp, obs_delta_t, deltat))
+        if verbose:
+            print("==> Processing station: "
+                  "%s - Comp: %s - obs dt = %4.3f - sim dt = %4.3f" %
+                  (station_name, comp, obs_delta_t, deltat))
 
         # Bring obs_data to desired RZZ_DT
-        print("Obs in: %d pts, %f delta t" % (len(obs_data), obs_delta_t))
+        if verbose:
+            print("Obs in: %d pts, %f delta t" % (len(obs_data), obs_delta_t))
         obs_times, obs_data, obs_delta_t = self.filter_data(obs_times,
                                                             obs_data,
                                                             obs_delta_t)
-        print("Obs out: %d pts, %f delta t" % (len(obs_data), obs_delta_t))
+        if verbose:
+            print("Obs out: %d pts, %f delta t" % (len(obs_data), obs_delta_t))
+
         # Bring sim_data to desired RZZ_DT
-        print("Sim in: %d pts, %f delta t" % (len(sim_data), deltat))
+        if verbose:
+            print("Sim in: %d pts, %f delta t" % (len(sim_data), deltat))
         sim_times, sim_data, deltat = self.filter_data(sim_times,
                                                        sim_data,
                                                        deltat)
-        print("Sim out: %d pts, %f delta t" % (len(sim_data), deltat))
+        if verbose:
+            print("Sim out: %d pts, %f delta t" % (len(sim_data), deltat))
 
         tf = obs_data
         xi = sim_data
@@ -870,6 +877,8 @@ class RZZ2015(object):
                             help="prefix used for each plot")
         parser.add_argument("--comp-label", dest="comp_label", required=True,
                             help="comparison label used in plots")
+        parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                            help="runs in quiet mode, only print error messages")
         args = parser.parse_args()
 
         return args
@@ -879,6 +888,14 @@ class RZZ2015(object):
         Parses command-line arguments and run the RZZ2015 code
         """
         args = self.parse_arguments()
+
+        # Check for quiet mode
+        verbose = True
+        if args.quiet is True:
+            verbose = False
+
+        if verbose:
+            print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
         output_dir = ""
         if args.output_dir is not None:
@@ -903,12 +920,14 @@ class RZZ2015(object):
         self.run_rzz2015(station_list, args.comp_label,
                          sim_dir, obs_dir,
                          output_file,
-                         plot_prefix=plot_prefix)
+                         plot_prefix=plot_prefix,
+                         verbose=verbose)
         
     def run_rzz2015(self, a_station_list, comp_label,
                     sim_dir, obs_dir,
                     output_file,
-                    plot_prefix="rzz2015"):
+                    plot_prefix="rzz2015",
+                    verbose=False):
         """
         Runs the RZZ2015 module
         """
@@ -946,9 +965,9 @@ class RZZ2015(object):
                 self.process(station_name, comp,
                              output_file, plot_prefix, comp_label,
                              obs_data[0], obs_data[comp],
-                             sim_data[0], sim_data[comp])
+                             sim_data[0], sim_data[comp],
+                             verbose=verbose)
 
 if __name__ == '__main__':
-    print("Running module: %s" % (os.path.basename(sys.argv[0])))
     ME = RZZ2015()
     ME.run()

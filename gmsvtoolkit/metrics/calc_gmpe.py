@@ -145,6 +145,8 @@ class CalculateGMPE(object):
                             help="station list for batch processing")
         parser.add_argument("--src-file", "--src", dest="src_file", required=True,
                             help="source description file (SRC file)")
+        parser.add_argument("-q", "--quiet", dest="quiet", action="store_true",
+                            help="runs in quiet mode, only print error messages")
         args = parser.parse_args()
 
         return args
@@ -155,6 +157,14 @@ class CalculateGMPE(object):
         """
         # Parse command-line options
         args = self.parse_arguments()
+
+        # Check for quiet mode
+        verbose = True
+        if args.quiet is True:
+            verbose = False
+
+        if verbose:
+            print("Running module: %s" % (os.path.basename(sys.argv[0])))
 
         station_file = os.path.abspath(args.station_list)
         src_file = os.path.abspath(args.src_file)
@@ -170,10 +180,12 @@ class CalculateGMPE(object):
             output_dir = args.output_dir
 
         self.run_station_mode(station_file, src_file,
-                              gmpe_group, output_dir)
+                              gmpe_group, output_dir,
+                              verbose=verbose)
 
     def run_station_mode(self, station_file, src_file,
-                         gmpe_group, output_dir):
+                         gmpe_group, output_dir,
+                         verbose=False):
         """
         Calculates GMPEs for a list of stations
         """
@@ -188,11 +200,11 @@ class CalculateGMPE(object):
         for station in station_list:
             station_name = station.scode
 
-            print("==> Calculating GMPE for station: %s" % (station_name))
+            if verbose:
+                print("==> Calculating GMPE for station: %s" % (station_name))
             output_file = os.path.join(output_dir, "%s-gmpe.ri50" % (station_name))
             self.calculate_gmpe(gmpe_group, station, output_file)
             
 if __name__ == '__main__':
-    print("Running module: %s" % (os.path.basename(sys.argv[0])))
     ME = CalculateGMPE()
     ME.run()
