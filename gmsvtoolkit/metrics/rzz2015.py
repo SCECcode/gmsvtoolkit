@@ -861,8 +861,8 @@ class RZZ2015(object):
         This function takes care of parsing the command-line arguments and
         asking the user for any missing parameters that we need
         """
-        parser = argparse.ArgumentParser(description="Calculates Afshari and Stewart (2016_ "
-                                         " GMPE for significant duration.")
+        parser = argparse.ArgumentParser(description="Calculates the "
+                                         "Rezaeian-Zhong-Zareian 2015 validation metrics.")
         parser.add_argument("--output-dir", dest="output_dir",
                             help="output directory")
         parser.add_argument("--output-file", dest="output_file", required=True,

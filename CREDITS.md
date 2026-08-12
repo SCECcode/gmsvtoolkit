@@ -10,6 +10,7 @@ The following developers have contributed to the development of the GMSVToolkit 
 * Gail Atkinson, Western University, Canada
 * Shima Azizzadeh-Roodpish, University of Memphis
 * Jeff Bayless, AECOM
+* Scott Brandenberg, University of California Los Angeles (UCLA)
 * Alexander Nikolas Breuer, Friedrich Schiller University Jena
 * Scott Callaghan, Statewide California Earthquake Center (SCEC)
 * Jorge Crempien, Pontificia Universidad Católica de Chile

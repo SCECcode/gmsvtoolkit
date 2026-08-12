@@ -384,7 +384,7 @@ class AS16(object):
         This function takes care of parsing the command-line arguments and
         asking the user for any missing parameters that we need
         """
-        parser = argparse.ArgumentParser(description="Calculates Afshari and Stewart (2016_ "
+        parser = argparse.ArgumentParser(description="Calculates Afshari and Stewart (2016) "
                                          " GMPE for significant duration.")
         parser.add_argument("--output-dir", dest="output_dir",
                             help="output directory")
