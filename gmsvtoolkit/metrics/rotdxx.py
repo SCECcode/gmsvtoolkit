@@ -172,7 +172,7 @@ class RotDXX(object):
                             help="input acceleration BBP file")
         parser.add_argument("-o", "--output", "--output-file",
                             dest="output_file",
-                            help="output rd100 file")
+                            help="output rd50/rd100 file")
         parser.add_argument("--batch-file", "-b", dest="batch_file", 
                             help="file with list of timeseries to process")
         parser.add_argument("--station-list", "-s", dest="station_list",
