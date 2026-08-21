@@ -175,7 +175,7 @@ def run():
             input_fas_file = os.path.join(input_dir, args.input_fas_file)
             input_seas_file = os.path.join(input_dir, args.input_seas_file)
         else:
-            print("[ERROR]: Must specify input_file or BOTH "
+            print("[ERROR]: Must specify both "
                   "input_fas_file and input_seas_file!")
             sys.exit(1)
         if args.output_file:
@@ -225,7 +225,7 @@ def plot_fas_single_station(station, output_file,
         (freqs_seas,
          smoothed_eas) = file_utilities.read_seas_file(input_seas_file)
     else:
-        print("[ERROR]: Must specify input_file or BOTH input_fas_file "
+        print("[ERROR]: Must specify both input_fas_file "
               "and input_seas_file!")
         sys.exit(1)
 
@@ -293,7 +293,7 @@ def plot_directory_mode(station_name, input_dir,
         input_fas_file = input_list[0]
     else:
         # FAS file not found, abort!
-        print("[ERROR]: Can't find input file for station %s" %
+        print("[ERROR]: Can't find input FAS/EAS file for station %s" %
               (station_name))
         sys.exit(1)
     # Now look for seas file
@@ -304,7 +304,7 @@ def plot_directory_mode(station_name, input_dir,
         input_seas_file = input_list[0]
     else:
         # SEAS file not found, abort!
-        print("[ERROR]: Can't find input file for station %s" %
+        print("[ERROR]: Can't find input FAS/SEAS file for station %s" %
               (station_name))
         sys.exit(1)
 
