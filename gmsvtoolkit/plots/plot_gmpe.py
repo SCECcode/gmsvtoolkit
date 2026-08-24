@@ -181,8 +181,6 @@ def parse_arguments():
                         help="station list for batch processing")
     parser.add_argument("--plot-title", "--title", dest="plot_title",
                         help="plot title")
-    parser.add_argument("--input-file", dest="input_file",
-                        help="input file")
     parser.add_argument("--comp-label", dest="comp_label",
                         help="comparison label used for the output file prefix")
     parser.add_argument("--run-prefix", dest="run_prefix",
