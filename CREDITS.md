@@ -1,6 +1,6 @@
-## GMSVToolkit Software Contributors
+## GMSV Toolkit Software Contributors
 
-The following developers have contributed to the development of the GMSVToolkit software package.
+The following developers have contributed to the development of the GMSV Toolkit software package.
 
 * Norm Abrahamson, Pacific Gas & Electric (PG&E)
 * John Anderson, University of Nevada, Reno (UNR)

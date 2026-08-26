@@ -1,6 +1,6 @@
-# Contributing to the SCEC GMSVToolkit Software Package
+# Contributing to the SCEC GMSV Toolkit Software Package
 
-This document provides an overview on how to contribute to GMSVToolkit, and will provide step-by-step instructions on a practical contribution workflow.
+This document provides an overview on how to contribute to GMSV Toolkit, and will provide step-by-step instructions on a practical contribution workflow.
 
 ## Getting Started
 
@@ -30,14 +30,14 @@ If you feel that you need to add large files, let us know and we can figure some
 
 ## Submitting an Issue
 
-Please open an issue if you want to ask a question about the GMSVToolkit.
+Please open an issue if you want to ask a question about the GMSV Toolkit.
 
 * Please search through the past issues to see if your question or the bug has already been addressed
 * Please apply the correct tag to your issue so others can search
 
 If you want to submit a bug report, please provide the information below:
-* GMSVToolkit version, Python version, and Platform (Linux, Windows, Mac OSX, etc)
-* How did you install the GMSVToolkit
+* GMSV Toolkit version, Python version, and Platform (Linux, Windows, Mac OSX, etc)
+* How did you install the GMSV Toolkit
 * Please provide a short, complete, and correct example that demonstrates the issue.
 * If this broke in a recent update, please tell us when it used to work.
 
