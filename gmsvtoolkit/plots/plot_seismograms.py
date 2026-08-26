@@ -144,7 +144,7 @@ def plot_overlay_timeseries(input_files, labels,
         data['dt'] = dt
         data['samples'] = samples
         all_data.append(data)
-        
+
     # Limits on x axis
     delta_ts = [timeseries['dt'] for timeseries in all_data]
     xtmin = xmin
@@ -239,6 +239,8 @@ def plot_overlay_timeseries(input_files, labels,
             axarr[i][index].grid(True)
             styles = all_styles[0:len(times)]
             for timeseries, c_vel, style in zip(times, c_vels, styles):
+                if len(timeseries) == len(c_vel) + 1:
+                    timeseries = timeseries[:-1]
                 axarr[i][index].plot(timeseries, c_vel, style, lw=0.5)
             # Add labels to first plot
             if i == 0:
