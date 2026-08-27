@@ -301,7 +301,7 @@ def parse_arguments():
     parser.add_argument("--high-freq", "--hf", dest="hfreq",
                         help="adds vertical line at this high frequency corner")
     parser.add_argument("--method", dest="method",
-                        help="specify simulation method (for both low and high freq lines")
+                        help="specify simulation method (for both low and high freq lines)")
     parser.add_argument("--colorset", dest="colorset", default="single",
                         help="select colorset [single/combined] default single")
     parser.add_argument("--plot-limit", dest="plot_limit", type=float, default=0.01,
