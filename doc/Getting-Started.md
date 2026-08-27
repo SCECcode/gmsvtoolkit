@@ -16,11 +16,11 @@ gmsvtoolkit/
 └── utils/
 ```
 
-Most of the codes are split into 4 packages: metrics, models, plots, and stats. The tests folder includes [unit tests](Running-Tests) and reference files needed to verify if the package was installed correctly. The src folder includes C/C++/Fortran codes that are used by the Python packages; the core folder includes basic functionality that is used by most codes, and the utils folder includes miscellaneous codes.
+Most of the codes are split into 4 packages: metrics, models, plots, and stats. The tests folder includes [unit tests](Running-Tests.md) and reference files needed to verify if the package was installed correctly. The src folder includes C/C++/Fortran codes that are used by the Python packages; the core folder includes basic functionality that is used by most codes, and the utils folder includes miscellaneous codes.
 
 ### Metrics
 
-The metrics package includes a number of tools for computing metrics on timeseries files, and are described in more detail in the [Metrics page](./Metrics-Calculation). The codes can be used to calculate GMPEs for a set of stations or to compute FAS, RotD50/RotD100, and the RZZ2015 metrics for a set of acceleration timeseries.
+The metrics package includes a number of tools for computing metrics on timeseries files, and are described in more detail in the [Metrics page](./Metrics-Calculation.md). The codes can be used to calculate GMPEs for a set of stations or to compute FAS, RotD50/RotD100, and the RZZ2015 metrics for a set of acceleration timeseries.
 
 ```sh
 gmsvtoolkit/
@@ -59,7 +59,7 @@ gmsvtoolkit/
 
 ### Plots
 
-The plots package contains a number of plotting utilities that can be used to generate various plots. Several tools can be used on the results produced by the packages from the metrics and/or stats packages. These tools are described in more detail in the [Plotting page](./Plotting).
+The plots package contains a number of plotting utilities that can be used to generate various plots. Several tools can be used on the results produced by the packages from the metrics and/or stats packages. These tools are described in more detail in the [Plotting page](./Plotting.md).
 
 ```sh
 gmsvtoolkit/
@@ -91,7 +91,7 @@ gmsvtoolkit/
 
 ### Stats
 
-The stats package includes several codes that can be used to aggregate per-station information produced by the metrics modules. The output of these tools can be used by the plotting package to generate Goodness-of-Fit (GoF) plots. These tools are described in more detail in the [Statistics Page](./Statistics-Computation).
+The stats package includes several codes that can be used to aggregate per-station information produced by the metrics modules. The output of these tools can be used by the plotting package to generate Goodness-of-Fit (GoF) plots. These tools are described in more detail in the [Statistics Page](./Statistics-Computation.md).
 
 ```sh
 gmsvtoolkit/
@@ -123,7 +123,7 @@ $ rotdxx.py --input-file sims/2354660.2001-SCE.acc.bbp --output-file 2354660.200
 
 This command will read the acceleration timeseries and output the results in the specified folder and output file.
 
-Users can also process timeseries from multiple stations at the same time. In this later case, users can provide either a station list or a batch file (described in detail in the [File Format page](./File-Format-Guide)). For example to use a station list, users can call the code as follows:
+Users can also process timeseries from multiple stations at the same time. In this later case, users can provide either a station list or a batch file (described in detail in the [File Format page](./File-Format-Guide.md)). For example to use a station list, users can call the code as follows:
 
 ```bash
 $ rotdxx.py --station-list bbp_inputs/nr_stations.stl --input-dir bbp_results --output-dir output_data
