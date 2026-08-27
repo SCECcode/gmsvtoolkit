@@ -300,7 +300,7 @@ def run_single_station(station_name, gmpe_dir, comp_dir,
 def run_batch_mode(batch_file, gmpe_dir,
                    comp_dir, output_dir,
                    gmpe_labels,
-                   comp_label, run_prefix,
+                   comp_label, run_prefix=None,
                    verbose=False):
     """
     Generated FAS comparison plots for stations in a batch file
@@ -326,7 +326,7 @@ def run_batch_mode(batch_file, gmpe_dir,
 def run_station_mode(station_file, gmpe_dir,
                      comp_dir, output_dir,
                      gmpe_labels,
-                     comp_label, run_prefix,
+                     comp_label, run_prefix=None,
                      verbose=False):
     """
     Generates GMPE comparison plots for a list of stations
