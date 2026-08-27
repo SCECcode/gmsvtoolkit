@@ -57,7 +57,7 @@ rotdxx_obj = rotdxx.RotDXX(mode="rotd50")
 rotdxx_obj.run_station_mode("nr_v19_06_2.stl", "bbp_results", "sims_processed", verbose=True)
 ```
 
-Per-station results from the 'rotdxx.py' module can be plotted using the 'plot_rotdxx.py' module in the [plots package](./Plotting). Results can also be aggregated using the 'psa_gof.py' module in the [stats package](./Statistics-Computation), and used to generate a PSA Goodness-of-Fit plot, as described in the [PSA and FAS Workflows page](./PSA-and-FAS-Workflows).
+Per-station results from the 'rotdxx.py' module can be plotted using the 'plot_rotdxx.py' module in the [plots package](./Plotting.md). Results can also be aggregated using the 'psa_gof.py' module in the [stats package](./Statistics-Computation.md), and used to generate a PSA Goodness-of-Fit plot, as described in the [PSA and FAS Workflows page](./PSA-and-FAS-Workflows.md).
 
 ## fas.py
 
@@ -119,7 +119,7 @@ output_dir = "fas_output"
 fas_obj.run_fas_seas("nr_v19_06_2.stl", fas_input_dirs, fas_labels, output_dir, verbose=True)
 ```
 
-Per-station results from the 'fas.py' module can be plotted using the 'plot_fas.py' module, and can be compared against other data with the 'plot_fas_comparison.py' module, both in the [plots package](./Plotting). Results can also be aggregated using the 'fas_eas_gof.py' and 'fas_seas_gof.py' modules, available in the [stats package](./Statistics-Computation), and used to generate FAS Goodness-of-Fit plots, as described in the [PSA and FAS Workflows page](./PSA-and-FAS-Workflows).
+Per-station results from the 'fas.py' module can be plotted using the 'plot_fas.py' module, and can be compared against other data with the 'plot_fas_comparison.py' module, both in the [plots package](./Plotting.md). Results can also be aggregated using the 'fas_eas_gof.py' and 'fas_seas_gof.py' modules, available in the [stats package](./Statistics-Computation.md), and used to generate FAS Goodness-of-Fit plots, as described in the [PSA and FAS Workflows page](./PSA-and-FAS-Workflows.md).
 
 ## rzz2015.py
 
@@ -241,7 +241,7 @@ output_dir = "gmpe_output"
 calc_gmpe_obj.run_station_mode(station_file, src_file, gmpe_group, output_dir, verbose=True)
 ```
 
-Per-station results from the 'calc_gmpe.py' module can be plotted using the 'plot_gmpe.py' module in the [plots package](./Plotting). Results can also be aggregated using the 'gmpe_gof.py' module in the [stats package](./Statistics-Computation), and used to generate a PSA GMPE Goodness-of-Fit plot.
+Per-station results from the 'calc_gmpe.py' module can be plotted using the 'plot_gmpe.py' module in the [plots package](./Plotting.md). Results can also be aggregated using the 'gmpe_gof.py' module in the [stats package](./Statistics-Computation.md), and used to generate a PSA GMPE Goodness-of-Fit plot.
 
   # References
 
