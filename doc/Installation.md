@@ -61,7 +61,7 @@ Either way, after one of the steps above users should have the GMSV Toolkit sour
   $ make
 ```
 
-The commands above will compile the codes in the GMSV Toolkit source distribution. Please refer to the [FAQ page](./FAQ) if you have issues compiling the GMSV Toolkit software on your system. You will also need to set up the GMSVTOOLKIT_DIR environment variable so that it points to the root folder in the gmsvtoolkit package. This is the folder that has all the other software modules, like metrics, stats, plots, etc. You can set it up by using a command like:
+The commands above will compile the codes in the GMSV Toolkit source distribution. Please refer to the [FAQ page](./FAQ.md) if you have issues compiling the GMSV Toolkit software on your system. You will also need to set up the GMSVTOOLKIT_DIR environment variable so that it points to the root folder in the gmsvtoolkit package. This is the folder that has all the other software modules, like metrics, stats, plots, etc. You can set it up by using a command like:
 
 ```bash
  $ export GMSVTOOLKIT_DIR=/home/sarah/gmsvtoolkit-26.8.0/gmsvtoolkit
@@ -69,7 +69,7 @@ The commands above will compile the codes in the GMSV Toolkit source distributio
 ```
 You should consider adding this to your bash_profile so that you don't have to retype them every time you want to use the GMSV Toolkit.
 
-After installing the GMSV Toolkit on their systems, users should confirm the code is built correctly by [running Unit Tests](./Running-Tests) before starting to use the code for research purposes.
+After installing the GMSV Toolkit on their systems, users should confirm the code is built correctly by [running Unit Tests](./Running-Tests.md) before starting to use the code for research purposes.
 
 ## Using the GMSV Toolkit inside a Docker Container
 
