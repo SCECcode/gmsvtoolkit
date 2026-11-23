@@ -18,7 +18,7 @@ void geoutm_(double *dlon, double *dlat, double *xr0,
 
 int main(int ac,char **av)
 {
-FILE *fopfile(), *fpr, *fpw;
+FILE *fopfile(char *, char *), *fpr, *fpw;
 float mlat, mlon, xazim, mrot;
 float kperd_n, kperd_e, ar1, ar2, ar3, ar4;
 float xp, yp, plon, plat;
