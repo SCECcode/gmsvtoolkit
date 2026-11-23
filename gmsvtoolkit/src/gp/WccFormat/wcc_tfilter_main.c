@@ -27,7 +27,7 @@ char infilebuf[MAXFILES*256];
 char outfilebuf[MAXFILES*256];
 
 struct statdata shead1;
-char *infile[MAXFILES], *outfile[MAXFILES], *string, *readline(), filelist[256];
+char *infile[MAXFILES], *outfile[MAXFILES], *string, *readline(FILE *), filelist[256];
 char str[512];
 struct complex *q, *p;
 float *s1;
