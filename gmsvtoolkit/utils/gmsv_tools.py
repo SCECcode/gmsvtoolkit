@@ -135,6 +135,9 @@ def read_bbp_units(filename):
             if line.find("time(sec)") > 0:
                 units = line.split()[2]
                 break
+            if line.find("time(s)") > 0:
+                units = line.split()[2]
+                break
         input_file.close()
     except IOError:
         print("[ERROR]: Cannot open file %s, exiting...." % (filename))
@@ -310,6 +313,12 @@ def convert_files_from_station_list(station_file,
     Process a station list and convert each file as
     indicated by action_type and action_count
     """
+    if temp_dir is None:
+        # Create temp directory if needed
+        temp_dir = tempfile.mkdtemp()
+        # And clean up later
+        atexit.register(cleanup, temp_dir)
+
     action_type, action_count = select_action(input_format, output_format)
 
     stations = StationList(station_file)
@@ -337,6 +346,12 @@ def convert_files_from_batch_file(batch_file,
     Process a batch file and convert each file as
     indicated by action_type and action_count
     """
+    if temp_dir is None:
+        # Create temp directory if needed
+        temp_dir = tempfile.mkdtemp()
+        # And clean up later
+        atexit.register(cleanup, temp_dir)
+
     action_type, action_count = select_action(input_format, output_format)
     
     # Open batch file
