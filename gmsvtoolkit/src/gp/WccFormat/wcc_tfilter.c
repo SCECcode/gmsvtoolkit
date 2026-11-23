@@ -45,7 +45,7 @@ int phase = 0;
 int inbin = 0;
 int outbin = 0;
 
-FILE *fopfile(), *fmake_or_open(), *fpr, *fpw;
+FILE *fopfile(char *, char *), *fmake_or_open(), *fpr, *fpw;
 char outpath[256];
 
 order = 0;

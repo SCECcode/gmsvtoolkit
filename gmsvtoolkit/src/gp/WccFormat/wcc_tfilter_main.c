@@ -37,7 +37,7 @@ int nshft, inchar, outchar, nstat, nt6;
 int inbin = 0;
 int outbin = 0;
 
-FILE *fopfile(), *fmake_or_open(), *fpr, *fpw;
+FILE *fopfile(char *, char *), *fmake_or_open(), *fpr, *fpw;
 char outpath[256];
 
 if(ac == 1)
