@@ -165,7 +165,7 @@ while(n--)
 
 int write_xyz(char *file,struct standrupformat *srf,char *type,int ig,int calc_xy,float *xoff,float *yoff,int tsstr,int tsend,int tsinc,float *svmin,float *slipmin,int keepsign,int dump_slip)
 {
-FILE *fpw, *fopfile();
+FILE *fpw, *fopfile(char *, char *);
 struct srf_prectsegments *prseg_ptr;
 struct srf_apointvalues *apval_ptr;
 float elon, elat;
@@ -787,7 +787,7 @@ if(strcmp(type,"rough") == 0)
 
 void write_maxsvfX(char *file,struct standrupformat *srf,char *type,int ig,float *maxslip)
 {
-FILE *fpw, *fopfile();
+FILE *fpw, *fopfile(char *, char *);
 struct srf_prectsegments *prseg_ptr;
 struct srf_apointvalues *apval_ptr;
 float elon, elat;
@@ -887,7 +887,7 @@ fprintf(stderr,"kp= %5d\n",kp);
 
 void write_maxsvf(char *file,struct standrupformat *srf,char *type,int ig,float *maxslip,int kp_in)
 {
-FILE *fpw, *fopfile();
+FILE *fpw, *fopfile(char *, char *);
 struct srf_prectsegments *prseg_ptr;
 struct srf_apointvalues *apval_ptr;
 float elon, elat;
@@ -1035,7 +1035,7 @@ fprintf(stderr,"kp= %d dels= %13.5e\n",kp,dels);
 
 void get_vmax2slip(char *file,struct standrupformat *srf,char *type,int ig)
 {
-FILE *fpw, *fopfile();
+FILE *fpw, *fopfile(char *, char *);
 struct srf_prectsegments *prseg_ptr;
 struct srf_apointvalues *apval_ptr;
 float elon, elat;
@@ -1158,7 +1158,7 @@ if(pflag)
 
 void read_Fvelmodel(char *vfile,struct velmodel *vm)
 {
-FILE *fpr, *fopfile();
+FILE *fpr, *fopfile(char *, char *);
 int i, nr;
 char str[512];
 
@@ -1405,7 +1405,7 @@ fprintf(stderr,"Static stress drop= %.3f bar (circular crack: area= %13.5e km*km
 
 int write_lld(char *file,struct standrupformat *srf,int ig,float *dmin,float *dmax,char *type,int dump_slip)
 {
-FILE *fpw, *fopfile();
+FILE *fpw, *fopfile(char *, char *);
 struct srf_prectsegments *prseg_ptr;
 struct srf_apointvalues *apval_ptr;
 float outval, svmax, sv, *stf1, *stf2, *stf3;
@@ -1932,7 +1932,7 @@ while(cbuf[0] != '\0')
 
 void dump_sliprate(char *fileroot,struct standrupformat *srf,int ig,float *dmin,float *dmax,float *smin)
 {
-FILE *fpw, *fopfile();
+FILE *fpw, *fopfile(char *, char *);
 struct srf_prectsegments *prseg_ptr;
 struct srf_apointvalues *apval_ptr;
 float outval, svmax, *sv, *stf1, *stf2, *stf3;
