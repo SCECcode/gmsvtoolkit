@@ -5,7 +5,7 @@
 
 void read_srf(struct standrupformat *srf,char *file,int bflag)
 {
-FILE *fpr, *fopfile();
+FILE *fpr, *fopfile(char *, char *);
 struct srf_prectsegments *prseg_ptr;
 struct srf_apointvalues *apval_ptr;
 char *sptr, str[MAXLINE];
@@ -461,7 +461,7 @@ else if(atof(srf->version) >= 3.0)
 
 void write_srf1(struct standrupformat *srf,char *file,int bflag)
 {
-FILE *fpw, *fopfile();
+FILE *fpw, *fopfile(char *, char *);
 struct srf_planerectangle *prect_ptr;
 struct srf_prectsegments *prseg_ptr;
 struct srf_allpoints *apnts_ptr;
@@ -637,7 +637,7 @@ else
 
 void write_srf2(struct standrupformat *srf,char *file,int bflag)
 {
-FILE *fpw, *fopfile();
+FILE *fpw, *fopfile(char *, char *);
 struct srf_planerectangle *prect_ptr;
 struct srf_prectsegments *prseg_ptr;
 struct srf_allpoints *apnts_ptr;
@@ -833,7 +833,7 @@ else
 
 void write_srf3(struct standrupformat *srf,char *file,int bflag)
 {
-FILE *fpw, *fopfile();
+FILE *fpw, *fopfile(char *, char *);
 struct srf_planerectangle *prect_ptr;
 struct srf_prectsegments *prseg_ptr;
 struct srf_allpoints *apnts_ptr;
