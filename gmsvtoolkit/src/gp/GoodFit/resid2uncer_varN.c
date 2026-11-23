@@ -37,7 +37,7 @@ float t95[] = {  6.3138, 2.9200, 2.3534, 2.1318, 2.0150, 1.9432, 1.8946,
 
 int main(int ac,char **av)
 {
-FILE *fpr, *fpw, *fopfile();
+FILE *fpr, *fpw, *fopfile(char *, char *);
 float *per, *resid, vs30, cdst, xcos, ycos, *tmin, *tmax;
 float *bias, *sigma, *sigma0, *cl90m, *cl90p;
 int nstat, nper, *nval, nstat_read, i;

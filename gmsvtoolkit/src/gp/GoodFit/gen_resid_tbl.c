@@ -24,7 +24,7 @@
 
 int main(int ac,char **av)
 {
-FILE *fpr, *fopfile();
+FILE *fpr, *fopfile(char *, char *);
 float *per, *sa1, *sa2, *res1, *res2, *avgr, v[8];
 float rpga1, rpga2, avgpga, rpgv1, rpgv2, avgpgv;
 int i, np2, np;
