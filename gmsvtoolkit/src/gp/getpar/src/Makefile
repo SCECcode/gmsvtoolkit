@@ -93,7 +93,7 @@ $(COBJS) $(FOBJS): libget.h
 
 fgetpar.o:	getpar.c
 		cp getpar.c fgetpar.c
-		$(CC) $(CFLAGS) -DFORTRAN -c fgetpar.c
+		$(CC) $(CFLAGS) -DFORTRAN -Wno-error=implicit-function-declaration -c fgetpar.c
 		$(RM) -f fgetpar.c
 
 fgetarg.o:	getarg.c
@@ -149,7 +149,7 @@ xclean:
 		-$(RM) -f $(COBJS) $(FOBJS) libget.a core
 		-$(RM) -f $(PROGRAM) $(LIBRARY) 
 		-$(SCLEAN)
-		
+
 lint:		$(CSRCS) $(HDRS) $(FSRCS)
 		$(LINT) $(LFLAGS) $(CSRCS) $(FSRCS)
 
